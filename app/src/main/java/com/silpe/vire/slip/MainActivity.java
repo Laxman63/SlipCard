@@ -91,11 +91,15 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
         @Override
         public CharSequence getPageTitle(int tabposition) {
-            return "Tab " + tabposition;
+            return taborgs.getTitle(tabposition);
         }
     }
 
     static class TabOrg  {
+        final String[] tabs = {
+                "home", "show", "yolo"
+        };
+
         int index;
         String name;
         boolean initiated = false;
@@ -110,9 +114,8 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
             yolo = new YoloFragment();
         }
 
-        public TabOrg (int index , String name) {
-            this.index = index;
-            this.name = name;
+        public String getTitle (int num) {
+            return tabs[num];
         }
 
         public Fragment getFragment (int index){
