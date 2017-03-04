@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/listPreferredItemHeight"
-    android:padding="6dip">
+    android:layout_height="100dip"
+    android:background="@color/colorPrimary"
+    tools:context=".MainActivity">
 
     <com.silpe.vire.slip.Icon
-        android:id="@+id/icon"
+        android:id="@+id/itemIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -22,8 +24,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@id/icon"
-        android:layout_toEndOf="@id/icon"
+        android:layout_toRightOf="@id/itemIcon"
+        android:layout_toEndOf="@id/itemIcon"
         android:ellipsize="marquee"
         android:maxLines="1"
         android:text="Jeff Niu is awesome"
@@ -38,8 +40,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/icon"
-        android:layout_toEndOf="@id/icon"
+        android:layout_toRightOf="@id/itemIcon"
+        android:layout_toEndOf="@id/itemIcon"
         android:gravity="center_vertical"
         android:text="Jeff Niu"
         android:textSize="16sp"/>

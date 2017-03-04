@@ -24,7 +24,6 @@
             android:layout_height="48dp"
             android:layout_below="@+id/toolBar"
             app:accentColor="@color/colorAccent"
-            app:primaryColor="#3F51B5"
             />
 
     </android.support.design.widget.AppBarLayout>
