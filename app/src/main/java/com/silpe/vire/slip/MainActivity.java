@@ -8,15 +8,48 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import android.widget.TabHost;
 
 public class MainActivity extends AppCompatActivity {
+    Toolbar toolbar;
+    LinearLayout tabHost;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TabHost host = (TabHost)findViewById(R.id.tabHost);
+
         setSupportActionBar(toolbar);
+        final String[] tabs = {
+                "home", "show", "yolo"
+        };
+
+
+
+        host.setup();
+
+        //Tab 1
+        TabHost.TabSpec spec = host.newTabSpec(tabs[0]);
+        spec.setContent(R.id.tab1);
+        spec.setIndicator(tabs[0]);
+        host.addTab(spec);
+
+        //Tab 2
+        spec = host.newTabSpec(tabs[1]);
+        spec.setContent(R.id.tab2);
+        spec.setIndicator(tabs[1]);
+        host.addTab(spec);
+
+        //Tab 3
+        spec = host.newTabSpec(tabs[2]);
+        spec.setContent(R.id.tab3);
+        spec.setIndicator(tabs[2]);
+        host.addTab(spec);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
