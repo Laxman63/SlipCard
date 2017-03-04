@@ -24,27 +24,30 @@ public class MainActivity extends AppCompatActivity {
         TabHost host = (TabHost)findViewById(R.id.tabHost);
 
         setSupportActionBar(toolbar);
+        final String[] tabs = {
+                "home", "show", "yolo"
+        };
 
 
 
         host.setup();
 
         //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec("Tab One");
+        TabHost.TabSpec spec = host.newTabSpec(tabs[0]);
         spec.setContent(R.id.tab1);
-        spec.setIndicator("Tab One");
+        spec.setIndicator(tabs[0]);
         host.addTab(spec);
 
         //Tab 2
-        spec = host.newTabSpec("Tab Two");
+        spec = host.newTabSpec(tabs[1]);
         spec.setContent(R.id.tab2);
-        spec.setIndicator("Tab Two");
+        spec.setIndicator(tabs[1]);
         host.addTab(spec);
 
         //Tab 3
-        spec = host.newTabSpec("Tab Three");
+        spec = host.newTabSpec(tabs[2]);
         spec.setContent(R.id.tab3);
-        spec.setIndicator("Tab Three");
+        spec.setIndicator(tabs[2]);
         host.addTab(spec);
 
 
