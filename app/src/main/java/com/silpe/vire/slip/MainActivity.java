@@ -15,23 +15,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TabHost;
 
-import java.util.ArrayList;
-import java.util.List;
-import it.neokree.materialtabs.MaterialTab;
-import it.neokree.materialtabs.MaterialTabHost;
-import it.neokree.materialtabs.MaterialTabListener;
+import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity implements MaterialTabListener {
+
+public class MainActivity extends AppCompatActivity implements SlipTabListener {
     Toolbar toolbar;
-    MaterialTabHost tabHost;
+    SlipTabHost tabHost;
     ViewPager viewPager;
     ViewPagerAdapter androidAdapter;
     TabOrg taborgs;
+    Text text;
 
     final String[] tabs = {
             "home", "show", "yolo"
@@ -61,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         taborgs = new TabOrg();
 
         //tab host
-        tabHost = (MaterialTabHost) this.findViewById(R.id.tabHost);
+        tabHost = (SlipTabHost) this.findViewById(R.id.tabHost);
         viewPager = (ViewPager) this.findViewById(R.id.viewPager);
 
         //adapter view
@@ -168,20 +162,20 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
     //tab on selected
     @Override
-    public void onTabSelected(MaterialTab materialTab) {
+    public void onTabSelected(SlipTab materialTab) {
 
         viewPager.setCurrentItem(materialTab.getPosition());
     }
 
     //tab on reselected
     @Override
-    public void onTabReselected(MaterialTab materialTab) {
+    public void onTabReselected(SlipTab materialTab) {
 
     }
 
     //tab on unselected
     @Override
-    public void onTabUnselected(MaterialTab materialTab) {
+    public void onTabUnselected(SlipTab materialTab) {
 
     }
 

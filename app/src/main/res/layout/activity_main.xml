@@ -18,13 +18,12 @@
             android:layout_height="56dp"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <it.neokree.materialtabs.MaterialTabHost
+        <com.silpe.vire.slip.SlipTabHost
             android:id="@+id/tabHost"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_below="@+id/toolBar"
-            app:accentColor="@color/colorAccent"
-            />
+            app:accentColor="@color/colorAccent"/>
 
     </android.support.design.widget.AppBarLayout>
 
