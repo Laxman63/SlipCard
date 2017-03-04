@@ -3,7 +3,11 @@ package com.silpe.vire.slip;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
@@ -11,9 +15,20 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 
-public class MainActivity extends AppCompatActivity {
+import it.neokree.materialtabs.MaterialTab;
+import it.neokree.materialtabs.MaterialTabHost;
+import it.neokree.materialtabs.MaterialTabListener;
+
+public class MainActivity extends AppCompatActivity implements MaterialTabListener{
     Toolbar toolbar;
-    LinearLayout tabHost;
+    MaterialTabHost tabHost;
+    ViewPager viewPager;
+    ViewPagerAdapter androidAdapter;
+    TabOrg taborgs;
+
+    final String[] tabs = {
+            "home", "show", "yolo"
+    };
 
 
     @Override
@@ -21,35 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TabHost host = (TabHost)findViewById(R.id.tabHost);
-
         setSupportActionBar(toolbar);
-        final String[] tabs = {
-                "home", "show", "yolo"
-        };
-
-
-
-        host.setup();
-
-        //Tab 1
-        TabHost.TabSpec spec = host.newTabSpec(tabs[0]);
-        spec.setContent(R.id.tab1);
-        spec.setIndicator(tabs[0]);
-        host.addTab(spec);
-
-        //Tab 2
-        spec = host.newTabSpec(tabs[1]);
-        spec.setContent(R.id.tab2);
-        spec.setIndicator(tabs[1]);
-        host.addTab(spec);
-
-        //Tab 3
-        spec = host.newTabSpec(tabs[2]);
-        spec.setContent(R.id.tab3);
-        spec.setIndicator(tabs[2]);
-        host.addTab(spec);
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +46,88 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        taborgs = new TabOrg();
+
+        //tab host
+        tabHost = (MaterialTabHost) this.findViewById(R.id.tabHost);
+        viewPager = (ViewPager) this.findViewById(R.id.viewPager);
+
+        //adapter view
+        androidAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(androidAdapter);
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int tabposition) {
+                tabHost.setSelectedNavigationItem(tabposition);
+            }
+        });
+
+        //for tab position
+        for (int i = 0; i < androidAdapter.getCount(); i++) {
+            tabHost.addTab(
+                    tabHost.newTab()
+                            .setText(androidAdapter.getPageTitle(i))
+                            .setTabListener(this)
+            );
+        }
+    }
+
+    // view pager adapter
+    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
+        public ViewPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        public Fragment getItem(int num) {
+            return taborgs.getFragment(num);
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int tabposition) {
+            return "Tab " + tabposition;
+        }
+    }
+
+    static class TabOrg  {
+        int index;
+        String name;
+        boolean initiated = false;
+
+        Fragment home ;
+        Fragment show;
+        Fragment yolo;
+
+        public TabOrg () {
+            home = new HomeFragment();
+            show = new HomeFragment();
+            yolo = new HomeFragment();
+        }
+
+        public TabOrg (int index , String name) {
+            this.index = index;
+            this.name = name;
+        }
+
+        public Fragment getFragment (int index){
+            switch (index){
+                case 0:
+                    return home;
+                case 1:
+                    return show;
+                case 2:
+                    return yolo;
+                default:
+                    return home;
+            }
+        }
+
     }
 
     @Override
@@ -82,4 +151,26 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    //tab on selected
+    @Override
+    public void onTabSelected(MaterialTab materialTab) {
+
+        viewPager.setCurrentItem(materialTab.getPosition());
+    }
+
+    //tab on reselected
+    @Override
+    public void onTabReselected(MaterialTab materialTab) {
+
+    }
+
+    //tab on unselected
+    @Override
+    public void onTabUnselected(MaterialTab materialTab) {
+
+    }
+
+
+
 }
