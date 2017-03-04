@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
         public TabOrg () {
             home = new HomeFragment();
-            show = new HomeFragment();
-            yolo = new HomeFragment();
+            show = new ShowFragment();
+            yolo = new YoloFragment();
         }
 
         public TabOrg (int index , String name) {
