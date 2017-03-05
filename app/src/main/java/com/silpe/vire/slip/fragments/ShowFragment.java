@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.silpe.vire.slip.R;
+import com.silpe.vire.slip.dtos.SlipUser;
+import com.silpe.vire.slip.models.SessionModel;
 
 
 /**
@@ -63,10 +66,16 @@ public class ShowFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_show, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        SlipUser user = SessionModel.get().getUser();
+        View view = inflater.inflate(R.layout.fragment_show, container, false);
+        ((TextView) view.findViewById(R.id.show_firstName)).setText(user.firstName);
+        ((TextView) view.findViewById(R.id.show_lastName)).setText(user.lastName);
+        ((TextView) view.findViewById(R.id.show_occupation)).setText(user.occupation);
+        ((TextView) view.findViewById(R.id.show_company)).setText(user.company);
+        ((TextView) view.findViewById(R.id.show_email)).setText(user.email);
+        ((TextView) view.findViewById(R.id.show_uid)).setText(user.uid);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

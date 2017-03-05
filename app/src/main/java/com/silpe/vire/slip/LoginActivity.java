@@ -3,22 +3,19 @@ package com.silpe.vire.slip;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
-
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -38,6 +35,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.silpe.vire.slip.dtos.SlipUser;
+import com.silpe.vire.slip.models.SessionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -327,7 +331,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onComplete(@NonNull Task<ProviderQueryResult> task) {
                 LoginActivity.this.mTaskInProgress = false;
-                if (task.isSuccessful()) {
+                if (task.isSuccessful() && task.getResult().getProviders() != null) {
                     if (task.getResult().getProviders().size() > 0) {
                         doLogin(email, password);
                     } else {
@@ -366,16 +370,36 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.d(getClass().getCanonicalName(), "signInWithEmail:onComplete:" + task.isSuccessful());
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
+                    LoginActivity.this.showProgress(false);
                 } else {
-                    Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    LoginActivity.this.startActivity(intent);
+                    gotoMainActivity();
                 }
-                LoginActivity.this.showProgress(false);
             }
         });
     }
 
+    private void gotoMainActivity() {
+        // Get the user from the database
+        FirebaseUser user = mAuth.getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref = ref.child(getString(R.string.database_users)).child(user.getUid());
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                SlipUser user = snapshot.getValue(SlipUser.class);
+                SessionModel.get().setUser(user);
+                Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                LoginActivity.this.showProgress(false);
+                LoginActivity.this.startActivity(intent);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+            }
+        };
+        ref.addListenerForSingleValueEvent(userListener);
+    }
 
 }
 
