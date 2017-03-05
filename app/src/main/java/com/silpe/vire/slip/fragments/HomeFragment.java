@@ -12,7 +12,7 @@ import android.view.ViewPropertyAnimator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.silpe.vire.slip.CollectionListAdapter;
+import com.silpe.vire.slip.adapters.CollectionListAdapter;
 import com.silpe.vire.slip.R;
 
 import java.util.ArrayList;

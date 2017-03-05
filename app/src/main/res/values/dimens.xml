@@ -7,4 +7,7 @@
     <dimen name="card_preview_height">100dp</dimen>
     <dimen name="card_preview_horizontal_padding">12dp</dimen>
     <dimen name="card_preview_vertical_padding">12dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="login_button_padding">20dp</dimen>
+    <dimen name="login_button_width">200dp</dimen>
 </resources>

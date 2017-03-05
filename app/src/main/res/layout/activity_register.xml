@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.silpe.vire.slip.LoginActivity">
+    tools:context="com.silpe.vire.slip.RegisterActivity">
 
     <!-- Login progress -->
     <ProgressBar
@@ -30,16 +30,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
-                    android:id="@+id/email"
+                <EditText
+                    android:id="@+id/firstName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
+                    android:hint="@string/prompt_firstName"
+                    android:inputType="textPersonName"
                     android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
@@ -49,27 +50,55 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/password"
+                    android:id="@+id/lastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_password"
-                    android:imeActionId="@+id/login"
-                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:hint="@string/prompt_lastName"
+                    android:inputType="textPersonName"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/occupation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_occupation"
+                    android:inputType="text"
+                    android:maxLines="1" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/company"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_company"
+                    android:imeActionId="@+id/register"
+                    android:imeActionLabel="@string/action_register_short"
                     android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
+                    android:inputType="text"
                     android:maxLines="1" />
 
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/register_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="@dimen/login_button_width"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_gravity="center"
                 android:padding="@dimen/login_button_padding"
-                android:text="@string/action_sign_in"
+                android:text="@string/action_register"
                 android:textStyle="bold" />
 
         </LinearLayout>
