@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "177075443187",
+    "firebase_url": "https://slip-8e306.firebaseio.com",
+    "project_id": "slip-8e306",
+    "storage_bucket": "slip-8e306.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177075443187:android:c0adf7268110ceb8",
+        "android_client_info": {
+          "package_name": "com.silpe.vire.slip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177075443187-tuqkeu6j107baqgrtrlbbbk46u4sa792.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.silpe.vire.slip",
+            "certificate_hash": "b12e2a1ce82a2d05782cccca857ca11b6948ad08"
+          }
+        },
+        {
+          "client_id": "177075443187-a7m387ftrr63l4rol50vusacg7pu8q7b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGIp1xyZVmM_9kFDt3b2do7dk61-eh1-Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177075443187-a7m387ftrr63l4rol50vusacg7pu8q7b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

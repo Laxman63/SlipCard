@@ -2,7 +2,6 @@ package com.silpe.vire.slip.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,14 +22,14 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        setHasOptionsMenu(true);
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         final ListView collectionList = (ListView) view.findViewById(R.id.collectionList);
         final List<String> values = new ArrayList<>();
         for (int i = 0; i <= 25; i++) {
             values.add("xd" + i);
         }
-        final CollectionListAdapter collectionAdapter = new CollectionListAdapter(this.getContext(), R.layout.card_collection_listitem, R.id.secondLine, values);
+        final CollectionListAdapter collectionAdapter = new CollectionListAdapter(this.getContext(), R.layout.collection_card_preview, R.id.secondLine, values);
         collectionList.setAdapter(collectionAdapter);
         collectionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

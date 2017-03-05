@@ -1,6 +1,5 @@
 package com.silpe.vire.slip;
 
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,13 +30,13 @@ public class CollectionListAdapter extends ArrayAdapter<String> {
         ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.card_collection_listitem, parent, false);
+            convertView = inflater.inflate(R.layout.collection_card_preview, parent, false);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.getFirstLine().setText("xd");
+        holder.getFirstLine().setText("xd" + position);
         holder.getSecondLine().setText("yolo");
         return convertView;
     }

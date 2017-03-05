@@ -13,19 +13,16 @@ import android.view.View;
 
 import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 
-
 public class MainActivity extends AppCompatActivity {
     NavigationPagerAdapter navigationPagerAdapter;
     ViewPager viewPager;
     Toolbar toolbar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setContentView(R.layout.activity_main);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

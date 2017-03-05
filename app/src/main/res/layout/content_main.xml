@@ -5,7 +5,6 @@
     android:id="@+id/content_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dip"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.silpe.vire.slip.MainActivity"
     tools:showIn="@layout/fragment_home">
@@ -15,5 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@android:color/transparent"
-        android:dividerHeight="16dip"/>
+        android:dividerHeight="0dp"
+        android:paddingBottom="@dimen/card_preview_vertical_padding"/>
 </RelativeLayout>
