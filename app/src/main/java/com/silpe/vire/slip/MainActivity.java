@@ -14,7 +14,7 @@ import android.view.View;
 import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 
 
-public class MainActivity extends AppCompatActivity implements SlipTabListener {
+public class MainActivity extends AppCompatActivity {
     NavigationPagerAdapter navigationPagerAdapter;
     ViewPager viewPager;
     Toolbar toolbar;
@@ -66,26 +66,5 @@ public class MainActivity extends AppCompatActivity implements SlipTabListener {
 
         return super.onOptionsItemSelected(item);
     }
-
-    //tab on selected
-    @Override
-    public void onTabSelected(SlipTab materialTab) {
-
-        viewPager.setCurrentItem(materialTab.getPosition());
-    }
-
-    //tab on reselected
-    @Override
-    public void onTabReselected(SlipTab materialTab) {
-
-    }
-
-    //tab on unselected
-    @Override
-    public void onTabUnselected(SlipTab materialTab) {
-
-    }
-
-
 
 }
