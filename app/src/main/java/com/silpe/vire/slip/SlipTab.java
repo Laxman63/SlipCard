@@ -1,35 +1,24 @@
 package com.silpe.vire.slip;
 
-/**
- * Created by eugene on 3/4/2017.
- */
+import java.util.Locale;
 
+import android.animation.Animator;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-
-        import java.util.Locale;
-
-        import android.animation.Animator;
-        import android.annotation.SuppressLint;
-        import android.content.Context;
-        import android.content.res.Resources;
-        import android.graphics.Color;
-        import android.graphics.Paint;
-        import android.graphics.Point;
-        import android.graphics.Rect;
-        import android.graphics.drawable.Drawable;
-        import android.os.Build;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.widget.ImageView;
-        import android.widget.TextView;
-
-@SuppressLint({ "InflateParams", "ClickableViewAccessibility" })
-/**
- * A simple Tab with Material Design style
- * @author neokree
- *
- */
+@SuppressLint({"InflateParams", "ClickableViewAccessibility"})
 public class SlipTab implements View.OnTouchListener {
 
     private final static int REVEAL_DURATION = 400;
@@ -56,26 +45,25 @@ public class SlipTab implements View.OnTouchListener {
     private float density;
     private Point lastTouchedPoint;
 
-    public SlipTab(Context ctx,boolean hasIcon) {
+    public SlipTab(Context ctx, boolean hasIcon) {
         this.hasIcon = hasIcon;
         density = ctx.getResources().getDisplayMetrics().density;
         res = ctx.getResources();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            if(!hasIcon) {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            if (!hasIcon) {
                 completeView = LayoutInflater.from(ctx).inflate(R.layout.tab, null);
 
                 text = (TextView) completeView.findViewById(R.id.text);
-            }
-            else {
+            } else {
                 completeView = LayoutInflater.from(ctx).inflate(R.layout.tab_icon, null);
 
                 icon = (ImageView) completeView.findViewById(R.id.icon);
             }
 
             selector = (ImageView) completeView.findViewById(R.id.selector);
-        }
-        else {
+        } else {
             if (!hasIcon) {
                 // if there is no icon
                 completeView = LayoutInflater.from(ctx).inflate(R.layout.material_tab, null);
@@ -110,10 +98,9 @@ public class SlipTab implements View.OnTouchListener {
     public void setPrimaryColor(int color) {
         this.primaryColor = color;
 
-        if(deviceHaveRippleSupport()) {
+        if (deviceHaveRippleSupport()) {
             background.setBackgroundColor(color);
-        }
-        else {
+        } else {
             completeView.setBackgroundColor(color);
         }
 
@@ -121,20 +108,19 @@ public class SlipTab implements View.OnTouchListener {
 
     public void setTextColor(int color) {
         textColor = color;
-        if(text != null) {
+        if (text != null) {
             text.setTextColor(color);
         }
     }
 
-    public void setIconColor(int color)
-    {
+    public void setIconColor(int color) {
         this.iconColor = color;
         if (this.icon != null)
             this.icon.setColorFilter(color);
     }
 
     public SlipTab setText(CharSequence text) {
-        if(hasIcon)
+        if (hasIcon)
             throw new RuntimeException("You had setted tabs with icons, uses icons instead text");
 
         this.text.setText(text.toString().toUpperCase(Locale.US));
@@ -142,7 +128,7 @@ public class SlipTab implements View.OnTouchListener {
     }
 
     public SlipTab setIcon(Drawable icon) {
-        if(!hasIcon)
+        if (!hasIcon)
             throw new RuntimeException("You had setted tabs without icons, uses text instead icons");
 
         iconDrawable = icon;
@@ -154,10 +140,10 @@ public class SlipTab implements View.OnTouchListener {
 
     public void disableTab() {
         // set 60% alpha to text color
-        if(text != null)
-            this.text.setTextColor(Color.argb(0x99 ,Color.red(textColor), Color.green(textColor), Color.blue(textColor)));
+        if (text != null)
+            this.text.setTextColor(Color.argb(0x99, Color.red(textColor), Color.green(textColor), Color.blue(textColor)));
         // set 60% alpha to icon
-        if(icon != null)
+        if (icon != null)
             setIconAlpha(0x99);
 
         // set transparent the selector view
@@ -165,16 +151,16 @@ public class SlipTab implements View.OnTouchListener {
 
         active = false;
 
-        if(listener != null)
+        if (listener != null)
             listener.onTabUnselected(this);
     }
 
     public void activateTab() {
         // set full color text
-        if(text != null)
+        if (text != null)
             this.text.setTextColor(textColor);
         // set 100% alpha to icon
-        if(icon != null)
+        if (icon != null)
             setIconAlpha(0xFF);
 
         // set accent color to selector view
@@ -193,8 +179,8 @@ public class SlipTab implements View.OnTouchListener {
         lastTouchedPoint.x = (int) event.getX();
         lastTouchedPoint.y = (int) event.getY();
 
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            if(!deviceHaveRippleSupport()) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (!deviceHaveRippleSupport()) {
                 completeView.setBackgroundColor(Color.argb(0x80, Color.red(accentColor), Color.green(accentColor), Color.blue(accentColor)));
             }
 
@@ -202,22 +188,22 @@ public class SlipTab implements View.OnTouchListener {
             return true;
         }
 
-        if(event.getAction() == MotionEvent.ACTION_CANCEL) {
-            if(!deviceHaveRippleSupport()) {
+        if (event.getAction() == MotionEvent.ACTION_CANCEL) {
+            if (!deviceHaveRippleSupport()) {
                 completeView.setBackgroundColor(primaryColor);
             }
             return true;
         }
 
         // new effects
-        if(event.getAction() == MotionEvent.ACTION_UP) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
 
-            if(!deviceHaveRippleSupport()) {
+            if (!deviceHaveRippleSupport()) {
                 completeView.setBackgroundColor(primaryColor);
-            }
-            else {
-                // set the backgroundcolor
-                this.background.reveal(lastTouchedPoint.x, lastTouchedPoint.y, Color.argb(0x80, Color.red(accentColor), Color.green(accentColor), Color.blue(accentColor)), 0, REVEAL_DURATION, new Animator.AnimatorListener() {
+            } else {
+                this.background.reveal(lastTouchedPoint.x, lastTouchedPoint.y,
+                        Color.argb(0x80, Color.red(accentColor), Color.green(accentColor), Color.blue(accentColor)),
+                        0, REVEAL_DURATION, new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
                     }
@@ -238,18 +224,17 @@ public class SlipTab implements View.OnTouchListener {
             }
 
             // set the click
-            if(listener != null) {
+            if (listener != null) {
 
-                if(active) {
+                if (active) {
                     // if the tab is active when the user click on it it will be reselect
                     listener.onTabReselected(this);
-                }
-                else {
+                } else {
                     listener.onTabSelected(this);
                 }
             }
             // if the tab is not activated, it will be active
-            if(!active)
+            if (!active)
                 this.activateTab();
 
             return true;
@@ -282,10 +267,8 @@ public class SlipTab implements View.OnTouchListener {
     }
 
     @SuppressLint({"NewApi"})
-    private void setIconAlpha(int paramInt)
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-        {
+    private void setIconAlpha(int paramInt) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             this.icon.setImageAlpha(paramInt);
             return;
         }
@@ -296,15 +279,14 @@ public class SlipTab implements View.OnTouchListener {
         String textString = text.getText().toString();
         Rect bounds = new Rect();
         Paint textPaint = text.getPaint();
-        textPaint.getTextBounds(textString,0,textString.length(),bounds);
+        textPaint.getTextBounds(textString, 0, textString.length(), bounds);
         return bounds.width();
     }
 
     private boolean deviceHaveRippleSupport() {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             return false;
-        }
-        else {
+        } else {
             return true;
         }
 
@@ -315,10 +297,9 @@ public class SlipTab implements View.OnTouchListener {
     }
 
     public int getTabMinWidth() {
-        if(hasIcon) {
+        if (hasIcon) {
             return getIconWidth();
-        }
-        else {
+        } else {
             return getTextLenght();
         }
     }

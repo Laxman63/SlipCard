@@ -7,7 +7,7 @@
     android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
-    <com.silpe.vire.slip.Icon
+    <com.silpe.vire.slip.components.Icon
         android:id="@+id/itemIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

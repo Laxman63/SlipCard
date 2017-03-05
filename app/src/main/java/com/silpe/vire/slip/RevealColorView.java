@@ -1,10 +1,5 @@
 package com.silpe.vire.slip;
 
-/**
- * Created by eugene on 3/4/2017.
- */
-
-
 
 import android.animation.Animator;
 import android.content.Context;
@@ -16,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
-
 
 
 public class RevealColorView extends ViewGroup {

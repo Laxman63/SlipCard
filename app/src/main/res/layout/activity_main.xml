@@ -7,25 +7,37 @@
     android:fitsSystemWindows="true"
     tools:context="com.silpe.vire.slip.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <android.widget.LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-        <com.silpe.vire.slip.SlipTabHost
-            android:id="@+id/tabHost"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+        </android.support.design.widget.AppBarLayout>
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/toplevelTabs"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_below="@+id/toolBar"
-            app:accentColor="@color/colorAccent"/>
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed" />
 
-    </android.support.design.widget.AppBarLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/toplevelPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.widget.LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -34,13 +46,5 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
-
-    <android.support.v4.view.ViewPager
-        android:layout_marginTop="103dp"
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/tabHost" />
-
 
 </android.support.design.widget.CoordinatorLayout>

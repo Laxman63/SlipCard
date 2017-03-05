@@ -1,4 +1,4 @@
-package com.silpe.vire.slip;
+package com.silpe.vire.slip.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -14,9 +14,11 @@ import android.view.ViewPropertyAnimator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.silpe.vire.slip.CollectionListAdapter;
+import com.silpe.vire.slip.R;
+
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -70,9 +72,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         /**
          * List view to display a user's card collection
          */
@@ -82,8 +82,7 @@ public class HomeFragment extends Fragment {
         for (int i = 0; i <= 25; i++) {
             values.add("xd" + i);
         }
-        final CollectionListAdapter collectionAdapter =
-                new CollectionListAdapter(this.getContext(), R.layout.card_collection_listitem, R.id.secondLine, values);
+        final CollectionListAdapter collectionAdapter = new CollectionListAdapter(this.getContext(), R.layout.card_collection_listitem, R.id.secondLine, values);
         collectionList.setAdapter(collectionAdapter);
         collectionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
