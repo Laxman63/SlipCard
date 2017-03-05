@@ -1,4 +1,4 @@
-package com.silpe.vire.slip;
+package com.silpe.vire.slip.components;
 
 import android.content.Context;
 import android.util.AttributeSet;
