@@ -2,6 +2,7 @@ package com.silpe.vire.slip.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
@@ -9,15 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.dtos.SlipUser;
 import com.silpe.vire.slip.image.PickerBuilder;
+import com.silpe.vire.slip.image.TimestampSignature;
 import com.silpe.vire.slip.models.SessionModel;
 
 import java.io.File;
@@ -36,7 +42,7 @@ public class ShowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_show, container, false);
 
-        SlipUser user = SessionModel.get().getUser();
+        final SlipUser user = SessionModel.get().getUser();
         ((TextView) view.findViewById(R.id.show_firstName)).setText(user.firstName);
         ((TextView) view.findViewById(R.id.show_lastName)).setText(user.lastName);
         ((TextView) view.findViewById(R.id.show_occupation)).setText(user.occupation);
@@ -44,15 +50,17 @@ public class ShowFragment extends Fragment {
         ((TextView) view.findViewById(R.id.show_email)).setText(user.email);
         ((TextView) view.findViewById(R.id.show_uid)).setText(user.uid);
 
-        StorageReference ref = FirebaseStorage.getInstance().getReference();
-        ref = ref.child(getString(R.string.database_users)).child(user.uid).child(getString(R.string.database_profile_picture));
         final ImageView imageView = (ImageView) view.findViewById(R.id.show_profile_picture);
-        Glide.with(getContext())
-                .using(new FirebaseImageLoader())
-                .load(ref)
-                .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
-                .into(imageView);
-
+        if (user.signature > 0) {
+            StorageReference sRef = FirebaseStorage.getInstance().getReference();
+            sRef = sRef.child(getString(R.string.database_users)).child(user.uid).child(getString(R.string.database_profile_picture));
+            Glide.with(getContext())
+                    .using(new FirebaseImageLoader())
+                    .load(sRef)
+                    .signature(new TimestampSignature(user.signature))
+                    .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
+                    .into(imageView);
+        }
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,7 +68,23 @@ public class ShowFragment extends Fragment {
                         .setOnImageReceivedListener(new PickerBuilder.onImageReceivedListener() {
                             @Override
                             public void onImageReceived(Uri imageUri) {
-                                Glide.with(ShowFragment.this.getContext()).load(new File(imageUri.getPath())).into(imageView);
+                                StorageReference sRef = FirebaseStorage.getInstance().getReference();
+                                sRef = sRef.child(getString(R.string.database_users)).child(user.uid).child(getString(R.string.database_profile_picture));
+                                UploadTask uploadTask = sRef.putFile(imageUri);
+                                TimestampSignature signature = new TimestampSignature();
+                                user.signature = signature.getSignature();
+                                DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+                                dbRef = dbRef.child(getString(R.string.database_users)).child(user.uid);
+                                dbRef.setValue(user);
+                                uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                    }
+                                });
+                                Glide.with(ShowFragment.this.getContext())
+                                        .load(new File(imageUri.getPath()))
+                                        .signature(signature)
+                                        .into(imageView);
                             }
                         })
                         .setImageName("profile_picture")

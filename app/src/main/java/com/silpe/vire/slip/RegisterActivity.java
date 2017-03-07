@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        SlipUser slipUser = new SlipUser(user.getUid(), user.getEmail(), firstName, lastName, occupation, company);
+        SlipUser slipUser = new SlipUser(user.getUid(), user.getEmail(), firstName, lastName, occupation, company, 0);
         SessionModel.get().setUser(slipUser);
         ref.child(getString(R.string.database_users)).child(slipUser.uid).setValue(slipUser);
         Intent intent = new Intent(this, MainActivity.class);
