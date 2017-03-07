@@ -20,6 +20,8 @@ import com.silpe.vire.slip.dtos.SlipUser;
 import com.silpe.vire.slip.image.PickerBuilder;
 import com.silpe.vire.slip.models.SessionModel;
 
+import java.io.File;
+
 public class ShowFragment extends Fragment {
 
     public ShowFragment() {
@@ -32,19 +34,25 @@ public class ShowFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SlipUser user = SessionModel.get().getUser();
         View view = inflater.inflate(R.layout.fragment_show, container, false);
+
+        SlipUser user = SessionModel.get().getUser();
         ((TextView) view.findViewById(R.id.show_firstName)).setText(user.firstName);
         ((TextView) view.findViewById(R.id.show_lastName)).setText(user.lastName);
         ((TextView) view.findViewById(R.id.show_occupation)).setText(user.occupation);
         ((TextView) view.findViewById(R.id.show_company)).setText(user.company);
         ((TextView) view.findViewById(R.id.show_email)).setText(user.email);
         ((TextView) view.findViewById(R.id.show_uid)).setText(user.uid);
+
         StorageReference ref = FirebaseStorage.getInstance().getReference();
         ref = ref.child(getString(R.string.database_users)).child(user.uid).child(getString(R.string.database_profile_picture));
-        ImageView imageView = (ImageView) view.findViewById(R.id.show_profile_picture);
-        Glide.with(getContext()).using(new FirebaseImageLoader()).load(ref)
-                .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null)).into(imageView);
+        final ImageView imageView = (ImageView) view.findViewById(R.id.show_profile_picture);
+        Glide.with(getContext())
+                .using(new FirebaseImageLoader())
+                .load(ref)
+                .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
+                .into(imageView);
+
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,7 +60,7 @@ public class ShowFragment extends Fragment {
                         .setOnImageReceivedListener(new PickerBuilder.onImageReceivedListener() {
                             @Override
                             public void onImageReceived(Uri imageUri) {
-                                Toast.makeText(ShowFragment.this.getActivity(),"Got image - " + imageUri,Toast.LENGTH_LONG).show();
+                                Glide.with(ShowFragment.this.getContext()).load(new File(imageUri.getPath())).into(imageView);
                             }
                         })
                         .setImageName("profile_picture")
