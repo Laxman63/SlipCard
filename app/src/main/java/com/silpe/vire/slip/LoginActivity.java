@@ -382,23 +382,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Get the user from the database
         FirebaseUser user = mAuth.getCurrentUser();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref = ref.child(getString(R.string.database_users)).child(user.getUid());
-        ValueEventListener userListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                SlipUser user = snapshot.getValue(SlipUser.class);
-                SessionModel.get().setUser(user);
-                Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                LoginActivity.this.showProgress(false);
-                LoginActivity.this.startActivity(intent);
-            }
+        if (user != null) {
+            ref = ref.child(getString(R.string.database_users)).child(user.getUid());
+            ValueEventListener userListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    SlipUser user = snapshot.getValue(SlipUser.class);
+                    SessionModel.get().setUser(user);
+                    Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    LoginActivity.this.showProgress(false);
+                    LoginActivity.this.startActivity(intent);
+                }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-            }
-        };
-        ref.addListenerForSingleValueEvent(userListener);
+                @Override
+                public void onCancelled(DatabaseError error) {
+                }
+            };
+            ref.addListenerForSingleValueEvent(userListener);
+        }
     }
 
 }

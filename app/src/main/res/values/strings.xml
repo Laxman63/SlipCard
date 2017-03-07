@@ -38,4 +38,5 @@
     <string name="action_register">Accept</string>
     <string name="action_register_short">Register</string>
     <string name="database_users">users</string>
+    <string name="database_profile_picture">profile_picture.jpg</string>
 </resources>
