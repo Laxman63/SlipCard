@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class Icon extends ImageView {
+public class Icon extends android.support.v7.widget.AppCompatImageView {
 
     public Icon(final Context context) {
         super(context);

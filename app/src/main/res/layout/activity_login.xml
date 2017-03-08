@@ -66,12 +66,11 @@
                 style="?android:textAppearanceSmall"
                 android:layout_width="@dimen/login_button_width"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_gravity="center"
+                android:layout_margin="16dp"
                 android:padding="@dimen/login_button_padding"
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

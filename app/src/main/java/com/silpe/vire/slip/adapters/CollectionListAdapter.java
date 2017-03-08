@@ -12,42 +12,45 @@ import android.widget.TextView;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.components.Icon;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CollectionListAdapter extends ArrayAdapter<String> {
+public class CollectionListAdapter extends ArrayAdapter<CollectionListItem> {
 
-    private final Map<String, Integer> mIdMap = new HashMap<>();
+    private final Map<CollectionListItem, Integer> mIdMap = new HashMap<>();
 
-    public CollectionListAdapter(Context context, int layoutId, int textViewResourceId, List<String> objects) {
-        super(context, layoutId, textViewResourceId, objects);
-        final int size = objects.size();
+    public CollectionListAdapter(Context context, int layoutId, int textViewResourceId, List<CollectionListItem> items) {
+        super(context, layoutId, textViewResourceId, items);
+        final int size = items.size();
         for (int i = 0; i < size; i++) {
-            mIdMap.put(objects.get(i), i);
+            mIdMap.put(items.get(i), i);
         }
     }
 
     @Override
-    public @NonNull View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public
+    @NonNull
+    View getView(int i, @Nullable View view, @NonNull ViewGroup parent) {
         ViewHolder holder;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.collection_card_preview, parent, false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
+        if (view == null) {
+            view = inflater.inflate(R.layout.collection_card_preview, parent, false);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
         } else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) view.getTag();
         }
-        holder.getFirstLine().setText("xd" + position);
-        holder.getSecondLine().setText("yolo");
-        return convertView;
+        CollectionListItem item = getItem(i);
+        holder.getName().setText(item.fullName);
+        holder.getDescription().setText(item.description);
+        return view;
     }
 
     @Override
     public long getItemId(int position) {
-        final String item = getItem(position);
-        return mIdMap.get(item);
+        return mIdMap.get(getItem(position));
     }
 
     @Override
@@ -65,26 +68,27 @@ public class CollectionListAdapter extends ArrayAdapter<String> {
             this.row = row;
         }
 
-        TextView getFirstLine() {
+        TextView getName() {
             if (this.firstLine == null) {
-                this.firstLine = (TextView) row.findViewById(R.id.firstLine);
+                this.firstLine = (TextView) row.findViewById(R.id.card_name);
             }
             return this.firstLine;
         }
 
-        TextView getSecondLine() {
+        TextView getDescription() {
             if (this.secondLine == null) {
-                this.secondLine = (TextView) row.findViewById(R.id.secondLine);
+                this.secondLine = (TextView) row.findViewById(R.id.card_description);
             }
             return this.secondLine;
         }
 
-        Icon getIcon() {
+        Icon getPicture() {
             if (this.icon == null) {
-                this.icon = (Icon) row.findViewById(R.id.itemIcon);
+                this.icon = (Icon) row.findViewById(R.id.card_picture);
             }
             return this.icon;
         }
 
     }
+
 }
