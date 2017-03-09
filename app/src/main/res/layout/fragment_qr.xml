@@ -1,16 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:clickable="true"
-    android:elevation="7dp"
-    tools:context="com.silpe.vire.slip.fragments.QRFragment">
+    android:elevation="6dp"
+    tools:context="com.silpe.vire.slip.fragments.QRFragment"
+    tools:targetApi="lollipop">
+    <!-- TODO Add elevation support for older versions -->
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/camera_uid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
+
+</android.support.v7.widget.LinearLayoutCompat>
