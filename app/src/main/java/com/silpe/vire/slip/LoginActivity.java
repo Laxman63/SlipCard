@@ -40,7 +40,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.silpe.vire.slip.dtos.SlipUser;
+import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.models.SessionModel;
 
 import java.util.ArrayList;
@@ -108,12 +108,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                /*
+                 * TODO
+                 * -- When the user is logged out but the session is active, return to the
+                 *    LoginActivity and display an error message detailing
+                 *    -> That the user was logged out unexpectedly
+                 *    -> Provide a reason for such
+                 * -- Automatically save the user's login information so that Slip can
+                 *    automatically log him in
+                 */
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
                     Log.d(getClass().getCanonicalName(), "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
-                    // User is signed out
                     Log.d(getClass().getCanonicalName(), "onAuthStateChanged:signed_out");
                 }
             }
@@ -162,9 +169,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return false;
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -175,12 +179,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
     private void attemptLogin() {
         if (mTaskInProgress) {
             return;
@@ -221,12 +219,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
             showProgress(true);
             mTaskInProgress = true;
             doAttempt(email, password);
@@ -234,12 +228,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+        /*
+         * TODO
+         * -- Provide good email validation, preferably using Google API
+         * -- Send a verification email that, when accepted
+         *    -> Enables the user to have access to more features in Slip
+         */
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
+        /*
+         * TODO
+         * -- Add somewhat more rigorous password verification
+         */
         return password.length() > 4;
     }
 
@@ -387,7 +389,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             ValueEventListener userListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    SlipUser user = snapshot.getValue(SlipUser.class);
+                    User user = snapshot.getValue(User.class);
                     SessionModel.get().setUser(user);
                     Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);

@@ -1,6 +1,6 @@
 package com.silpe.vire.slip.dtos;
 
-public class SlipUser {
+public class User {
 
     public String uid;
     public String email;
@@ -11,10 +11,10 @@ public class SlipUser {
 
     public long signature;
 
-    public SlipUser() {
+    private User() {
     }
 
-    public SlipUser(String uid, String email, String firstName, String lastName, String occupation, String company, long signature) {
+    public User(String uid, String email, String firstName, String lastName, String occupation, String company, long signature) {
         this();
         this.uid = uid;
         this.email = email;
@@ -23,6 +23,14 @@ public class SlipUser {
         this.occupation = occupation;
         this.company = company;
         this.signature = signature;
+    }
+
+    public String getFullName() {
+        return String.format("%s %s", firstName, lastName);
+    }
+
+    public String getDescription() {
+        return String.format("%s @ %s", occupation, company);
     }
 
 }

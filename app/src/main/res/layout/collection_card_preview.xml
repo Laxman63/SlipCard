@@ -16,7 +16,7 @@
         android:background="@color/white"
         android:elevation="@dimen/card_elevation"
         tools:targetApi="lollipop">
-        <!-- TODO REMOVE tools:targetApi="lollipop" and add pre-21 support for shadows-->
+        <!-- TODO REMOVE tools:targetApi="lollipop" and add pre-21 support for shadows -->
 
         <com.silpe.vire.slip.components.Icon
             android:id="@+id/card_picture"

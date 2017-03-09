@@ -16,12 +16,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.adapters.CollectionListAdapter;
-import com.silpe.vire.slip.adapters.CollectionListItem;
-import com.silpe.vire.slip.dtos.SlipUser;
+import com.silpe.vire.slip.dtos.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +30,16 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         if (user != null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
             ref = ref.child(getString(R.string.database_connections)).child(user.getUid());
             ref.addListenerForSingleValueEvent(new UserListRetrievalListener(view, this));
         }
+        /*
+         * TODO
+         * -- Display an error if the user is unexpectedly logged out
+         * -- Return the user to the login page
+         */
         return view;
     }
 
@@ -64,48 +66,88 @@ class UserListRetrievalListener implements ValueEventListener {
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        final List<CollectionListItem> items = new ArrayList<>();
-        final AtomicInteger[] c = {new AtomicInteger((int) dataSnapshot.getChildrenCount())};
+        final AtomicInteger syncer = new AtomicInteger((int) dataSnapshot.getChildrenCount());
+        final List<User> users = new ArrayList<>();
         DatabaseReference ref = FirebaseDatabase
                 .getInstance()
                 .getReference()
                 .child(getString(R.string.database_users));
-
-        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            String uid = snapshot.getValue(String.class);
-            ref.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    SlipUser user = dataSnapshot.getValue(SlipUser.class);
-                    StorageReference ref = FirebaseStorage.getInstance().getReference();
-                    ref = ref.child(getString(R.string.database_users)).child(user.uid).child(getString(R.string.database_profile_picture));
-                    items.add(new CollectionListItem(user.uid,
-                            String.format("%s %s", user.firstName, user.lastName),
-                            String.format("%s @ %s", user.occupation, user.company),
-                            ref));
-                    if (c[0].decrementAndGet() == 0) {
-                        CollectionListAdapter collectionAdapter = new CollectionListAdapter(
-                                context, R.layout.collection_card_preview, R.id.card_description, items);
-                        collectionList.setAdapter(collectionAdapter);
-                        collectionList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                                // TODO go to the profile
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                }
-            });
+        for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            final String uid = snapshot.getValue(String.class);
+            ref.child(uid).addListenerForSingleValueEvent(
+                    new OnUserInfoRetrievedListener(collectionList, context, syncer, users));
         }
 
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
+        /*
+         * TODO
+         * -- If loading the connections list fails, Slip should
+         *    -> Display a weak message on the list saying that Slip could not load contacts
+         *    -> Prompt the user to refresh the list by swiping down
+         */
+    }
+}
 
+/**
+ * A listener that fires once a user information query completes or fails.
+ */
+class OnUserInfoRetrievedListener implements ValueEventListener {
+
+    private final ListView collectionList;
+    private final Context context;
+    private final AtomicInteger syncer;
+    private final List<User> users;
+
+    OnUserInfoRetrievedListener(
+            final ListView collectionList,
+            final Context context,
+            final AtomicInteger syncer,
+            final List<User> users) {
+        this.collectionList = collectionList;
+        this.context = context;
+        this.syncer = syncer;
+        this.users = users;
+    }
+
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        User user = dataSnapshot.getValue(User.class);
+        users.add(user);
+        sync();
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        /*
+         * TODO
+         * -- Should a particular user fail to load, Slip should append that user to the end
+         *    of a buffer stack and attempt to reload that user later
+         */
+        sync();
+    }
+
+    private void sync() {
+        if (syncer.decrementAndGet() == 0) {
+            CollectionListAdapter collectionAdapter = new CollectionListAdapter(
+                    context, users,
+                    R.layout.collection_card_preview,
+                    R.id.card_description);
+            collectionList.setAdapter(collectionAdapter);
+            collectionList.setOnItemClickListener(new OnUserClickedListesner());
+        }
+    }
+}
+
+class OnUserClickedListesner implements AdapterView.OnItemClickListener {
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        /*
+         * TODO
+         * -- Take the user to the connection's profile page upon tapping his card.
+         */
     }
 }

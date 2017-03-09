@@ -21,7 +21,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.silpe.vire.slip.R;
-import com.silpe.vire.slip.dtos.SlipUser;
+import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.image.PickerBuilder;
 import com.silpe.vire.slip.image.TimestampSignature;
 import com.silpe.vire.slip.models.SessionModel;
@@ -42,7 +42,7 @@ public class ShowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_show, container, false);
 
-        final SlipUser user = SessionModel.get().getUser();
+        final User user = SessionModel.get().getUser();
         ((TextView) view.findViewById(R.id.show_firstName)).setText(user.firstName);
         ((TextView) view.findViewById(R.id.show_lastName)).setText(user.lastName);
         ((TextView) view.findViewById(R.id.show_occupation)).setText(user.occupation);

@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.silpe.vire.slip.dtos.SlipUser;
+import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.models.SessionModel;
 
 /**
@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        SlipUser slipUser = new SlipUser(user.getUid(), user.getEmail(), firstName, lastName, occupation, company, 0);
+        User slipUser = new User(user.getUid(), user.getEmail(), firstName, lastName, occupation, company, 0);
         SessionModel.get().setUser(slipUser);
         ref.child(getString(R.string.database_users)).child(slipUser.uid).setValue(slipUser);
         Intent intent = new Intent(this, MainActivity.class);

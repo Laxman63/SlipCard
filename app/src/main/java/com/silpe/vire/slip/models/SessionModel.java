@@ -1,6 +1,6 @@
 package com.silpe.vire.slip.models;
 
-import com.silpe.vire.slip.dtos.SlipUser;
+import com.silpe.vire.slip.dtos.User;
 
 /**
  * Singleton class that contains the current session models.
@@ -16,16 +16,16 @@ public class SessionModel {
         return model;
     }
 
-    private SlipUser user;
+    private User user;
 
     private SessionModel() {
     }
 
-    public SlipUser getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(SlipUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
