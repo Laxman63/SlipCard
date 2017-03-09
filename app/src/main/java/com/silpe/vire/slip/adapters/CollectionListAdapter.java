@@ -48,9 +48,7 @@ public class CollectionListAdapter extends ArrayAdapter<User> {
     }
 
     @Override
-    public
-    @NonNull
-    View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
+    public @NonNull View getView(int position, @Nullable View view, @NonNull ViewGroup parent) {
         CollectionListItem item;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater)
