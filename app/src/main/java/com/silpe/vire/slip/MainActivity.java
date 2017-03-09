@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
             SessionModel.get().setUser(null);
             startActivity(new Intent(this, LoginActivity.class));
         } else {
+            // TODO Move this handling into a separate listener class
             if (SessionModel.get().getUser() == null) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                 ref = ref.child(getString(R.string.database_users)).child(fbUser.getUid());
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(DatabaseError error) {
-
                     }
                 });
             } else {
@@ -67,11 +67,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.this.getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.toplevel, QRFragment.newInstance(user.uid), QR_FRAGMENT)
-                        .addToBackStack(QR_FRAGMENT)
-                        .commit();
+                if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
+                    MainActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.toplevel, QRFragment.newInstance(user.uid), QR_FRAGMENT)
+                            .addToBackStack(QR_FRAGMENT)
+                            .commit();
+                }
             }
         });
 
