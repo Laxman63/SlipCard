@@ -3,16 +3,18 @@ package com.silpe.vire.slip.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.components.Icon;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,11 @@ public class CollectionListAdapter extends ArrayAdapter<CollectionListItem> {
         CollectionListItem item = getItem(i);
         holder.getName().setText(item.fullName);
         holder.getDescription().setText(item.description);
+        Glide.with(getContext())
+                .using(new FirebaseImageLoader())
+                .load(item.pictureRef)
+                .error(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.empty_profile, null))
+                .into(holder.getPicture());
         return view;
     }
 

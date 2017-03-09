@@ -21,8 +21,7 @@
         <com.silpe.vire.slip.components.Icon
             android:id="@+id/card_picture"
             android:layout_width="@dimen/card_profile_picture"
-            android:layout_height="@dimen/card_profile_picture"
-            android:src="@android:drawable/ic_media_play" />
+            android:layout_height="@dimen/card_profile_picture" />
 
         <RelativeLayout
             android:layout_width="match_parent"
