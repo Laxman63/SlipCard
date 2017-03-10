@@ -25,7 +25,7 @@ import java.util.List;
  * refresh the connections display list when swiping down
  * -- Display a loading indicator while querying database
  */
-public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolder> {
+class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolder> {
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -83,7 +83,7 @@ public class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.Vi
      */
     private List<User> users;
 
-    public CollectionAdapter(List<User> users) {
+    CollectionAdapter(List<User> users) {
         this.users = users;
     }
 

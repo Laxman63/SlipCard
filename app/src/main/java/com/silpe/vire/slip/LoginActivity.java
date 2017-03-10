@@ -390,7 +390,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     User user = snapshot.getValue(User.class);
-                    SessionModel.get().setUser(user);
+                    SessionModel.get().setUser(user, LoginActivity.this);
                     Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     LoginActivity.this.showProgress(false);

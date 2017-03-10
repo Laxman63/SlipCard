@@ -32,18 +32,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fbUser == null) {
-            SessionModel.get().setUser(null);
+            SessionModel.get().setUser(null, this);
             startActivity(new Intent(this, LoginActivity.class));
         } else {
             // TODO Move this handling into a separate listener class
-            if (SessionModel.get().getUser() == null) {
+            if (SessionModel.get().getUser(this) == null) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                 ref = ref.child(getString(R.string.database_users)).child(fbUser.getUid());
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         User user = snapshot.getValue(User.class);
-                        SessionModel.get().setUser(user);
+                        SessionModel.get().setUser(user, MainActivity.this);
                         construct();
                     }
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         // Set up the QR Code floating action button
-        final User user = SessionModel.get().getUser();
+        final User user = SessionModel.get().getUser(this);
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         final int id = item.getItemId();
         if (id == R.id.action_logout) {
-            SessionModel.get().setUser(null);
+            SessionModel.get().setUser(null, this);
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, LoginActivity.class));
             return true;

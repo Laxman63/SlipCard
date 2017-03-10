@@ -22,7 +22,14 @@ public class CollectionView extends RecyclerView {
     }
 
     public void insertNew(User user) {
-        ((CollectionAdapter) getAdapter()).insertNew(user);
+        /*
+         * TODO
+         * -- Scroll to the top only when the user is near the top
+         * -- Immediately scroll to top, not smoothly, when doing initial load
+         */
+        CollectionAdapter adapter = (CollectionAdapter) getAdapter();
+        adapter.insertNew(user);
+        smoothScrollToPosition(0);
     }
 
 }

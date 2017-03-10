@@ -30,16 +30,18 @@ public class SessionModel {
 
     private User user;
 
-    public User getUser() {
+    private User getUser() {
         return user;
     }
 
     public User getUser(Context context) {
-        if (user != null) return user;
-        return readUser(context);
+        if (user == null) {
+            readUser(context);
+        }
+        return getUser();
     }
 
-    public void setUser(User user) {
+    private void setUser(User user) {
         this.user = user;
     }
 
@@ -48,18 +50,17 @@ public class SessionModel {
         cacheUser(context);
     }
 
-    public void cacheUser(@NonNull Context context) {
-        if (user == null) return;
+    private void cacheUser(@NonNull Context context) {
         SharedPreferences userSessionCache = context.getSharedPreferences(USER_SESSION_CACHE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = userSessionCache.edit();
-        editor.putString(USER_SESSION_KEY, user.encode());
-        editor.commit();
+        editor.putString(USER_SESSION_KEY, user == null ? null : user.encode());
+        editor.apply();
     }
 
-    public User readUser(@NonNull Context context) {
+    private void readUser(@NonNull Context context) {
         SharedPreferences userSessionCache = context.getSharedPreferences(USER_SESSION_CACHE, Context.MODE_PRIVATE);
         String serial = userSessionCache.getString(USER_SESSION_KEY, null);
-        return serial == null ? null : new User().decode(serial);
+        user = serial == null ? null : new User().decode(serial);
     }
 
 }

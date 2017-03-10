@@ -42,7 +42,7 @@ public class ShowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_show, container, false);
 
-        final User user = SessionModel.get().getUser();
+        final User user = SessionModel.get().getUser(getContext());
         ((TextView) view.findViewById(R.id.show_firstName)).setText(user.getFirstName());
         ((TextView) view.findViewById(R.id.show_lastName)).setText(user.getLastName());
         ((TextView) view.findViewById(R.id.show_occupation)).setText(user.getOccupation());

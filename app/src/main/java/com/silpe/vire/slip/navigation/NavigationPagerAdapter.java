@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.silpe.vire.slip.fragments.CollectionFragment;
+import com.silpe.vire.slip.collection.CollectionFragment;
 import com.silpe.vire.slip.fragments.ShowFragment;
 import com.silpe.vire.slip.fragments.NetworkFragment;
 
