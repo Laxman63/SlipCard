@@ -43,21 +43,21 @@ public class ShowFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_show, container, false);
 
         final User user = SessionModel.get().getUser();
-        ((TextView) view.findViewById(R.id.show_firstName)).setText(user.firstName);
-        ((TextView) view.findViewById(R.id.show_lastName)).setText(user.lastName);
-        ((TextView) view.findViewById(R.id.show_occupation)).setText(user.occupation);
-        ((TextView) view.findViewById(R.id.show_company)).setText(user.company);
-        ((TextView) view.findViewById(R.id.show_email)).setText(user.email);
-        ((TextView) view.findViewById(R.id.show_uid)).setText(user.uid);
+        ((TextView) view.findViewById(R.id.show_firstName)).setText(user.getFirstName());
+        ((TextView) view.findViewById(R.id.show_lastName)).setText(user.getLastName());
+        ((TextView) view.findViewById(R.id.show_occupation)).setText(user.getOccupation());
+        ((TextView) view.findViewById(R.id.show_company)).setText(user.getCompany());
+        ((TextView) view.findViewById(R.id.show_email)).setText(user.getEmail());
+        ((TextView) view.findViewById(R.id.show_uid)).setText(user.getUid());
 
         final ImageView imageView = (ImageView) view.findViewById(R.id.show_profile_picture);
-        if (user.signature > 0) {
+        if (user.getSignature() > 0) {
             StorageReference sRef = FirebaseStorage.getInstance().getReference();
-            sRef = sRef.child(getString(R.string.database_users)).child(user.uid).child(getString(R.string.database_profile_picture));
+            sRef = sRef.child(getString(R.string.database_users)).child(user.getUid()).child(getString(R.string.database_profile_picture));
             Glide.with(getContext())
                     .using(new FirebaseImageLoader())
                     .load(sRef)
-                    .signature(new TimestampSignature(user.signature))
+                    .signature(new TimestampSignature(user.getSignature()))
                     .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
                     .into(imageView);
         }
@@ -69,12 +69,12 @@ public class ShowFragment extends Fragment {
                             @Override
                             public void onImageReceived(Uri imageUri) {
                                 StorageReference sRef = FirebaseStorage.getInstance().getReference();
-                                sRef = sRef.child(getString(R.string.database_users)).child(user.uid).child(getString(R.string.database_profile_picture));
+                                sRef = sRef.child(getString(R.string.database_users)).child(user.getUid()).child(getString(R.string.database_profile_picture));
                                 UploadTask uploadTask = sRef.putFile(imageUri);
                                 TimestampSignature signature = new TimestampSignature();
-                                user.signature = signature.getSignature();
+                                user.setSignature(signature.getSignature());
                                 DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-                                dbRef = dbRef.child(getString(R.string.database_users)).child(user.uid);
+                                dbRef = dbRef.child(getString(R.string.database_users)).child(user.getUid());
                                 dbRef.setValue(user);
                                 uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                     @Override

@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
                     MainActivity.this.getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.toplevel, QRFragment.newInstance(user.uid), QR_FRAGMENT)
+                            .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), QR_FRAGMENT)
                             .addToBackStack(QR_FRAGMENT)
                             .commit();
                 }

@@ -3,19 +3,21 @@ package com.silpe.vire.slip.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.R;
-import com.silpe.vire.slip.adapters.CollectionListAdapter;
+import com.silpe.vire.slip.collection.CollectionAdapter;
+import com.silpe.vire.slip.collection.CollectionView;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.models.SessionModel;
 
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class HomeFragment extends Fragment {
+public class CollectionFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,8 +33,9 @@ public class HomeFragment extends Fragment {
         final User user = SessionModel.get().getUser();
         if (user != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-            ref = ref.child(getString(R.string.database_connections)).child(user.uid);
-            ref.addListenerForSingleValueEvent(new UserListRetrievalListener(view, this));
+            ref = ref.child(getString(R.string.database_connections)).child(user.getUid());
+            //ref.addListenerForSingleValueEvent(new UserListRetrievalListener(view, this));
+            ref.addChildEventListener(new UserListEventListener(view));
         }
         /*
          * TODO
@@ -44,17 +47,102 @@ public class HomeFragment extends Fragment {
 
 }
 
+class UserListEventListener implements ChildEventListener {
+
+    private CollectionView collectionView;
+    private DatabaseReference reference;
+
+    UserListEventListener(final View view) {
+        collectionView = (CollectionView) view.findViewById(R.id.collectionList);
+        collectionView.setAdapter(new CollectionAdapter(new ArrayList<User>()));
+        collectionView.setLayoutManager(new LinearLayoutManager(collectionView.getContext()));
+        reference = FirebaseDatabase.getInstance().getReference();
+    }
+
+    private static abstract class BaseChildListener implements ValueEventListener {
+        @Override
+        public void onCancelled(DatabaseError error) {
+            /*
+             * TODO
+             * -- Analyze the nature of the error and
+             *    -> Handle it appropriately
+             *    -> Handle it gracefully or
+             *    -> Display an error message
+             */
+        }
+    }
+
+    /**
+     * Current user has added another connection. This method will fire upon adding a new connection
+     * and will trigger the {@code CollectionView} to update with the new connection.
+     *
+     * @param snapshot the snapshot containing the new connection
+     * @param s        the key of the previous ordered child
+     */
+    @Override
+    public void onChildAdded(DataSnapshot snapshot, String s) {
+        String uid = snapshot.getValue(String.class);
+        reference.child(getString(R.string.database_users)).child(uid)
+                .addListenerForSingleValueEvent(new OnChildAddedListener());
+    }
+
+    private class OnChildAddedListener extends BaseChildListener {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            User user = snapshot.getValue(User.class);
+            collectionView.insertNew(user);
+        }
+    }
+
+    /**
+     * Since the list of a user's connections should only have elements added to it or removed
+     * from it, this method should never be called. This is because the list of a user's
+     * connections contains only the UIDs of his connections. The UIDs will never change, and
+     * will simply be added or removed.
+     *
+     * @param snapshot the snapshot of the changed item
+     * @param s the key of the changed item
+     */
+    @Override
+    public void onChildChanged(DataSnapshot snapshot, String s) {
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+
+    private String getString(int stringId) {
+        return collectionView.getContext().getString(stringId);
+    }
+
+}
+
 /**
  * After retrieving a user's list of connections, this listener will fire and start retrieving the
  * user information for these connections and fire a load listener afterwards.
+ *
+ * @deprecated Should use a child listener
  */
+@Deprecated
+@SuppressWarnings("unused")
 class UserListRetrievalListener implements ValueEventListener {
 
-    private final ListView collectionList;
+    private final CollectionView collectionView;
     private final Context context;
 
     UserListRetrievalListener(final View view, final Fragment fragment) {
-        this.collectionList = (ListView) view.findViewById(R.id.collectionList);
+        this.collectionView = (CollectionView) view.findViewById(R.id.collectionList);
         this.context = fragment.getContext();
     }
 
@@ -74,9 +162,8 @@ class UserListRetrievalListener implements ValueEventListener {
         for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
             final String uid = snapshot.getValue(String.class);
             ref.child(uid).addListenerForSingleValueEvent(
-                    new OnUserInfoRetrievedListener(collectionList, context, syncer, users));
+                    new OnUserInfoRetrievedListener(collectionView, context, syncer, users));
         }
-
     }
 
     @Override
@@ -95,17 +182,17 @@ class UserListRetrievalListener implements ValueEventListener {
  */
 class OnUserInfoRetrievedListener implements ValueEventListener {
 
-    private final ListView collectionList;
+    private final CollectionView collectionView;
     private final Context context;
     private final AtomicInteger syncer;
     private final List<User> users;
 
     OnUserInfoRetrievedListener(
-            final ListView collectionList,
+            final CollectionView collectionView,
             final Context context,
             final AtomicInteger syncer,
             final List<User> users) {
-        this.collectionList = collectionList;
+        this.collectionView = collectionView;
         this.context = context;
         this.syncer = syncer;
         this.users = users;
@@ -130,12 +217,10 @@ class OnUserInfoRetrievedListener implements ValueEventListener {
 
     private void sync() {
         if (syncer.decrementAndGet() == 0) {
-            CollectionListAdapter collectionAdapter = new CollectionListAdapter(
-                    context, users,
-                    R.layout.collection_card_preview,
-                    R.id.card_description);
-            collectionList.setAdapter(collectionAdapter);
-            collectionList.setOnItemClickListener(new OnUserClickedListesner());
+            CollectionAdapter adapter = new CollectionAdapter(users);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+            collectionView.setAdapter(adapter);
+            collectionView.setLayoutManager(layoutManager);
         }
     }
 }
