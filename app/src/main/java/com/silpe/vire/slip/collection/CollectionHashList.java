@@ -53,12 +53,12 @@ class CollectionHashList {
 
     void remove(String uid, CollectionAdapter adapter) {
         Integer position = positions.get(uid);
-        int actualPosition = reverse(position);
         if (position != null) {
+            int actualPosition = reverse(position);
             positions.remove(uid);
             list.remove(position.intValue());
+            adapter.notifyItemRemoved(actualPosition);
         }
-        adapter.notifyItemRemoved(actualPosition);
     }
 
     void update(List<User> users, CollectionAdapter adapter) {
