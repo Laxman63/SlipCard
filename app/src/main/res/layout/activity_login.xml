@@ -24,7 +24,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
                 android:contentDescription="@string/login_logo"
-                android:src="@drawable/logo" />
+                android:src="@drawable/logotransparent" />
 
             <!-- Email Label -->
             <android.support.design.widget.TextInputLayout
@@ -60,6 +60,7 @@
                     android:inputType="textPassword"
                     android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
+
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/email_sign_in_button"
