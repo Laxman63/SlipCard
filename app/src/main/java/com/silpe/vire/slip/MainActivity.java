@@ -105,6 +105,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * TODO
+     * -- Our back button does some strange stuff
+     * -- It may back into previous user sessions when logging out
+     */
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {

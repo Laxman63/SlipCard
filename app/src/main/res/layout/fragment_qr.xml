@@ -21,11 +21,11 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name" />
+            app:title="@string/qr_scan_name" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -33,7 +33,7 @@
             android:id="@+id/camera_uid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </android.support.v7.widget.LinearLayoutCompat>
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
 </RelativeLayout>

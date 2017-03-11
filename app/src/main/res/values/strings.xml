@@ -43,4 +43,9 @@
     <string name="login_logo">sliplogo</string>
     <string name="login_register_prompt">No account? Create one</string>
     <string name="login_button_text">Login</string>
+    <string name="qr_scan_name">Scan</string>
+    <string name="account_profile_picture">accountprofilepicture</string>
+    <string name="account_name">Profile</string>
+    <string name="prompt_edit">edit</string>
+    <string name="account_profile_picture_edit_text">Edit</string>
 </resources>
