@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 
 import com.silpe.vire.slip.dtos.User;
 
+import java.util.List;
+
 public class CollectionView extends RecyclerView {
 
     public CollectionView(Context context) {
@@ -21,15 +23,21 @@ public class CollectionView extends RecyclerView {
         super(context, attrs, defStyle);
     }
 
-    public void insertNew(User user) {
-        /*
-         * TODO
-         * -- Scroll to the top only when the user is near the top
-         * -- Immediately scroll to top, not smoothly, when doing initial load
-         */
+    void update(User user) {
         CollectionAdapter adapter = (CollectionAdapter) getAdapter();
-        adapter.insertNew(user);
-        smoothScrollToPosition(0);
+        if (adapter.update(user)) {
+            smoothScrollToPosition(0);
+        }
+    }
+
+    void update(List<User> users) {
+        CollectionAdapter adapter = (CollectionAdapter) getAdapter();
+        adapter.update(users);
+    }
+
+    void remove(String uid) {
+        CollectionAdapter adapter = (CollectionAdapter) getAdapter();
+        adapter.remove(uid);
     }
 
 }

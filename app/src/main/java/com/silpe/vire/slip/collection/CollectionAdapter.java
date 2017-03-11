@@ -77,14 +77,14 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
     /**
      * TODO
      * -- Replace with a better collection that
-     *    -> Is synchronized and supports multiple threads
-     *    -> Permits easier user updating from UID
-     *    -> Gracefully passes this update to the adapter
+     * -> Is synchronized and supports multiple threads
+     * -> Permits easier user updating from UID
+     * -> Gracefully passes this update to the adapter
      */
-    private List<User> users;
+    private CollectionHashList users;
 
-    CollectionAdapter(List<User> users) {
-        this.users = users;
+    CollectionAdapter() {
+        users = new CollectionHashList();
     }
 
     @Override
@@ -117,9 +117,16 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
         return users.size();
     }
 
-    void insertNew(User user) {
-        users.add(user);
-        notifyItemInserted(0);
+    boolean update(User user) {
+        return users.update(user, this);
+    }
+
+    void update(List<User> users) {
+        this.users.update(users, this);
+    }
+
+    void remove(String uid) {
+        users.remove(uid, this);
     }
 
 }

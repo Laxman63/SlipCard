@@ -1,9 +1,7 @@
 package com.silpe.vire.slip.collection;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +28,12 @@ public class CollectionFragment extends Fragment {
         final User user = SessionModel.get().getUser(getContext());
         if (user != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+            CollectionView collectionView = (CollectionView) view.findViewById(R.id.collectionList);
+            collectionView.setAdapter(new CollectionAdapter());
+            collectionView.setLayoutManager(new CollectionLayoutManager(getContext()));
             ref = ref.child(getString(R.string.database_connections)).child(user.getUid());
-            ref.addListenerForSingleValueEvent(new UserListRetrievalListener(view, this));
-            ref.addChildEventListener(new UserListEventListener(view));
+            ref.addChildEventListener(new UserListEventListener(collectionView));
+            ref.addListenerForSingleValueEvent(new UserListRetrievalListener(collectionView));
         }
         /*
          * TODO
@@ -44,23 +45,64 @@ public class CollectionFragment extends Fragment {
 
 }
 
+
+/**
+ * After retrieving a user's list of connections, this listener will fire and start retrieving the
+ * user information for these connections and fire a load listener afterwards.
+ */
+class UserListRetrievalListener implements ValueEventListener {
+
+    private final CollectionView collectionView;
+
+    UserListRetrievalListener(final CollectionView collectionView) {
+        this.collectionView = collectionView;
+    }
+
+    private String getString(int stringId) {
+        return collectionView.getContext().getString(stringId);
+    }
+
+
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        final AtomicInteger syncer = new AtomicInteger((int) dataSnapshot.getChildrenCount());
+        final List<User> users = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child(getString(R.string.database_users));
+        for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            final String uid = snapshot.getValue(String.class);
+            ref.child(uid).addListenerForSingleValueEvent(
+                    new UserInfoRetrievalListener(collectionView, syncer, users));
+        }
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+        /*
+         * TODO
+         * -- If loading the connections list fails, Slip should
+         *    -> Display a weak message on the list saying that Slip could not load contacts
+         *    -> Prompt the user to refresh the list by swiping down
+         */
+    }
+}
+
 /**
  * A listener that fires once a user information query completes or fails.
  */
-class OnUserInfoRetrievedListener implements ValueEventListener {
+class UserInfoRetrievalListener implements ValueEventListener {
 
     private final CollectionView collectionView;
-    private final Context context;
     private final AtomicInteger syncer;
     private final List<User> users;
 
-    OnUserInfoRetrievedListener(
+    UserInfoRetrievalListener(
             final CollectionView collectionView,
-            final Context context,
             final AtomicInteger syncer,
             final List<User> users) {
         this.collectionView = collectionView;
-        this.context = context;
         this.syncer = syncer;
         this.users = users;
     }
@@ -84,10 +126,7 @@ class OnUserInfoRetrievedListener implements ValueEventListener {
 
     private void sync() {
         if (syncer.decrementAndGet() == 0) {
-            CollectionAdapter adapter = new CollectionAdapter(users);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-            collectionView.setAdapter(adapter);
-            collectionView.setLayoutManager(layoutManager);
+            collectionView.update(users);
         }
     }
 
@@ -95,13 +134,11 @@ class OnUserInfoRetrievedListener implements ValueEventListener {
 
 class UserListEventListener implements ChildEventListener {
 
-    private CollectionView collectionView;
-    private DatabaseReference reference;
+    private final CollectionView collectionView;
+    private final DatabaseReference reference;
 
-    UserListEventListener(final View view) {
-        collectionView = (CollectionView) view.findViewById(R.id.collectionList);
-        collectionView.setAdapter(new CollectionAdapter(new ArrayList<User>()));
-        collectionView.setLayoutManager(new CollectionLayoutManager(view.getContext()));
+    UserListEventListener(final CollectionView collectionView) {
+        this.collectionView = collectionView;
         reference = FirebaseDatabase.getInstance().getReference();
     }
 
@@ -129,7 +166,7 @@ class UserListEventListener implements ChildEventListener {
     public void onChildAdded(DataSnapshot snapshot, String s) {
         String uid = snapshot.getValue(String.class);
         reference.child(getString(R.string.database_users)).child(uid)
-                .addListenerForSingleValueEvent(new OnChildAddedListener());
+                .addValueEventListener(new OnChildAddedListener());
     }
 
     private class OnChildAddedListener extends BaseChildListener {
@@ -141,7 +178,7 @@ class UserListEventListener implements ChildEventListener {
              * -- Ensure that when inserting new children, chronological order is followed
              *    -> Sorted by most recently added
              */
-            collectionView.insertNew(user);
+            collectionView.update(user);
         }
     }
 
@@ -159,8 +196,9 @@ class UserListEventListener implements ChildEventListener {
     }
 
     @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+    public void onChildRemoved(DataSnapshot snapshot) {
+        String uid = snapshot.getValue(String.class);
+        collectionView.remove(uid);
     }
 
     @Override
@@ -177,49 +215,4 @@ class UserListEventListener implements ChildEventListener {
         return collectionView.getContext().getString(stringId);
     }
 
-}
-
-/**
- * After retrieving a user's list of connections, this listener will fire and start retrieving the
- * user information for these connections and fire a load listener afterwards.
- */
-class UserListRetrievalListener implements ValueEventListener {
-
-    private final CollectionView collectionView;
-    private final Context context;
-
-    UserListRetrievalListener(final View view, final Fragment fragment) {
-        this.collectionView = (CollectionView) view.findViewById(R.id.collectionList);
-        this.context = fragment.getContext();
-    }
-
-    private String getString(int stringId) {
-        return context.getString(stringId);
-    }
-
-
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        final AtomicInteger syncer = new AtomicInteger((int) dataSnapshot.getChildrenCount());
-        final List<User> users = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase
-                .getInstance()
-                .getReference()
-                .child(getString(R.string.database_users));
-        for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            final String uid = snapshot.getValue(String.class);
-            ref.child(uid).addListenerForSingleValueEvent(
-                    new OnUserInfoRetrievedListener(collectionView, context, syncer, users));
-        }
-    }
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
-        /*
-         * TODO
-         * -- If loading the connections list fails, Slip should
-         *    -> Display a weak message on the list saying that Slip could not load contacts
-         *    -> Prompt the user to refresh the list by swiping down
-         */
-    }
 }
