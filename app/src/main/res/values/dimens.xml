@@ -14,4 +14,6 @@
     <dimen name="card_profile_picture">88dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="card_description">26dp</dimen>
+    <dimen name="login_padding_horizontal">64dp</dimen>
+    <dimen name="login_logo_height">72dp</dimen>
 </resources>

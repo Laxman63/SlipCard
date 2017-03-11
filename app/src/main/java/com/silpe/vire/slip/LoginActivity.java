@@ -255,6 +255,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // the progress spinner.
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
+       /*
+        * note that we do not need to hide the login screen when user log in, however, we do nee to:
+        * TODO set the loading bar on top of the login screen
+        *
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                 show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
@@ -263,6 +267,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             }
         });
+        */
 
         mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
         mProgressView.animate().setDuration(shortAnimTime).alpha(

@@ -40,4 +40,7 @@
     <string name="database_users">users</string>
     <string name="database_profile_picture">profile_picture.jpg</string>
     <string name="database_connections">connections</string>
+    <string name="login_logo">sliplogo</string>
+    <string name="login_register_prompt">No account? Create one</string>
+    <string name="login_button_text">Login</string>
 </resources>
