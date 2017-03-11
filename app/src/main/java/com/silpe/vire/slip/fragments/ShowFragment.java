@@ -45,6 +45,7 @@ public class ShowFragment extends Fragment {
         final SessionModel session = SessionModel.get();
         final User user = session.getUser(getContext());
 
+        //for debugging lol
         if (session == null){
             Log.d("OOPS", "Session is Null");
         } else if (user == null) {
@@ -60,14 +61,14 @@ public class ShowFragment extends Fragment {
         email = ((TextView) view.findViewById(R.id.show_email));
         id = ((TextView) view.findViewById(R.id.show_uid));
 
-        if (false) {
-            firstName.setText(user.getFirstName());
-            lastName.setText(user.getLastName());
-            occupation.setText(user.getOccupation());
-            company.setText(user.getCompany());
-            email.setText(user.getEmail());
-            id.setText(user.getUid());
-        }
+
+        firstName.setText(user.getFirstName());
+        lastName.setText(user.getLastName());
+        occupation.setText(user.getOccupation());
+        company.setText(user.getCompany());
+        email.setText(user.getEmail());
+        id.setText(user.getUid());
+
 
         final ImageView imageView = (ImageView) view.findViewById(R.id.show_profile_picture);
         if (user.getSignature() > 0) {
