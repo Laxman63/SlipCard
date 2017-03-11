@@ -26,10 +26,13 @@ import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private static final String QR_FRAGMENT = "fragment_qr";
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fbUser == null) {
             SessionModel.get().setUser(null, this);
