@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import com.silpe.vire.slip.dtos.User;
 
-// TODO Link this class with SharedPreferences to gracefully handle and cache information
+//TODO Link this class with SharedPreferences to gracefully handle and cache information
 
 /**
  * Singleton class that contains the current session models.

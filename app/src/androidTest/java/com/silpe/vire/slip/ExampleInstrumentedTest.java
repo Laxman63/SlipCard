@@ -1,4 +1,4 @@
-package com.silpe.vire.slip;
+package slip;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
