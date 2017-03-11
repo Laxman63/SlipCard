@@ -1,4 +1,5 @@
-<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,7 +10,22 @@
     tools:targetApi="lollipop">
     <!-- TODO Add elevation support for older versions -->
 
-    <FrameLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarQR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/qr_scan_name" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -17,7 +33,7 @@
             android:id="@+id/camera_uid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-    </FrameLayout>
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
 
-</android.support.v7.widget.LinearLayoutCompat>
+</RelativeLayout>

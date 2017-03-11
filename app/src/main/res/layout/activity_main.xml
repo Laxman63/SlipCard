@@ -38,12 +38,10 @@
                 app:tabTextColor="@color/grey" />
         </android.support.design.widget.AppBarLayout>
 
-
         <android.support.v4.view.ViewPager
             android:id="@+id/toplevelPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
     </android.widget.LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

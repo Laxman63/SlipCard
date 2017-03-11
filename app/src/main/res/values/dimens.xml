@@ -14,4 +14,13 @@
     <dimen name="card_profile_picture">88dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="card_description">26dp</dimen>
+    <dimen name="login_padding_horizontal">64dp</dimen>
+    <dimen name="login_logo_height">72dp</dimen>
+    <dimen name="account_profile_block_margin">12dp</dimen>
+    <dimen name="account_profile_picture_size">152dp</dimen>
+    <dimen name="zero">0dp</dimen>
+    <dimen name="account_career_block_padding">48dp</dimen>
+    <dimen name="small_icon">24dp</dimen>
+    <dimen name="account_profile_edit_block_margin_horizontal">2dp</dimen>
+    <dimen name="small_text">15sp</dimen>
 </resources>

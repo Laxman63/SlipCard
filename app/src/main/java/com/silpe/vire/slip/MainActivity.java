@@ -102,8 +102,24 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(this, LoginActivity.class));
             return true;
+        } else if (id == R.id.action_account) {
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * TODO
+     * -- Our back button does some strange stuff
+     * -- It may back into previous user sessions when logging out
+     */
+    @Override
+    public void onBackPressed() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
 }

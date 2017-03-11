@@ -49,28 +49,47 @@ import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via email and password. The user
+ * can navigate to the register screen from here.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
-     * Id to identity READ_CONTACTS permission request.
+     * ID to identify the request made to access contacts.
+     * Access to contacts allows the app to prefill the email field.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    // UI references.
+    /**
+     * The email input text field.
+     */
     private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
 
     /**
-     * Keep track of whether the user is currently logging in.
+     * The password input text field.
+     */
+    private EditText mPasswordView;
+
+    /**
+     * The overlay view containing a darkened background and
+     * the progress indicator.
+     */
+    private View mProgressView;
+
+    /**
+     * A flag indicating whether the user is currently
+     * trying to log in.
      */
     private boolean mTaskInProgress = false;
 
-    // Firebase references
+    /**
+     * Firebase Authentication instance.
+     */
     private FirebaseAuth mAuth;
+    /**
+     * An authentication state listener that fires
+     * when the user's login status changes.
+     */
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
@@ -101,7 +120,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
         mAuth = FirebaseAuth.getInstance();
@@ -143,7 +161,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -248,35 +265,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-       /*
-        * note that we do not need to hide the login screen when user log in, however, we do nee to:
-        * TODO set the loading bar on top of the login screen
-        *
-        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
-        */
-
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
+        int shortAnimTime = getResources().getInteger(R.integer.shortAnimationTime);
+        if (show) {
+            mProgressView.setVisibility(View.VISIBLE);
+        }
+        mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (!show) {
+                            mProgressView.setVisibility(View.GONE);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -285,12 +287,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // Retrieve data rows for the device user's 'profile' contact.
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
                         ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
                 // Select only email addresses.
                 ContactsContract.Contacts.Data.MIMETYPE +
                         " = ?", new String[]{ContactsContract.CommonDataKinds.Email
                 .CONTENT_ITEM_TYPE},
-
                 // Show primary email addresses first. Note that there won't be
                 // a primary email address if the user hasn't specified one.
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
@@ -304,13 +304,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
         }
-
         addEmailsToAutoComplete(emails);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
     }
 
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
@@ -318,7 +316,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
         mEmailView.setAdapter(adapter);
     }
 
@@ -345,6 +342,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         doRegister(email, password);
                     }
                 } else {
+                    // TODO Error handling
                     LoginActivity.this.showProgress(false);
                 }
             }
