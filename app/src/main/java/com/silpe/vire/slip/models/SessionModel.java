@@ -31,6 +31,9 @@ public class SessionModel {
     private User user;
 
     private User getUser() {
+        if (user == null){
+            user = new User("Uid", "testcase@email.com", "John" , "lastName" , "Debugger" , "Slip", 0xd);
+        }
         return user;
     }
 

@@ -17,6 +17,7 @@ public class User implements Persistent<User> {
     private long signature;
 
     public User() {
+
     }
 
     public User(String uid, String email, String firstName, String lastName, String occupation, String company, long signature) {

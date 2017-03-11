@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ import com.silpe.vire.slip.models.SessionModel;
 import java.io.File;
 
 public class ShowFragment extends Fragment {
-
+    TextView firstName, lastName, occupation, company, email, id;
     public ShowFragment() {
     }
 
@@ -41,14 +42,32 @@ public class ShowFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_show, container, false);
+        final SessionModel session = SessionModel.get();
+        final User user = session.getUser(getContext());
 
-        final User user = SessionModel.get().getUser(getContext());
-        ((TextView) view.findViewById(R.id.show_firstName)).setText(user.getFirstName());
-        ((TextView) view.findViewById(R.id.show_lastName)).setText(user.getLastName());
-        ((TextView) view.findViewById(R.id.show_occupation)).setText(user.getOccupation());
-        ((TextView) view.findViewById(R.id.show_company)).setText(user.getCompany());
-        ((TextView) view.findViewById(R.id.show_email)).setText(user.getEmail());
-        ((TextView) view.findViewById(R.id.show_uid)).setText(user.getUid());
+        if (session == null){
+            Log.d("OOPS", "Session is Null");
+        } else if (user == null) {
+            Log.d("OOPS", "user is Null");
+        } else {
+
+        }
+
+        firstName = ((TextView) view.findViewById(R.id.show_firstName));
+        lastName = ((TextView) view.findViewById(R.id.show_lastName));
+        occupation = ((TextView) view.findViewById(R.id.show_occupation));
+        company = ((TextView) view.findViewById(R.id.show_company));
+        email = ((TextView) view.findViewById(R.id.show_email));
+        id = ((TextView) view.findViewById(R.id.show_uid));
+
+        if (false) {
+            firstName.setText(user.getFirstName());
+            lastName.setText(user.getLastName());
+            occupation.setText(user.getOccupation());
+            company.setText(user.getCompany());
+            email.setText(user.getEmail());
+            id.setText(user.getUid());
+        }
 
         final ImageView imageView = (ImageView) view.findViewById(R.id.show_profile_picture);
         if (user.getSignature() > 0) {
