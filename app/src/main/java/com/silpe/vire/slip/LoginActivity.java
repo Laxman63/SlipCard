@@ -3,7 +3,6 @@ package com.silpe.vire.slip;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -70,6 +68,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Access to contacts allows the app to prefill the email field.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    /**
+     * Intent ID to indicate that we want to exit the application.
+     */
+    private static final String EXIT_APP = "EXIT";
 
     /**
      * The email input text field.
@@ -111,6 +113,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Exit the app if we need to
+        if (getIntent().getBooleanExtra("EXIT", false)) finish();
+        
+        // Set the layout
         setContentView(R.layout.activity_login);
 
         // Obtain the email input field and attempt autocompletion
@@ -244,11 +250,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     *
+     * When the user clicks back on the login screen he should
+     * no return to any previous activity or fragment in this app.
+     * Instead, the user will return to his device's main screen.
      */
     @Override
     public void onBackPressed() {
-
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(EXIT_APP, true);
+        startActivity(intent);
     }
 
 
