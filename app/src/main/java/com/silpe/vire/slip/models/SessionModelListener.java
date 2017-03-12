@@ -1,6 +1,6 @@
 package com.silpe.vire.slip.models;
 
-interface SessionModelListener<T> {
+public interface SessionModelListener<T> {
 
     void valueUpdated(T t);
 
