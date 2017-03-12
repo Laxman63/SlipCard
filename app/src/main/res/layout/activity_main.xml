@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context="com.silpe.vire.slip.MainActivity">
 
-    <android.widget.LinearLayout
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -42,10 +42,10 @@
             android:id="@+id/toplevelPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </android.widget.LinearLayout>
+    </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/scanFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

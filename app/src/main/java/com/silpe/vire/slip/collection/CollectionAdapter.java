@@ -14,7 +14,7 @@ import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.silpe.vire.slip.R;
-import com.silpe.vire.slip.components.Icon;
+import com.silpe.vire.slip.components.DisplayIcon;
 import com.silpe.vire.slip.dtos.User;
 
 import java.util.List;
@@ -30,7 +30,7 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         private View view;
-        private Icon profilePicture;
+        private DisplayIcon profilePicture;
         private TextView fullName;
         private TextView description;
 
@@ -39,9 +39,9 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
             this.view = view;
         }
 
-        Icon getProfilePicture() {
+        DisplayIcon getProfilePicture() {
             if (profilePicture == null) {
-                profilePicture = (Icon) view.findViewById(R.id.card_picture);
+                profilePicture = (DisplayIcon) view.findViewById(R.id.card_picture);
             }
             return profilePicture;
         }

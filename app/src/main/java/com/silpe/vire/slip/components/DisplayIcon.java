@@ -4,17 +4,17 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class Icon extends android.support.v7.widget.AppCompatImageView {
+public class DisplayIcon extends android.support.v7.widget.AppCompatImageView {
 
-    public Icon(final Context context) {
+    public DisplayIcon(final Context context) {
         super(context);
     }
 
-    public Icon(final Context context, final AttributeSet attributeSet) {
+    public DisplayIcon(final Context context, final AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    public Icon(final Context context, final AttributeSet attributeSet, final int defStyle) {
+    public DisplayIcon(final Context context, final AttributeSet attributeSet, final int defStyle) {
         super(context, attributeSet, defStyle);
     }
 

@@ -32,7 +32,7 @@ public class PickerBuilder {
     }
 
     public void start() {
-        Intent intent = new Intent(activity, TempActivity.class);
+        Intent intent = new Intent(activity, PickerActivity.class);
         activity.startActivity(intent);
 
         GlobalHolder.getInstance().setPickerManager(pickerManager);

@@ -43,6 +43,8 @@ public class User implements Persistent<User> {
         setSignature(signature);
     }
 
+
+
     @Exclude
     public String getFullName() {
         return String.format("%s %s", getFirstName(), getLastName());
@@ -141,6 +143,5 @@ public class User implements Persistent<User> {
         final String[] kv = serial.split("&");
         return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], kv[6], Long.valueOf(kv[7]));
     }
-
 
 }
