@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_margin="24dp"
     android:orientation="vertical"
-    tools:context="com.silpe.vire.slip.fragments.ShowFragment">
+    tools:context="com.silpe.vire.slip.fragments.MyCardFragment">
 
     <ImageView
         android:id="@+id/show_profile_picture"

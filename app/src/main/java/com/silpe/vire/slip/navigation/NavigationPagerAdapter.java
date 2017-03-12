@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.collection.CollectionFragment;
-import com.silpe.vire.slip.fragments.ShowFragment;
+import com.silpe.vire.slip.fragments.MyCardFragment;
 import com.silpe.vire.slip.fragments.NetworkFragment;
 
 public class NavigationPagerAdapter extends FragmentPagerAdapter {
@@ -20,7 +20,7 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
     public NavigationPagerAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
         mContext = context;
-        mMyCardFragment = new ShowFragment();
+        mMyCardFragment = new MyCardFragment();
         mCollectionFragment = new CollectionFragment();
         mNetworkFragment = new NetworkFragment();
     }
