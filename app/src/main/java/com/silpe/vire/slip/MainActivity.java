@@ -1,10 +1,12 @@
 package com.silpe.vire.slip;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -29,12 +31,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.fragments.AccountFragment;
 import com.silpe.vire.slip.fragments.QRFragment;
+import com.silpe.vire.slip.fragments.SearchlistFragment;
 import com.silpe.vire.slip.models.SessionModel;
 import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String QR_FRAGMENT = "fragment_qr";
+    static final String QR_FRAGMENT = "fragment_qr";
+    private static final String SEARCH_FRAGMENT = "fragment_search";
+    private static final String ACCOUNT_FRAGMENT = "fragment_account";
 
     Toolbar toolbar;
     ViewPager viewPager;
@@ -42,15 +47,18 @@ public class MainActivity extends AppCompatActivity {
     NavigationPagerAdapter navigationPagerAdapter;
     SearchView  searchView;
     LinearLayout body, searchlist;
+    Context contxt;
+    User user;
+    FloatingActionButton fab;
 
 
-    private static final String ACCOUNT_FRAGMENT = "fragment_account";
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        contxt = getApplicationContext();
 
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fbUser == null) {
@@ -97,16 +105,16 @@ public class MainActivity extends AppCompatActivity {
         searchlist = (LinearLayout)findViewById(R.id.searchList);
 
         // Set up the QR Code floating action button
-        final User user = SessionModel.get().getUser(this);
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        user = SessionModel.get().getUser(this);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
                     MainActivity.this.getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), QR_FRAGMENT)
-                            .addToBackStack(QR_FRAGMENT)
+                            .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), SEARCH_FRAGMENT)
+                            .addToBackStack(SEARCH_FRAGMENT)
                             .commit();
                 }
             }
@@ -166,46 +174,21 @@ public class MainActivity extends AppCompatActivity {
         final MenuItem searchItem = menu.findItem(R.id.action_search);
 
         if (searchItem != null) {
-            searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-
+            searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
-                public boolean onClose() {
-
-                    return false;
+                public boolean onMenuItemClick(MenuItem item) {
+                    MainActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.toplevel,  new SearchlistFragment(), SEARCH_FRAGMENT)
+                            .addToBackStack(SEARCH_FRAGMENT)
+                            .commit();
+                    return true;
                 }
             });
-            searchView.setOnSearchClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    body.setVisibility(View.GONE);
-                    searchlist.setVisibility(View.VISIBLE);
-                    //some operation
-                }
-            });
-            EditText searchPlate = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-            searchPlate.setHint("Search");
-            View searchPlateView = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
-            searchPlateView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-            // use this method for search process
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    // use this method when query submitted
-                    Toast.makeText(getParent(), query, Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    // use this method for auto complete search process
-                    return false;
-                }
-            });
-            SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
         }
+
+
+
 
 
         return true;

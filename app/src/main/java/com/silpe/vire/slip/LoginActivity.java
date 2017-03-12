@@ -343,19 +343,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
     }
+    //lol, debugging purpose:
+    boolean isSuccess;
+    boolean doRegister(final String email, final String password) {
 
-    private void doRegister(final String email, final String password) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 LoginActivity.this.mTaskInProgress = false;
                 Log.d(getClass().getCanonicalName(), "createUserWithEmail:onComplete:" + task.isSuccessful());
+                isSuccess = true;
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
                     LoginActivity.this.showProgress(false);
+                    isSuccess = false;
                 }
+
             }
         });
+        return isSuccess;
     }
 
     private void doLogin(String email, String password) {

@@ -25,4 +25,5 @@
     <dimen name="small_text">15sp</dimen>
     <dimen name="title_text">24sp</dimen>
     <dimen name="button">200dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>
