@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String QR_FRAGMENT = "fragment_qr";
     Toolbar toolbar;
+    ViewPager viewPager;
+    TabLayout tabLayout;
+    NavigationPagerAdapter navigationPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void construct() {
         setContentView(R.layout.activity_main);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Set up the QR Code floating action button
         final User user = SessionModel.get().getUser(this);
@@ -81,12 +86,52 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Set up the pagination and tab navigation
-        NavigationPagerAdapter navigationPagerAdapter = new NavigationPagerAdapter(getSupportFragmentManager());
-        ViewPager viewPager = (ViewPager) findViewById(R.id.toplevelPager);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.toplevelTabs);
-        viewPager.setAdapter(navigationPagerAdapter);
+        navigationPagerAdapter = new NavigationPagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        viewPager = (ViewPager) findViewById(R.id.toplevelPager);
+        tabLayout = (TabLayout) findViewById(R.id.toplevelTabs);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                Log.d("YOLO", ((String)" "+tab.getPosition()) );
+                switch(tab.getPosition()) {
+
+
+
+                    case 0:
+                        viewPager.setCurrentItem(0);
+                        toolbar.setTitle(getString(R.string.fragment0title));
+                        break;
+                    case 1:
+                        viewPager.setCurrentItem(1);
+                        toolbar.setTitle(getString(R.string.fragment1title));
+                        break;
+                    case 2:
+                        viewPager.setCurrentItem(2);
+                        toolbar.setTitle(getString(R.string.fragment2title));
+                        break;
+
+                    default:
+
+                        viewPager.setCurrentItem(tab.getPosition());
+                        toolbar.setTitle("Fragment Star");
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+                viewPager.setAdapter(navigationPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

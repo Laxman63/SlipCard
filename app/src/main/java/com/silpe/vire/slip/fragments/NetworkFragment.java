@@ -31,9 +31,12 @@ public class NetworkFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+
     public NetworkFragment() {
-        // Required empty public constructor
+        super();
     }
+
+
 
     /**
      * Use this factory method to create a new instance of

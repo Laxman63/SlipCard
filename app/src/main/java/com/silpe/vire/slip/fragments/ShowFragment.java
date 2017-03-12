@@ -31,8 +31,12 @@ import java.io.File;
 
 public class ShowFragment extends Fragment {
     TextView firstName, lastName, occupation, company, email, id;
+
+
     public ShowFragment() {
+        super();
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,14 +49,7 @@ public class ShowFragment extends Fragment {
         final SessionModel session = SessionModel.get();
         final User user = session.getUser(getContext());
 
-        //for debugging lol
-        if (session == null){
-            Log.d("OOPS", "Session is Null");
-        } else if (user == null) {
-            Log.d("OOPS", "user is Null");
-        } else {
 
-        }
 
         firstName = ((TextView) view.findViewById(R.id.show_firstName));
         lastName = ((TextView) view.findViewById(R.id.show_lastName));
