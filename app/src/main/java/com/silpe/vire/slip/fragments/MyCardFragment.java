@@ -110,11 +110,9 @@ public class MyCardFragment extends Fragment
         String phoneNumber = user.getPhoneNumber();
         mPhoneNumberView.setText(phoneNumber.isEmpty() ? "+ Add a phone number" : phoneNumber);
         if (user.getSignature() > 0) {
-            StorageReference sRef = FirebaseStorage.getInstance().getReference();
-            sRef = sRef.child(getString(R.string.database_users)).child(user.getUid()).child(getString(R.string.database_profile_picture));
-            Glide.with(getContext())
+            Glide.with(this)
                     .using(new FirebaseImageLoader())
-                    .load(sRef)
+                    .load(user.getProfilePictureReference(getContext()))
                     .signature(new TimestampSignature(user.getSignature()))
                     .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
                     .into(mProfilePictureView);

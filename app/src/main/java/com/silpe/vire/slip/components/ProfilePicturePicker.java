@@ -43,20 +43,12 @@ public class ProfilePicturePicker implements View.OnClickListener {
             User user = SessionModel.get().getUser(display.getContext());
             String databaseUsers = display.getString(R.string.database_users);
             // Upload the selected file
-            FirebaseStorage.getInstance()
-                    .getReference()
-                    .child(databaseUsers)
-                    .child(user.getUid())
-                    .child(display.getString(R.string.database_profile_picture))
-                    .putFile(imageUri);
+            user.getProfilePictureReference(display.getContext()).putFile(imageUri);
             // Update the image signature
             TimestampSignature signature = new TimestampSignature();
-            FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child(databaseUsers)
-                    .child(user.getUid())
-                    .child(display.getString(R.string.database_user_signature))
-                    .setValue(signature.getSignature());
+            user.getDatabaseReference(display.getContext()).child(display.getString(R.string.database_user_signature)).setValue(signature.getSignature());
+            user.setSignature(signature.getSignature());
+            SessionModel.get().setUser(user, display.getContext());
             // Update the user profile picture
             Glide.with(display.getActivity())
                     .load(new File(imageUri.getPath()))
