@@ -42,6 +42,16 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".SearchList"
+            android:label="@string/title_activity_search_list"
+            android:theme="@style/noAnimTheme"
+            android:parentActivityName=".MainActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.silpe.vire.slip.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

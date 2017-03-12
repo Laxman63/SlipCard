@@ -57,4 +57,6 @@
     <string name="fragment0title">My card</string>
     <string name="fragment1title">Collection</string>
     <string name="fragment2title">Network</string>
+    <string name="title_activity_search_list">SearchList</string>
+    <string name="searchtarget">What\'s up?</string>
 </resources>

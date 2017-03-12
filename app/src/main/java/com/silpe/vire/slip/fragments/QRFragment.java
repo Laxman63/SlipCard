@@ -53,5 +53,4 @@ public class QRFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
-
 }
