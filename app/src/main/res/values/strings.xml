@@ -50,4 +50,5 @@
     <string name="fragment0title">My Card</string>
     <string name="fragment1title">Collection</string>
     <string name="fragment2title">Network</string>
+    <string name="srch">Search</string>
 </resources>
