@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,6 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -34,9 +30,8 @@ import java.io.File;
 
 public class ShowFragment extends Fragment {
 
-    TextView mFirstNameView, mLastNameView, mOccupationView, mCompanyView, mEmailView, mPhoneNumberView, mUidView;
-
     public ShowFragment() {
+        super();
     }
 
     @Override
@@ -50,23 +45,23 @@ public class ShowFragment extends Fragment {
         final SessionModel session = SessionModel.get();
         final User user = session.getUser(getContext());
 
-        mFirstNameView = ((TextView) view.findViewById(R.id.show_firstName));
-        mLastNameView = ((TextView) view.findViewById(R.id.show_lastName));
-        mOccupationView = ((TextView) view.findViewById(R.id.show_occupation));
-        mCompanyView = ((TextView) view.findViewById(R.id.show_company));
-        mEmailView = ((TextView) view.findViewById(R.id.show_email));
-        mPhoneNumberView = ((TextView) view.findViewById(R.id.show_phone));
-        mUidView = ((TextView) view.findViewById(R.id.show_uid));
+        TextView firstNameView = ((TextView) view.findViewById(R.id.show_firstName));
+        TextView lastNameView = ((TextView) view.findViewById(R.id.show_lastName));
+        TextView occupationView = ((TextView) view.findViewById(R.id.show_occupation));
+        TextView companyView = ((TextView) view.findViewById(R.id.show_company));
+        TextView emailView = ((TextView) view.findViewById(R.id.show_email));
+        TextView phoneNumberView = ((TextView) view.findViewById(R.id.show_phone));
+        TextView uidView = ((TextView) view.findViewById(R.id.show_uid));
 
-        mFirstNameView.setText(user.getFirstName());
-        mLastNameView.setText(user.getLastName());
-        mOccupationView.setText(user.getOccupation());
-        mCompanyView.setText(user.getCompany());
-        mEmailView.setText(user.getEmail());
-        mUidView.setText(user.getUid());
+        firstNameView.setText(user.getFirstName());
+        lastNameView.setText(user.getLastName());
+        occupationView.setText(user.getOccupation());
+        companyView.setText(user.getCompany());
+        emailView.setText(user.getEmail());
+        uidView.setText(user.getUid());
 
         String phoneNumber = user.getPhoneNumber();
-        mPhoneNumberView.setText(phoneNumber.isEmpty() ? "+ Add a phone number" : phoneNumber);
+        phoneNumberView.setText(phoneNumber.isEmpty() ? "+ Add a phone number" : phoneNumber);
 
 
         final ImageView imageView = (ImageView) view.findViewById(R.id.show_profile_picture);

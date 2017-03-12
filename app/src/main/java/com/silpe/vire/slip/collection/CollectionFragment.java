@@ -22,6 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CollectionFragment extends Fragment {
 
+    public CollectionFragment() {
+        super();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);

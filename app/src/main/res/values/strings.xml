@@ -23,9 +23,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions." </string>
     <string name="auth_failed">Login failed</string>
     <string name="auth_success">Login success</string>
     <string name="register_failed">Registration failed</string>
@@ -51,4 +49,8 @@
     <string name="account_contact_info_title">Contact Info</string>
     <string name="prompt_phone">Phone number</string>
     <string name="account_accept_button_text">Accept</string>
+    <string name="myCardTitle">My Card</string>
+    <string name="collectionTitle">Collection</string>
+    <string name="networkTitle">Network</string>
+    <string name="search">Search</string>
 </resources>
