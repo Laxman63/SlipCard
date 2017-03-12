@@ -140,9 +140,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        }
+        getSupportFragmentManager().popBackStackImmediate();
     }
 
 }
