@@ -59,4 +59,8 @@
     <string name="fragment2title">Network</string>
     <string name="title_activity_search_list">SearchList</string>
     <string name="searchtarget">What\'s up?</string>
+    <string name="database_user_signature">signature</string>
+    <string name="profile_picture">profile_picture</string>
+    <string name="picture_folder">slipPics</string>
+    <string name="double_back_prompt">Double-tap BACK to exit</string>
 </resources>

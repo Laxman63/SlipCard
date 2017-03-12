@@ -18,7 +18,7 @@
         tools:targetApi="lollipop">
         <!-- TODO REMOVE tools:targetApi="lollipop" and add pre-21 support for shadows -->
 
-        <com.silpe.vire.slip.components.Icon
+        <com.silpe.vire.slip.components.ProfilePictureView
             android:id="@+id/card_picture"
             android:layout_width="@dimen/card_profile_picture"
             android:layout_height="@dimen/card_profile_picture" />

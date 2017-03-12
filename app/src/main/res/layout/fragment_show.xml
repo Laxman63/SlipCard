@@ -4,13 +4,14 @@
     android:layout_height="match_parent"
     android:layout_margin="24dp"
     android:orientation="vertical"
-    tools:context="com.silpe.vire.slip.fragments.ShowFragment">
+    tools:context="com.silpe.vire.slip.fragments.MyCardFragment">
 
-    <ImageView
+    <com.silpe.vire.slip.components.ProfilePictureView
         android:id="@+id/show_profile_picture"
         android:layout_width="@dimen/show_profile_picture_size"
         android:layout_height="@dimen/show_profile_picture_size"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/profile_picture" />
 
     <TextView
         android:id="@+id/show_firstName"

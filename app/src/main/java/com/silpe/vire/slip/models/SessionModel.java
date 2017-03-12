@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 
 import com.silpe.vire.slip.dtos.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //TODO Link this class with SharedPreferences to gracefully handle and cache information
 
 /**
@@ -25,11 +28,19 @@ public class SessionModel {
         return model;
     }
 
-    private SessionModel() {
+    private static <T> void notifyListeners(List<SessionModelListener<T>> listeners, T t) {
+        for (SessionModelListener<T> listener : listeners) {
+            listener.valueUpdated(t);
+        }
     }
 
-    private User user;
+    private SessionModel() {
+        userListeners = new ArrayList<>();
+    }
 
+
+    private User user;
+    private List<SessionModelListener<User>> userListeners;
 
     public User getUser(Context context) {
         if (user == null) {
@@ -38,10 +49,18 @@ public class SessionModel {
         return user;
     }
 
-
     public void setUser(User user, Context context) {
         this.user = user;
+        notifyListeners(userListeners, user);
         cacheUser(context);
+    }
+
+    public void addListener(SessionModelListener<User> userListener) {
+        userListeners.add(userListener);
+    }
+
+    public void removeListener(SessionModelListener<User> userListener) {
+        userListeners.remove(userListener);
     }
 
     private void cacheUser(@NonNull Context context) {

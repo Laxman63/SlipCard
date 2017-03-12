@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import static com.yalantis.ucrop.UCrop.REQUEST_CROP;
 
-public class TempActivity extends AppCompatActivity {
+public class PickerActivity extends AppCompatActivity {
 
     PickerManager pickerManager;
 
@@ -16,9 +16,8 @@ public class TempActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         this.pickerManager = GlobalHolder.getInstance().getPickerManager();
-        this.pickerManager.setActivity(TempActivity.this);
+        this.pickerManager.setActivity(PickerActivity.this);
         this.pickerManager.pickPhotoWithPermission();
-
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.silpe.vire.slip.dtos;
 
-import android.util.Log;
-
 import com.google.firebase.database.Exclude;
 import com.silpe.vire.slip.models.Persistent;
 
@@ -144,17 +142,7 @@ public class User implements Persistent<User> {
     public User decode(String serial) {
         final String[] kv = serial.split("&");
 
-        //Oops, not every user have 8 fields
-        //Todo find a way to decode with any number of fields given now only support 8
-        /*for (int i = 0 ; i <kv.length; i ++) {
-            Log.d("String", i+": "+kv[i]);
-        }*/
-        if (kv.length ==7){
-            return new User(kv[0], kv[1],""+911, kv[2], kv[3], kv[4], kv[5], Long.valueOf(kv[6]));
-        }
-
         return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], kv[6], Long.valueOf(kv[7]));
     }
-
 
 }

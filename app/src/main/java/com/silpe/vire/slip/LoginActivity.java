@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -41,6 +40,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.silpe.vire.slip.components.DoubleBackHandler;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.dtos.Validator;
 import com.silpe.vire.slip.models.SessionModel;
@@ -100,6 +100,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * when the user's login status changes.
      */
     private FirebaseAuth.AuthStateListener mAuthListener;
+    /**
+     * The back press handler that exits upon a double-tap.
+     */
+    private DoubleBackHandler backPressHandler;
 
     /**
      * Create the login screen layout. Bind listeners to the login and register
@@ -131,6 +135,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Obtain the Firebase Authentication listeners and create the listener
         mAuth = FirebaseAuth.getInstance();
         mAuthListener = new UserStateListener();
+
+        // Set the back press handler
+        backPressHandler = new DoubleBackHandler(this);
     }
 
     /**
@@ -243,9 +250,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
     }
 
-
-
-
     /**
      * Pause any ongoing asynchronous tasks when the activity
      * is on pause.
@@ -326,7 +330,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     // TODO Remove this and add a register button
     private void doAttempt(final String email, final String password) {
-        Task<ProviderQueryResult> fetchEmailTask = mAuth.fetchProvidersForEmail(email).addOnCompleteListener(this, new OnCompleteListener<ProviderQueryResult>() {
+        mAuth.fetchProvidersForEmail(email).addOnCompleteListener(this, new OnCompleteListener<ProviderQueryResult>() {
             @Override
             public void onComplete(@NonNull Task<ProviderQueryResult> task) {
                 LoginActivity.this.mTaskInProgress = false;
@@ -373,39 +377,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
                     LoginActivity.this.showProgress(false);
-                } else {
-                    // gotoMainActivity();
                 }
             }
         });
     }
-
-    private void gotoMainActivity() {
-        // Get the user from the database
-        FirebaseUser user = mAuth.getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        if (user != null) {
-            ref = ref.child(getString(R.string.database_users)).child(user.getUid());
-            ValueEventListener userListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    User user = snapshot.getValue(User.class);
-                    SessionModel.get().setUser(user, LoginActivity.this);
-                    Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
-                    LoginActivity.this.showProgress(false);
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    LoginActivity.this.startActivity(intent);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                }
-            };
-            ref.addListenerForSingleValueEvent(userListener);
-        }
-    }
     // END TODO
+
 
     /**
      * This listener will attempt to log in the user
@@ -468,24 +445,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-
-    boolean doubleBackToExitPressedOnce = false;
+    /**
+     * Pressing the back button will do nothing, but double-tapping
+     * the back button will end the application. This is to prevent
+     * the user from back navigating to the {@code MainActivity}.
+     */
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            this.finishAffinity();
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
-            }
-        }, 2000);
+        backPressHandler.onBackPressed();
     }
 
 }
