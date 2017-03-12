@@ -68,10 +68,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Access to contacts allows the app to prefill the email field.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
-    /**
-     * Intent ID to indicate that we want to exit the application.
-     */
-    private static final String EXIT_APP = "EXIT";
 
     /**
      * The email input text field.
@@ -113,10 +109,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Exit the app if we need to
-        if (getIntent().getBooleanExtra("EXIT", false)) finish();
-        
-        // Set the layout
         setContentView(R.layout.activity_login);
 
         // Obtain the email input field and attempt autocompletion
@@ -250,19 +242,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * When the user clicks back on the login screen he should
-     * no return to any previous activity or fragment in this app.
-     * Instead, the user will return to his device's main screen.
+     * The user should not be able to return to an unlogged
+     * {@code MainActivity} by pressing "Back" in the login
+     * screen. Thus, pressing "Back" in the login screen will
+     * do nothing for now.
      */
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(EXIT_APP, true);
-        startActivity(intent);
+        // TODO Find an organic way to achieve desired behavior
+    }
+
+    /**
+     * Pause any ongoing asynchronous tasks when the activity
+     * is on pause.
+     */
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
 
+    // TODO CLEAN UP CODE
     private void attemptLogin() {
         if (mTaskInProgress) {
             return;
@@ -348,8 +348,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 });
     }
 
+    // TODO Remove this and add a register button
     private void doAttempt(final String email, final String password) {
-        mAuth.fetchProvidersForEmail(email).addOnCompleteListener(this, new OnCompleteListener<ProviderQueryResult>() {
+        Task<ProviderQueryResult> fetchEmailTask = mAuth.fetchProvidersForEmail(email).addOnCompleteListener(this, new OnCompleteListener<ProviderQueryResult>() {
             @Override
             public void onComplete(@NonNull Task<ProviderQueryResult> task) {
                 LoginActivity.this.mTaskInProgress = false;
@@ -375,12 +376,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.d(getClass().getCanonicalName(), "createUserWithEmail:onComplete:" + task.isSuccessful());
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(LoginActivity.this, R.string.register_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                    LoginActivity.this.startActivity(intent);
+                    LoginActivity.this.showProgress(false);
                 }
-                LoginActivity.this.showProgress(false);
             }
         });
     }
@@ -395,7 +392,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     Toast.makeText(LoginActivity.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
                     LoginActivity.this.showProgress(false);
                 } else {
-                    gotoMainActivity();
+                    // gotoMainActivity();
                 }
             }
         });
@@ -413,8 +410,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     User user = snapshot.getValue(User.class);
                     SessionModel.get().setUser(user, LoginActivity.this);
                     Toast.makeText(LoginActivity.this, R.string.auth_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     LoginActivity.this.showProgress(false);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     LoginActivity.this.startActivity(intent);
                 }
 
@@ -425,6 +423,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             ref.addListenerForSingleValueEvent(userListener);
         }
     }
+    // END TODO
 
     /**
      * This listener will attempt to log in the user
@@ -489,6 +488,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 }
 
+/**
+ * This listener will acquire the user information and
+ * direct the to the {@code MainActivity}, after setting
+ * the user session.
+ */
 class UserValueListener implements ValueEventListener {
 
     private final LoginActivity context;
@@ -500,11 +504,17 @@ class UserValueListener implements ValueEventListener {
     @Override
     public void onDataChange(DataSnapshot snapshot) {
         User user = snapshot.getValue(User.class);
-        SessionModel.get().setUser(user, context);
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        context.showProgress(false);
-        context.startActivity(intent);
+        if (user == null) {
+            Intent intent = new Intent(context, RegisterActivity.class);
+            context.showProgress(false);
+            context.startActivity(intent);
+        } else {
+            SessionModel.get().setUser(user, context);
+            Intent intent = new Intent(context, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            context.showProgress(false);
+            context.startActivity(intent);
+        }
     }
 
     @Override

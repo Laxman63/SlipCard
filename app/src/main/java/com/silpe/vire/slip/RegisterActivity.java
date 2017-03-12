@@ -67,6 +67,12 @@ public class RegisterActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    @Override
+    public void onBackPressed() {
+        FirebaseAuth.getInstance().signOut();
+        super.onBackPressed();
+    }
+
     private void attemptRegister() {
         // Reset errors.
         mFirstNameView.setError(null);
@@ -151,6 +157,7 @@ public class RegisterActivity extends AppCompatActivity {
         SessionModel.get().setUser(slipUser, this);
         ref.child(getString(R.string.database_users)).child(slipUser.getUid()).setValue(slipUser);
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.dtos.User;
+import com.silpe.vire.slip.fragments.AccountFragment;
 import com.silpe.vire.slip.fragments.QRFragment;
 import com.silpe.vire.slip.models.SessionModel;
 import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
@@ -29,6 +30,7 @@ import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private static final String QR_FRAGMENT = "fragment_qr";
+    private static final String ACCOUNT_FRAGMENT = "fragment_account";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fbUser == null) {
-            onBackPressed();
+            SessionModel.get().setUser(null, this);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         } else {
             // TODO Move this handling into a separate listener class
             if (SessionModel.get().getUser(this) == null) {
@@ -48,8 +52,15 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         User user = snapshot.getValue(User.class);
-                        SessionModel.get().setUser(user, MainActivity.this);
-                        construct();
+                        if (user == null) {
+                            FirebaseAuth.getInstance().signOut();
+                            SessionModel.get().setUser(null, MainActivity.this);
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        } else {
+                            SessionModel.get().setUser(user, MainActivity.this);
+                            construct();
+                        }
                     }
 
                     @Override
@@ -108,25 +119,29 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_logout) {
             SessionModel.get().setUser(null, this);
             FirebaseAuth.getInstance().signOut();
-            startActivity(new Intent(this, LoginActivity.class));
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_account) {
-
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.toplevel, new AccountFragment(), ACCOUNT_FRAGMENT)
+                    .addToBackStack(ACCOUNT_FRAGMENT)
+                    .commit();
         }
         return super.onOptionsItemSelected(item);
     }
 
     /**
-     * TODO
-     * -- Our back button does some strange stuff
-     * -- It may back into previous user sessions when logging out
+     * If there is a fragment stack, such as {@code QRFragment}
+     * or {@code AccountFragment}, then pressing "Back" will
+     * return to the previous fragment. Otherwise, pressing
+     * "Back" will do nothing in the main screen.
      */
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
-        } else {
-            super.onBackPressed();
         }
     }
 
