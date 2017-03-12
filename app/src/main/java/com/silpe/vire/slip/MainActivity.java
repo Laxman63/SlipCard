@@ -107,9 +107,6 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.d("YOLO", ((String)" "+tab.getPosition()) );
                 switch(tab.getPosition()) {
-
-
-
                     case 0:
                         viewPager.setCurrentItem(0);
                         toolbar.setTitle(getString(R.string.fragment0title));
@@ -124,7 +121,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     default:
-
                         viewPager.setCurrentItem(tab.getPosition());
                         toolbar.setTitle("Fragment Star");
                         break;
