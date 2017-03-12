@@ -41,6 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.dtos.User;
+import com.silpe.vire.slip.dtos.Validator;
 import com.silpe.vire.slip.models.SessionModel;
 
 import java.util.ArrayList;
@@ -120,8 +121,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setOnEditorActionListener(new PasswordSubmitListener());
 
         // Bind the attempt login listener to the login button
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new LoginButtonListener());
+        Button signInButton = (Button) findViewById(R.id.email_sign_in_button);
+        signInButton.setOnClickListener(new LoginButtonListener());
 
         // Obtain a reference to the loading indicator
         mProgressView = findViewById(R.id.login_progress);
@@ -280,7 +281,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password)) {
-            if (!isPasswordValid(password)) {
+            if (!Validator.isValidPassword(password)) {
                 mPasswordView.setError(getString(R.string.error_invalid_password));
                 focusView = mPasswordView;
                 cancel = true;
@@ -296,7 +297,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } else if (!Validator.isValidEmail(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
@@ -309,24 +310,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mTaskInProgress = true;
             doAttempt(email, password);
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        /*
-         * TODO
-         * -- Provide good email validation, preferably using Google API
-         * -- Send a verification email that, when accepted
-         *    -> Enables the user to have access to more features in Slip
-         */
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        /*
-         * TODO
-         * -- Add somewhat more rigorous password verification
-         */
-        return password.length() > 4;
     }
 
     /**

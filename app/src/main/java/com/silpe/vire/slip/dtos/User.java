@@ -1,5 +1,6 @@
 package com.silpe.vire.slip.dtos;
 
+import com.google.firebase.database.Exclude;
 import com.silpe.vire.slip.models.Persistent;
 
 import java.util.Locale;
@@ -42,10 +43,12 @@ public class User implements Persistent<User> {
         setSignature(signature);
     }
 
+    @Exclude
     public String getFullName() {
         return String.format("%s %s", getFirstName(), getLastName());
     }
 
+    @Exclude
     public String getDescription() {
         return String.format("%s @ %s", getOccupation(), getCompany());
     }
@@ -62,7 +65,7 @@ public class User implements Persistent<User> {
         return email;
     }
 
-    private void setEmail(String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -70,7 +73,7 @@ public class User implements Persistent<User> {
         return phoneNumber;
     }
 
-    private void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
@@ -78,7 +81,7 @@ public class User implements Persistent<User> {
         return firstName;
     }
 
-    private void setFirstName(String firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
@@ -86,7 +89,7 @@ public class User implements Persistent<User> {
         return lastName;
     }
 
-    private void setLastName(String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
@@ -94,7 +97,7 @@ public class User implements Persistent<User> {
         return occupation;
     }
 
-    private void setOccupation(String occupation) {
+    public void setOccupation(String occupation) {
         this.occupation = occupation;
     }
 
@@ -102,7 +105,7 @@ public class User implements Persistent<User> {
         return company;
     }
 
-    private void setCompany(String company) {
+    public void setCompany(String company) {
         this.company = company;
     }
 

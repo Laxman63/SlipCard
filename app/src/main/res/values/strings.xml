@@ -53,4 +53,5 @@
     <string name="collectionTitle">Collection</string>
     <string name="networkTitle">Network</string>
     <string name="search">Search</string>
+    <string name="error_invalid_phoneNumber">This phone number is invalid</string>
 </resources>
