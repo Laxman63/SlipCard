@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.silpe.vire.slip.YoloFragment">
+    tools:context="com.silpe.vire.slip.fragments.NetworkFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

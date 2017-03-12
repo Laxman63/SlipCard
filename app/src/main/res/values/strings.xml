@@ -10,4 +10,52 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_account">Account</string>
+    <string name="action_logout">Log out</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions." </string>
+    <string name="auth_failed">Login failed</string>
+    <string name="auth_success">Login success</string>
+    <string name="register_failed">Registration failed</string>
+    <string name="register_success">Register success</string>
+    <string name="title_activity_register">Register</string>
+    <string name="prompt_firstName">First name</string>
+    <string name="prompt_lastName">Last name</string>
+    <string name="prompt_occupation">Occupation</string>
+    <string name="prompt_company">Company</string>
+    <string name="action_register">Accept</string>
+    <string name="action_register_short">Register</string>
+    <string name="database_users">users</string>
+    <string name="database_profile_picture">profile_picture.jpg</string>
+    <string name="database_connections">connections</string>
+    <string name="login_logo">sliplogo</string>
+    <string name="login_register_prompt">No account? Create one</string>
+    <string name="login_button_text">Login</string>
+    <string name="qr_scan_name">Scan</string>
+    <string name="account_profile_picture">accountprofilepicture</string>
+    <string name="account_name">Profile</string>
+    <string name="prompt_edit">edit</string>
+    <string name="account_profile_picture_edit_text">Edit</string>
+    <string name="account_contact_info_title">Contact Info</string>
+    <string name="prompt_phone">Phone number</string>
+    <string name="account_accept_button_text">Accept</string>
+    <string name="myCardTitle">My Card</string>
+    <string name="collectionTitle">Collection</string>
+    <string name="networkTitle">Network</string>
+    <string name="search">Search</string>
+    <string name="error_invalid_phoneNumber">This phone number is invalid</string>
+    <string name="database_user_signature">signature</string>
+    <string name="profile_picture">profile_picture</string>
+    <string name="picture_folder">slipPics</string>
+    <string name="double_back_prompt">Double-tap BACK to exit</string>
 </resources>
