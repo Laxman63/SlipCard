@@ -4,8 +4,8 @@
     tools:context="com.silpe.vire.slip.MainActivity">
     <item
         android:id="@+id/action_search"
-        android:icon="@drawable/search_icon"
-        android:title="@string/srch"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
     <item

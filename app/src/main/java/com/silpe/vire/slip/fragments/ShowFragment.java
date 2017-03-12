@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +29,10 @@ import com.silpe.vire.slip.models.SessionModel;
 import java.io.File;
 
 public class ShowFragment extends Fragment {
-    TextView firstName, lastName, occupation, company, email, id;
-
 
     public ShowFragment() {
         super();
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,22 +45,23 @@ public class ShowFragment extends Fragment {
         final SessionModel session = SessionModel.get();
         final User user = session.getUser(getContext());
 
+        TextView firstNameView = ((TextView) view.findViewById(R.id.show_firstName));
+        TextView lastNameView = ((TextView) view.findViewById(R.id.show_lastName));
+        TextView occupationView = ((TextView) view.findViewById(R.id.show_occupation));
+        TextView companyView = ((TextView) view.findViewById(R.id.show_company));
+        TextView emailView = ((TextView) view.findViewById(R.id.show_email));
+        TextView phoneNumberView = ((TextView) view.findViewById(R.id.show_phone));
+        TextView uidView = ((TextView) view.findViewById(R.id.show_uid));
 
+        firstNameView.setText(user.getFirstName());
+        lastNameView.setText(user.getLastName());
+        occupationView.setText(user.getOccupation());
+        companyView.setText(user.getCompany());
+        emailView.setText(user.getEmail());
+        uidView.setText(user.getUid());
 
-        firstName = ((TextView) view.findViewById(R.id.show_firstName));
-        lastName = ((TextView) view.findViewById(R.id.show_lastName));
-        occupation = ((TextView) view.findViewById(R.id.show_occupation));
-        company = ((TextView) view.findViewById(R.id.show_company));
-        email = ((TextView) view.findViewById(R.id.show_email));
-        id = ((TextView) view.findViewById(R.id.show_uid));
-
-
-        firstName.setText(user.getFirstName());
-        lastName.setText(user.getLastName());
-        occupation.setText(user.getOccupation());
-        company.setText(user.getCompany());
-        email.setText(user.getEmail());
-        id.setText(user.getUid());
+        String phoneNumber = user.getPhoneNumber();
+        phoneNumberView.setText(phoneNumber.isEmpty() ? "+ Add a phone number" : phoneNumber);
 
 
         final ImageView imageView = (ImageView) view.findViewById(R.id.show_profile_picture);
@@ -77,6 +74,8 @@ public class ShowFragment extends Fragment {
                     .signature(new TimestampSignature(user.getSignature()))
                     .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
                     .into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.empty_profile);
         }
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override

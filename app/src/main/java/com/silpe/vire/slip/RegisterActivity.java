@@ -2,9 +2,7 @@ package com.silpe.vire.slip;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -69,6 +67,12 @@ public class RegisterActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
     }
 
+    @Override
+    public void onBackPressed() {
+        FirebaseAuth.getInstance().signOut();
+        super.onBackPressed();
+    }
+
     private void attemptRegister() {
         // Reset errors.
         mFirstNameView.setError(null);
@@ -114,13 +118,14 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
+        /*
+         * TODO
+         * -- Make the register form look nicer
+         * -- Overlay the loading indicator instead of hiding everything
+         * -- Add load timeout
+         */
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                 show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
@@ -144,10 +149,15 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        User slipUser = new User(user.getUid(), user.getEmail(), firstName, lastName, occupation, company, 0);
+        if (user == null) {
+            return;
+            // TODO Handle unexpected user session end OR make errors impossible
+        }
+        User slipUser = new User(user.getUid(), user.getEmail(), "", firstName, lastName, occupation, company, 0);
         SessionModel.get().setUser(slipUser, this);
         ref.child(getString(R.string.database_users)).child(slipUser.getUid()).setValue(slipUser);
         Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

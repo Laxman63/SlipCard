@@ -23,7 +23,8 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/toolbar_height">
+        android:layout_marginTop="@dimen/toolbar_height"
+        android:background="@color/whiteBackground">
 
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -34,7 +35,9 @@
                 android:id="@+id/account_profile_block"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/account_profile_block_margin">
+                android:layout_marginLeft="@dimen/account_profile_margin"
+                android:layout_marginStart="@dimen/account_profile_margin"
+                android:layout_marginTop="@dimen/account_profile_margin">
 
                 <RelativeLayout
                     android:id="@+id/account_profile_picture_container"
@@ -43,6 +46,7 @@
 
                     <ImageView
                         android:id="@+id/account_profile_picture"
+                        style="@style/ElevationBasic"
                         android:layout_width="@dimen/account_profile_picture_size"
                         android:layout_height="@dimen/account_profile_picture_size"
                         android:contentDescription="@string/account_profile_picture" />
@@ -61,12 +65,11 @@
                             android:id="@+id/account_profile_picture_edit_icon"
                             android:layout_width="@dimen/small_icon"
                             android:layout_height="@dimen/small_icon"
+                            android:layout_margin="@dimen/account_profile_padding_small"
                             android:contentDescription="@string/prompt_edit"
-                            app:srcCompat="@drawable/ic_mode_edit_white_24dp"
-                            android:layout_margin="@dimen/account_profile_edit_block_margin_horizontal"/>
+                            app:srcCompat="@drawable/ic_mode_edit_white_24dp" />
 
                         <TextView
-                            android:textSize="@dimen/small_text"
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/zero"
                             android:layout_alignBottom="@id/account_profile_picture_edit_icon"
@@ -75,7 +78,8 @@
                             android:layout_toRightOf="@id/account_profile_picture_edit_icon"
                             android:gravity="center"
                             android:text="@string/account_profile_picture_edit_text"
-                            android:textColor="@color/white">
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/small_text">
 
                         </TextView>
                     </RelativeLayout>
@@ -87,7 +91,8 @@
                     android:layout_height="@dimen/zero"
                     android:layout_alignBottom="@id/account_profile_picture_container"
                     android:layout_alignTop="@id/account_profile_picture_container"
-                    android:layout_margin="10dp"
+                    android:layout_marginLeft="@dimen/account_career_block_padding"
+                    android:layout_marginStart="@dimen/account_career_block_padding"
                     android:layout_toEndOf="@id/account_profile_picture_container"
                     android:layout_toRightOf="@id/account_profile_picture_container"
                     android:gravity="center"
@@ -99,10 +104,12 @@
                         android:layout_weight="1">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/account_first_name_field"
+                            android:id="@+id/account_firstNameField"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_firstName" />
+                            android:hint="@string/prompt_firstName"
+                            android:inputType="textPersonName"
+                            android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -111,10 +118,12 @@
                         android:layout_weight="1">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/account_last_name_field"
+                            android:id="@+id/account_lastNameField"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_lastName" />
+                            android:hint="@string/prompt_lastName"
+                            android:inputType="textPersonName"
+                            android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
                 </android.support.v7.widget.LinearLayoutCompat>
             </RelativeLayout>
@@ -122,10 +131,10 @@
             <android.support.v7.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/account_profile_block_margin"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/account_career_block_padding"
-                android:paddingRight="@dimen/account_career_block_padding">
+                android:layout_marginLeft="@dimen/account_career_block_padding"
+                android:layout_marginStart="@dimen/account_career_block_padding"
+                android:layout_marginTop="@dimen/account_profile_margin"
+                android:orientation="vertical">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -133,10 +142,13 @@
                     android:layout_weight="1">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/account_occupation_field"
+                        android:id="@+id/account_occupationField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prompt_occupation" />
+                        android:layout_marginTop="@dimen/account_profile_margin"
+                        android:hint="@string/prompt_occupation"
+                        android:inputType="text"
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -145,12 +157,63 @@
                     android:layout_weight="1">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/account_company_field"
+                        android:id="@+id/account_companyField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prompt_company" />
+                        android:layout_marginTop="@dimen/account_profile_margin"
+                        android:hint="@string/prompt_company"
+                        android:inputType="text"
+                        android:maxLines="1" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/account_emailField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/account_profile_margin"
+                        android:hint="@string/prompt_email"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/account_phoneNumberField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/account_profile_margin"
+                        android:hint="@string/prompt_phone"
+                        android:inputType="phone"
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
             </android.support.v7.widget.LinearLayoutCompat>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/account_accept_button"
+                    android:layout_width="@dimen/button"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/account_profile_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:text="@string/account_accept_button_text" />
+            </RelativeLayout>
         </android.support.v7.widget.LinearLayoutCompat>
     </ScrollView>
 </FrameLayout>

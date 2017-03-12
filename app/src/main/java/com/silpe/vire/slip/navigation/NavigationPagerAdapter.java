@@ -1,39 +1,39 @@
 package com.silpe.vire.slip.navigation;
 
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.widget.Toolbar;
 
-import com.silpe.vire.slip.MainActivity;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.collection.CollectionFragment;
 import com.silpe.vire.slip.fragments.ShowFragment;
 import com.silpe.vire.slip.fragments.NetworkFragment;
 
 public class NavigationPagerAdapter extends FragmentPagerAdapter {
-    Fragment show, collect, network;
-    Context context;
 
-    public NavigationPagerAdapter(FragmentManager fm, Context contxt) {
-        super(fm);
-        context = contxt;
-        show = new ShowFragment();
-        collect =  new CollectionFragment();
-        network = new NetworkFragment();
+    private Fragment mMyCardFragment;
+    private Fragment mCollectionFragment;
+    private Fragment mNetworkFragment;
+    private Context mContext;
+
+    public NavigationPagerAdapter(FragmentManager fragmentManager, Context context) {
+        super(fragmentManager);
+        mContext = context;
+        mMyCardFragment = new ShowFragment();
+        mCollectionFragment = new CollectionFragment();
+        mNetworkFragment = new NetworkFragment();
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return show;
+                return mMyCardFragment;
             case 1:
-                return collect;
+                return mCollectionFragment;
             case 2:
-                return network;
+                return mNetworkFragment;
         }
         return null;
     }
@@ -43,16 +43,15 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
         return 3;
     }
 
-
     @Override
     public CharSequence getPageTitle(int position) {
-        switch(position) {
+        switch (position) {
             case 0:
-                return context.getString(R.string.fragment0title);
+                return mContext.getString(R.string.myCardTitle);
             case 1:
-                return context.getString(R.string.fragment1title);
+                return mContext.getString(R.string.collectionTitle);
             case 2:
-                return context.getString(R.string.fragment2title);
+                return mContext.getString(R.string.networkTitle);
         }
         return null;
     }
