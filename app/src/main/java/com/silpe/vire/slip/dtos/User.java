@@ -9,6 +9,7 @@ public class User implements Persistent<User> {
     private String uid;
 
     private String email;
+    private String phoneNumber;
     private String firstName;
     private String lastName;
     private String occupation;
@@ -17,13 +18,23 @@ public class User implements Persistent<User> {
     private long signature;
 
     public User() {
-
+        uid = "";
+        email = "";
+        phoneNumber = "";
+        firstName = "";
+        lastName = "";
+        occupation = "";
+        company = "";
+        signature = 0;
     }
 
-    public User(String uid, String email, String firstName, String lastName, String occupation, String company, long signature) {
+    public User(String uid, String email, String phoneNumber,
+                String firstName, String lastName,
+                String occupation, String company, long signature) {
         this();
         setUid(uid);
         setEmail(email);
+        setPhoneNumber(phoneNumber);
         setFirstName(firstName);
         setLastName(lastName);
         setOccupation(occupation);
@@ -53,6 +64,14 @@ public class User implements Persistent<User> {
 
     private void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    private void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getFirstName() {
@@ -110,14 +129,14 @@ public class User implements Persistent<User> {
 
     @Override
     public String encode() {
-        return String.format(Locale.US, "%s&%s&%s&%s&%s&%s&%d",
-                uid, email, firstName, lastName, occupation, company, signature);
+        return String.format(Locale.US, "%s&%s&%s&%s&%s&%s&%s&%d",
+                uid, email, phoneNumber, firstName, lastName, occupation, company, signature);
     }
 
     @Override
     public User decode(String serial) {
         final String[] kv = serial.split("&");
-        return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], Long.valueOf(kv[6]));
+        return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], kv[6], Long.valueOf(kv[7]));
     }
 
 

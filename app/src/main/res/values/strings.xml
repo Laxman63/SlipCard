@@ -50,4 +50,5 @@
     <string name="account_profile_picture_edit_text">Edit</string>
     <string name="account_contact_info_title">Contact Info</string>
     <string name="prompt_phone">Phone number</string>
+    <string name="account_accept_button_text">Accept</string>
 </resources>

@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.silpe.vire.slip.R;
 
 public class QRFragment extends Fragment {
-    private static final String UID = "uid";
+    private static final String UID = "mUidView";
 
     private String uid;
 

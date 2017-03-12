@@ -103,10 +103,12 @@
                         android:layout_weight="1">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/account_first_name_field"
+                            android:id="@+id/account_firstNameField"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_firstName" />
+                            android:hint="@string/prompt_firstName"
+                            android:inputType="textPersonName"
+                            android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
@@ -115,10 +117,12 @@
                         android:layout_weight="1">
 
                         <android.support.design.widget.TextInputEditText
-                            android:id="@+id/account_last_name_field"
+                            android:id="@+id/account_lastNameField"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/prompt_lastName" />
+                            android:hint="@string/prompt_lastName"
+                            android:inputType="textPersonName"
+                            android:maxLines="1" />
                     </android.support.design.widget.TextInputLayout>
                 </android.support.v7.widget.LinearLayoutCompat>
             </RelativeLayout>
@@ -137,11 +141,13 @@
                     android:layout_weight="1">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/account_occupation_field"
+                        android:id="@+id/account_occupationField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/account_profile_margin"
-                        android:hint="@string/prompt_occupation" />
+                        android:hint="@string/prompt_occupation"
+                        android:inputType="text"
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -150,11 +156,13 @@
                     android:layout_weight="1">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/account_company_field"
+                        android:id="@+id/account_companyField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/account_profile_margin"
-                        android:hint="@string/prompt_company" />
+                        android:hint="@string/prompt_company"
+                        android:inputType="text"
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -163,11 +171,13 @@
                     android:layout_weight="1">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/account_email_field"
+                        android:id="@+id/account_emailField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/account_profile_margin"
-                        android:hint="@string/prompt_email" />
+                        android:hint="@string/prompt_email"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -176,13 +186,32 @@
                     android:layout_weight="1">
 
                     <android.support.design.widget.TextInputEditText
-                        android:id="@+id/account_phone_field"
+                        android:id="@+id/account_phoneNumberField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/account_profile_margin"
-                        android:hint="@string/prompt_phone" />
+                        android:hint="@string/prompt_phone"
+                        android:inputType="phone"
+                        android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
             </android.support.v7.widget.LinearLayoutCompat>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/account_accept_button"
+                    android:layout_width="@dimen/button"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/account_profile_margin"
+                    android:text="@string/account_accept_button_text" />
+            </RelativeLayout>
         </android.support.v7.widget.LinearLayoutCompat>
     </ScrollView>
 </FrameLayout>

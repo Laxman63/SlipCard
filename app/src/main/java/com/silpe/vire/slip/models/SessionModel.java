@@ -30,26 +30,17 @@ public class SessionModel {
 
     private User user;
 
-    private User getUser() {
-        if (user == null){
-            user = new User("Uid", "testcase@email.com", "John" , "lastName" , "Debugger" , "Slip", 0xd);
-        }
-        return user;
-    }
 
     public User getUser(Context context) {
         if (user == null) {
             readUser(context);
         }
-        return getUser();
+        return user;
     }
 
-    private void setUser(User user) {
-        this.user = user;
-    }
 
     public void setUser(User user, Context context) {
-        setUser(user);
+        this.user = user;
         cacheUser(context);
     }
 

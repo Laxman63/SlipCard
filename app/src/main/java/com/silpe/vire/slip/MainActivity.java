@@ -26,7 +26,6 @@ import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 public class MainActivity extends AppCompatActivity {
 
     private static final String QR_FRAGMENT = "fragment_qr";
-    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fbUser == null) {
-            SessionModel.get().setUser(null, this);
-            startActivity(new Intent(this, LoginActivity.class));
+            onBackPressed();
         } else {
             // TODO Move this handling into a separate listener class
             if (SessionModel.get().getUser(this) == null) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                 ref = ref.child(getString(R.string.database_users)).child(fbUser.getUid());
+                // TODO Add a timeout feature
                 ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
