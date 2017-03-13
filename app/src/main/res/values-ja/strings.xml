@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Slip</string>
+    <string name="account_accept_button_text">Yolo</string>
 </resources>

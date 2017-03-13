@@ -1,12 +1,10 @@
 package com.silpe.vire.slip;
 
-import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -14,9 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
-
+import android.widget.LinearLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,13 +28,28 @@ import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    static final String QR_FRAGMENT = "fragment_qr";
+    private static final String SEARCH_FRAGMENT = "fragment_search";
     private static final String ACCOUNT_FRAGMENT = "fragment_account";
-    private static final String QR_FRAGMENT = "fragment_qr";
+
+    Toolbar toolbar;
+    ViewPager viewPager;
+    TabLayout tabLayout;
+    NavigationPagerAdapter navigationPagerAdapter;
+    SearchView  searchView;
+    LinearLayout body, searchlist;
+    Context contxt;
+    User user;
+    FloatingActionButton fab;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        contxt = getApplicationContext();
 
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fbUser == null) {
@@ -82,16 +93,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Set up the QR Code floating action button
-        final User user = SessionModel.get().getUser(this);
-        final FloatingActionButton scanFab = (FloatingActionButton) findViewById(R.id.scanFab);
-        scanFab.setOnClickListener(new View.OnClickListener() {
+
+        user = SessionModel.get().getUser(this);
+        fab = (FloatingActionButton) findViewById(R.id.scanFab);
+        fab.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View view) {
                 if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
                     MainActivity.this.getSupportFragmentManager()
                             .beginTransaction()
-                            .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), QR_FRAGMENT)
-                            .addToBackStack(QR_FRAGMENT)
+                            .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), SEARCH_FRAGMENT)
+                            .addToBackStack(SEARCH_FRAGMENT)
                             .commit();
                 }
             }
@@ -112,44 +126,17 @@ public class MainActivity extends AppCompatActivity {
         // Retrieve the SearchView and plug it into SearchManager
         final MenuItem searchItem = menu.findItem(R.id.action_search);
 
-        if (searchItem != null) {
-            SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
 
-                @Override
-                public boolean onClose() {
-                    return false;
-                }
-            });
-            searchView.setOnSearchClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //some operation
-                }
-            });
-            EditText searchPlate = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-            searchPlate.setHint("Search");
-            View searchPlateView = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
-            searchPlateView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-            // use this method for search process
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    // use this method when query submitted
-                    Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
-                    return false;
-                }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    // use this method for auto complete search process
-                    return false;
-                }
-            });
-            SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
-        }
+        searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(contxt, SearchList.class);
+                startActivity(intent);
+                return false;
+            }
+        });
         return true;
     }
 
