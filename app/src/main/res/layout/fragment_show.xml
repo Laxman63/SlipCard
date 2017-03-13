@@ -1,13 +1,66 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.silpe.vire.slip.ShowFragment">
+    android:layout_margin="24dp"
+    android:orientation="vertical"
+    tools:context="com.silpe.vire.slip.fragments.MyCardFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <com.silpe.vire.slip.components.ProfilePictureView
+        android:id="@+id/show_profile_picture"
+        android:layout_width="@dimen/show_profile_picture_size"
+        android:layout_height="@dimen/show_profile_picture_size"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/profile_picture" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Show Fragments" />
+        android:id="@+id/show_firstName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="firstName" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/show_lastName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="lastName" />
+
+    <TextView
+        android:id="@+id/show_occupation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="occupation" />
+
+    <TextView
+        android:id="@+id/show_company"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="company" />
+
+    <TextView
+        android:id="@+id/show_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="email" />
+
+    <TextView
+        android:id="@+id/show_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="phone number" />
+
+    <TextView
+        android:id="@+id/show_uid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="uid" />
+    <!-- TODO <END> remove later-->
+
+</android.support.v7.widget.LinearLayoutCompat>

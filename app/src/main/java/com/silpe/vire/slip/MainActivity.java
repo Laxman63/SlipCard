@@ -1,179 +1,186 @@
 package com.silpe.vire.slip;
 
+import android.app.SearchManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.TabHost;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import it.neokree.materialtabs.MaterialTab;
-import it.neokree.materialtabs.MaterialTabHost;
-import it.neokree.materialtabs.MaterialTabListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.silpe.vire.slip.dtos.User;
+import com.silpe.vire.slip.fragments.AccountFragment;
+import com.silpe.vire.slip.fragments.QRFragment;
+import com.silpe.vire.slip.models.SessionModel;
+import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements MaterialTabListener{
-    Toolbar toolbar;
-    MaterialTabHost tabHost;
-    ViewPager viewPager;
-    ViewPagerAdapter androidAdapter;
-    TabOrg taborgs;
+public class MainActivity extends AppCompatActivity {
 
-    final String[] tabs = {
-            "home", "show", "yolo"
-    };
-
+    private static final String ACCOUNT_FRAGMENT = "fragment_account";
+    private static final String QR_FRAGMENT = "fragment_qr";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (fbUser == null) {
+            SessionModel.get().setUser(null, this);
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        } else {
+            // TODO Move this handling into a separate listener class
+            if (SessionModel.get().getUser(this) == null) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                ref = ref.child(getString(R.string.database_users)).child(fbUser.getUid());
+                // TODO Add a timeout feature
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        User user = snapshot.getValue(User.class);
+                        if (user == null) {
+                            FirebaseAuth.getInstance().signOut();
+                            SessionModel.get().setUser(null, MainActivity.this);
+                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        } else {
+                            SessionModel.get().setUser(user, MainActivity.this);
+                            construct();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+            } else {
+                construct();
+            }
+        }
+    }
+
+    private void construct() {
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        // Set up the QR Code floating action button
+        final User user = SessionModel.get().getUser(this);
+        final FloatingActionButton scanFab = (FloatingActionButton) findViewById(R.id.scanFab);
+        scanFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
+                    MainActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), QR_FRAGMENT)
+                            .addToBackStack(QR_FRAGMENT)
+                            .commit();
+                }
             }
         });
 
-        taborgs = new TabOrg();
+        // Set up the pagination and tab navigation
+        NavigationPagerAdapter navigationPagerAdapter = new NavigationPagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.toplevelPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.toplevelTabs);
 
-        //tab host
-        tabHost = (MaterialTabHost) this.findViewById(R.id.tabHost);
-        viewPager = (ViewPager) this.findViewById(R.id.viewPager);
-
-        //adapter view
-        androidAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(androidAdapter);
-        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int tabposition) {
-                tabHost.setSelectedNavigationItem(tabposition);
-            }
-        });
-
-        //for tab position
-        for (int i = 0; i < androidAdapter.getCount(); i++) {
-            tabHost.addTab(
-                    tabHost.newTab()
-                            .setText(androidAdapter.getPageTitle(i))
-                            .setTabListener(this)
-            );
-        }
-    }
-
-    // view pager adapter
-    private class ViewPagerAdapter extends FragmentStatePagerAdapter {
-
-        public ViewPagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        public Fragment getItem(int num) {
-            return taborgs.getFragment(num);
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int tabposition) {
-            return taborgs.getTitle(tabposition);
-        }
-    }
-
-    static class TabOrg  {
-        final String[] tabs = {
-                "home", "show", "yolo"
-        };
-
-        int index;
-        String name;
-        boolean initiated = false;
-
-        Fragment home ;
-        Fragment show;
-        Fragment yolo;
-
-        public TabOrg () {
-            home = new HomeFragment();
-            show = new ShowFragment();
-            yolo = new YoloFragment();
-        }
-
-        public String getTitle (int num) {
-            return tabs[num];
-        }
-
-        public Fragment getFragment (int index){
-            switch (index){
-                case 0:
-                    return home;
-                case 1:
-                    return show;
-                case 2:
-                    return yolo;
-                default:
-                    return home;
-            }
-        }
-
+        viewPager.setAdapter(navigationPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        // Retrieve the SearchView and plug it into SearchManager
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        if (searchItem != null) {
+            SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+            searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+
+                @Override
+                public boolean onClose() {
+                    return false;
+                }
+            });
+            searchView.setOnSearchClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //some operation
+                }
+            });
+            EditText searchPlate = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            searchPlate.setHint("Search");
+            View searchPlateView = searchView.findViewById(android.support.v7.appcompat.R.id.search_plate);
+            searchPlateView.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
+            // use this method for search process
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    // use this method when query submitted
+                    Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    // use this method for auto complete search process
+                    return false;
+                }
+            });
+            SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        final int id = item.getItemId();
+        if (id == R.id.action_logout) {
+            SessionModel.get().setUser(null, this);
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             return true;
+        } else if (id == R.id.action_account) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.toplevel, new AccountFragment(), ACCOUNT_FRAGMENT)
+                    .addToBackStack(ACCOUNT_FRAGMENT)
+                    .commit();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    //tab on selected
+    /**
+     * If there is a fragment stack, such as {@code QRFragment}
+     * or {@code AccountFragment}, then pressing "Back" will
+     * return to the previous fragment. Otherwise, pressing
+     * "Back" will do nothing in the main screen.
+     */
     @Override
-    public void onTabSelected(MaterialTab materialTab) {
-
-        viewPager.setCurrentItem(materialTab.getPosition());
+    public void onBackPressed() {
+        getSupportFragmentManager().popBackStackImmediate();
     }
-
-    //tab on reselected
-    @Override
-    public void onTabReselected(MaterialTab materialTab) {
-
-    }
-
-    //tab on unselected
-    @Override
-    public void onTabUnselected(MaterialTab materialTab) {
-
-    }
-
-
 
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/card_preview_height"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/card_preview_vertical_padding"
+    android:paddingLeft="@dimen/card_preview_horizontal_padding"
+    android:paddingRight="@dimen/card_preview_horizontal_padding"
+    android:paddingTop="@dimen/card_preview_vertical_padding"
+    tools:context="com.silpe.vire.slip.MainActivity">
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/card_toplevel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:elevation="@dimen/card_elevation"
+        tools:targetApi="lollipop">
+        <!-- TODO REMOVE tools:targetApi="lollipop" and add pre-21 support for shadows -->
+
+        <com.silpe.vire.slip.components.ProfilePictureView
+            android:id="@+id/card_picture"
+            android:layout_width="@dimen/card_profile_picture"
+            android:layout_height="@dimen/card_profile_picture" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/card_description"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/card_description"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/card_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/card_description"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignWithParentIfMissing="true"
+                android:gravity="center_vertical"
+                android:textSize="25sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.LinearLayoutCompat>
+</RelativeLayout>
