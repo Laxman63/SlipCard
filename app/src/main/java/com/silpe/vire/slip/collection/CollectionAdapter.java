@@ -17,7 +17,6 @@ import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.components.ProfilePictureView;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.fragments.ConnectionFragment;
-import com.silpe.vire.slip.fragments.QRFragment;
 import com.silpe.vire.slip.image.TimestampSignature;
 
 import java.util.List;
@@ -160,6 +159,11 @@ class CollectionCardClickListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.card_flip_right_in,
+                        R.anim.card_flip_right_out,
+                        R.anim.card_flip_left_in,
+                        R.anim.card_flip_left_out)
                 .replace(R.id.toplevel, ConnectionFragment.newInstance(user), CONNECTION_FRAGMENt)
                 .addToBackStack(CONNECTION_FRAGMENt)
                 .commit();

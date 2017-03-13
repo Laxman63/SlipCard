@@ -36,7 +36,7 @@ public class CollectionFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         final User user = SessionModel.get().getUser(getContext());
         if (user != null) {
