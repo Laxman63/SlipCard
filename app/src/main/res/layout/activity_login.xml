@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/login_logo_height"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="@dimen/login_logo_margin"
                 android:contentDescription="@string/login_logo"
                 android:src="@drawable/logotransparent" />
 
@@ -92,11 +92,17 @@
         android:clickable="true"
         android:visibility="gone">
 
-        <ProgressBar
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="280dp"
+            android:layout_height="170dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/background_modal">
 
+            <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+    </RelativeLayout>
 </RelativeLayout>
