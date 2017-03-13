@@ -66,7 +66,7 @@ public class User implements Persistent<User> {
                 .getReference()
                 .child(context.getString(R.string.database_users))
                 .child(getUid())
-                .child(context.getString(R.string.database_profile_picture));
+                .child(context.getString(R.string.database_profilePicture));
     }
 
     @Exclude

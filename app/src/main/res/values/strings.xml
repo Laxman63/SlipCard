@@ -36,7 +36,7 @@
     <string name="action_register">Accept</string>
     <string name="action_register_short">Register</string>
     <string name="database_users">users</string>
-    <string name="database_profile_picture">profile_picture.jpg</string>
+    <string name="database_profilePicture">profile_picture.jpg</string>
     <string name="database_connections">connections</string>
     <string name="login_logo">sliplogo</string>
     <string name="login_register_prompt">No account? Create one</string>
@@ -47,7 +47,7 @@
     <string name="prompt_edit">edit</string>
     <string name="account_profile_picture_edit_text">Edit</string>
     <string name="account_contact_info_title">Contact Info</string>
-    <string name="prompt_phone">Phone number</string>
+    <string name="prompt_phoneNumber">Phone number</string>
     <string name="account_accept_button_text">Accept</string>
     <string name="myCardTitle">My Card</string>
     <string name="collectionTitle">Collection</string>
@@ -58,4 +58,7 @@
     <string name="profile_picture">profile_picture</string>
     <string name="picture_folder">slipPics</string>
     <string name="double_back_prompt">Double-tap BACK to exit</string>
+    <string name="prompt_fullName">Full name</string>
+    <string name="prompt_description">Description</string>
+    <string name="prompt_connections">Connections</string>
 </resources>
