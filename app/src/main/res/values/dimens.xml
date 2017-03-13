@@ -26,4 +26,8 @@
     <dimen name="title_text">24sp</dimen>
     <dimen name="button">200dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="card_corner_radius">3dip</dimen>
+    <dimen name="modal_corner_radius">5dip</dimen>
+    <dimen name="login_logo_margin">24dp</dimen>
+    <dimen name="large_text">18sp</dimen>
 </resources>

@@ -1,8 +1,8 @@
 package com.silpe.vire.slip.collection;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +16,8 @@ import com.google.firebase.storage.StorageReference;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.components.ProfilePictureView;
 import com.silpe.vire.slip.dtos.User;
+import com.silpe.vire.slip.fragments.ConnectionFragment;
+import com.silpe.vire.slip.image.TimestampSignature;
 
 import java.util.List;
 
@@ -31,29 +33,37 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
 
         private View view;
         private ProfilePictureView profilePicture;
+        private LinearLayoutCompat toplevel;
         private TextView fullName;
         private TextView description;
 
-        ViewHolder(View view) {
+        private ViewHolder(View view) {
             super(view);
             this.view = view;
         }
 
-        ProfilePictureView getProfilePicture() {
+        private ProfilePictureView getProfilePicture() {
             if (profilePicture == null) {
                 profilePicture = (ProfilePictureView) view.findViewById(R.id.card_picture);
             }
             return profilePicture;
         }
 
-        TextView getFullName() {
+        private LinearLayoutCompat getToplevel() {
+            if (toplevel == null) {
+                toplevel = (LinearLayoutCompat) view.findViewById(R.id.card_toplevel);
+            }
+            return toplevel;
+        }
+
+        private TextView getFullName() {
             if (fullName == null) {
                 fullName = (TextView) view.findViewById(R.id.card_name);
             }
             return fullName;
         }
 
-        TextView getDescription() {
+        private TextView getDescription() {
             if (description == null) {
                 description = (TextView) view.findViewById(R.id.card_description);
             }
@@ -68,10 +78,6 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
             return getContext().getString(stringId);
         }
 
-        private Drawable getPlaceholderProfilePicture() {
-            return ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.empty_profile, null);
-        }
-
     }
 
     /**
@@ -82,8 +88,10 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
      * -> Gracefully passes this update to the adapter
      */
     private CollectionHashList users;
+    private FragmentManager fragmentManager;
 
-    CollectionAdapter() {
+    CollectionAdapter(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
         users = new CollectionHashList();
     }
 
@@ -102,14 +110,19 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
                 .getReference()
                 .child(holder.getString(R.string.database_users))
                 .child(user.getUid())
-                .child(holder.getString(R.string.database_profile_picture));
+                .child(holder.getString(R.string.database_profilePicture));
         holder.getFullName().setText(user.getFullName());
         holder.getDescription().setText(user.getDescription());
-        Glide.with(holder.getContext())
-                .using(new FirebaseImageLoader())
-                .load(pRef)
-                .error(holder.getPlaceholderProfilePicture())
-                .into(holder.getProfilePicture());
+        if (user.getSignature() > 0) {
+            Glide.with(holder.getContext())
+                    .using(new FirebaseImageLoader())
+                    .load(pRef)
+                    .signature(new TimestampSignature(user.getSignature()))
+                    .into(holder.getProfilePicture());
+        } else {
+            holder.getProfilePicture().setImageResource(R.drawable.empty_profile);
+        }
+        holder.getToplevel().setOnClickListener(new CollectionCardClickListener(user, fragmentManager));
     }
 
     @Override
@@ -129,4 +142,30 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
         users.remove(uid, this);
     }
 
+}
+
+class CollectionCardClickListener implements View.OnClickListener {
+
+    private static final String CONNECTION_FRAGMENt = "connection";
+
+    private final User user;
+    private final FragmentManager fragmentManager;
+
+    CollectionCardClickListener(User user, FragmentManager fragmentManager) {
+        this.user = user;
+        this.fragmentManager = fragmentManager;
+    }
+
+    @Override
+    public void onClick(View v) {
+        fragmentManager.beginTransaction()
+                .setCustomAnimations(
+                        R.anim.card_flip_right_in,
+                        R.anim.card_flip_right_out,
+                        R.anim.card_flip_left_in,
+                        R.anim.card_flip_left_out)
+                .replace(R.id.toplevel, ConnectionFragment.newInstance(user), CONNECTION_FRAGMENt)
+                .addToBackStack(CONNECTION_FRAGMENt)
+                .commit();
+    }
 }

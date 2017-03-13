@@ -3,16 +3,23 @@ package com.silpe.vire.slip.fragments;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.FirebaseDatabase;
 import com.silpe.vire.slip.R;
+import com.silpe.vire.slip.components.ProfileDisplayComponent;
+import com.silpe.vire.slip.components.ProfilePicturePicker;
+import com.silpe.vire.slip.components.ProfilePictureView;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.dtos.Validator;
+import com.silpe.vire.slip.image.TimestampSignature;
 import com.silpe.vire.slip.models.SessionModel;
 
 /**
@@ -21,7 +28,7 @@ import com.silpe.vire.slip.models.SessionModel;
  * click "Accept" in order to apply the changes. The exception
  * is for changing the profile picture.
  */
-public class AccountFragment extends Fragment {
+public class AccountFragment extends Fragment implements ProfileDisplayComponent {
 
     // User information input fields
     private TextInputEditText mFirstNameField;
@@ -31,9 +38,14 @@ public class AccountFragment extends Fragment {
     private TextInputEditText mEmailField;
     private TextInputEditText mPhoneNumberField;
 
+    /**
+     * A reference to the profile picture view. Tapping this
+     * view will prompt the user to select a new profile picture.
+     */
+    private ProfilePictureView mProfilePictureView;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account, container, false);
         // Obtain references to input fields
         mFirstNameField = (TextInputEditText) view.findViewById(R.id.account_firstNameField);
@@ -50,12 +62,33 @@ public class AccountFragment extends Fragment {
         mCompanyField.setText(user.getCompany());
         mEmailField.setText(user.getEmail());
         mPhoneNumberField.setText(user.getPhoneNumber());
-        // Bind the click listener
+        // Obtain reference to profile picture view and load the image
+        mProfilePictureView = (ProfilePictureView) view.findViewById(R.id.account_profile_picture);
+        if (user.getSignature() > 0) {
+            Glide.with(this)
+                    .using(new FirebaseImageLoader())
+                    .load(user.getProfilePictureReference(getContext()))
+                    .signature(new TimestampSignature(user.getSignature()))
+                    .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
+                    .into(mProfilePictureView);
+        } else {
+            mProfilePictureView.setImageResource(R.drawable.empty_profile);
+        }
+        // Bind click listeners to the accept button and profile picture
         Button acceptButton = (Button) view.findViewById(R.id.account_accept_button);
         acceptButton.setOnClickListener(new AcceptButtonListener());
+        mProfilePictureView.setOnClickListener(new ProfilePicturePicker(this));
         return view;
     }
 
+    /**
+     * Check the user's inputs in the fields. If there are any errors,
+     * indicate them to the user. This method will check the fields in reverse
+     * so that the user is directed to the first field with an error. If
+     * there are no errors, this method will update the database.
+     * <p>
+     * Required fields: first name, last name, occupation, company, email.
+     */
     private void doUpdate() {
         String firstName = mFirstNameField.getText().toString();
         String lastName = mLastNameField.getText().toString();
@@ -106,6 +139,16 @@ public class AccountFragment extends Fragment {
         }
     }
 
+    /**
+     * Send the updated {@code} user model to the database.
+     *
+     * @param firstName   updated first name
+     * @param lastName    updated last name
+     * @param occupation  updated occupation
+     * @param company     updated company
+     * @param email       updated email
+     * @param phoneNumber email phone number if any
+     */
     private void doUpdate(
             String firstName, String lastName,
             String occupation, String company,
@@ -125,6 +168,18 @@ public class AccountFragment extends Fragment {
                 .setValue(user);
     }
 
+    /**
+     * Obtain the reference to the {@code ProfilePictureView}
+     * as required by the {@code ProfileDisplayComponent} interface.
+     */
+    @Override
+    public ProfilePictureView getProfilePicture() {
+        return mProfilePictureView;
+    }
+
+    /**
+     * Listener for the accept button that will start an update.
+     */
     private class AcceptButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {

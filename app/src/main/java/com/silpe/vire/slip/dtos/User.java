@@ -1,6 +1,13 @@
 package com.silpe.vire.slip.dtos;
 
+import android.content.Context;
+
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.models.Persistent;
 
 import java.util.Locale;
@@ -43,8 +50,6 @@ public class User implements Persistent<User> {
         setSignature(signature);
     }
 
-
-
     @Exclude
     public String getFullName() {
         return String.format("%s %s", getFirstName(), getLastName());
@@ -53,6 +58,23 @@ public class User implements Persistent<User> {
     @Exclude
     public String getDescription() {
         return String.format("%s @ %s", getOccupation(), getCompany());
+    }
+
+    @Exclude
+    public StorageReference getProfilePictureReference(Context context) {
+        return FirebaseStorage.getInstance()
+                .getReference()
+                .child(context.getString(R.string.database_users))
+                .child(getUid())
+                .child(context.getString(R.string.database_profilePicture));
+    }
+
+    @Exclude
+    public DatabaseReference getDatabaseReference(Context context) {
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(context.getString(R.string.database_users))
+                .child(getUid());
     }
 
     public String getUid() {

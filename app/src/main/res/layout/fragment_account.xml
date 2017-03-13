@@ -44,9 +44,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <ImageView
+                    <com.silpe.vire.slip.components.ProfilePictureView
                         android:id="@+id/account_profile_picture"
-                        style="@style/ElevationBasic"
                         android:layout_width="@dimen/account_profile_picture_size"
                         android:layout_height="@dimen/account_profile_picture_size"
                         android:contentDescription="@string/account_profile_picture" />
@@ -191,7 +190,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/account_profile_margin"
-                        android:hint="@string/prompt_phone"
+                        android:hint="@string/prompt_phoneNumber"
                         android:inputType="phone"
                         android:maxLines="1" />
                 </android.support.design.widget.TextInputLayout>
@@ -206,12 +205,12 @@
                     android:layout_width="@dimen/button"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/account_profile_margin"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:text="@string/account_accept_button_text" />
             </RelativeLayout>
         </android.support.v7.widget.LinearLayoutCompat>

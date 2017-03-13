@@ -21,7 +21,7 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
         super(fragmentManager);
         mContext = context;
         mMyCardFragment = new MyCardFragment();
-        mCollectionFragment = new CollectionFragment();
+        mCollectionFragment = CollectionFragment.newInstance(fragmentManager);
         mNetworkFragment = new NetworkFragment();
     }
 
