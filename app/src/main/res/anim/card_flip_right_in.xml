@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<alpha
+        android:duration="0"
+        android:fromAlpha="1.0"
+        android:toAlpha="0.0" />
+    <rotate
+        android:duration="@integer/card_flip_time_full"
+        android:fromDegrees="180"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:pivotX="0%"
+        android:pivotY="100%"
+        android:toDegrees="0" />
+    <alpha
+        android:duration="1"
+        android:fromAlpha="0.0"
+        android:startOffset="@integer/card_flip_time_half"
+        android:toAlpha="1.0" />-->
+    <alpha
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0"
+        android:duration="@integer/card_flip_time_half"/>
+</set>
