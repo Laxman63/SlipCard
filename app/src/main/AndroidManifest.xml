@@ -42,7 +42,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:name=".SearchList"
+            android:name=".SearchActivity"
             android:label="@string/title_activity_search_list"
             android:theme="@style/noAnimTheme"
             android:parentActivityName=".MainActivity"
