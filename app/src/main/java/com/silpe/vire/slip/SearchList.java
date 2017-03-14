@@ -15,7 +15,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 public class SearchList extends AppCompatActivity {
-    Context contxt;
+
+    private SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +24,6 @@ public class SearchList extends AppCompatActivity {
         setContentView(R.layout.activity_search_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -38,8 +37,6 @@ public class SearchList extends AppCompatActivity {
     }
 
 
-
-    SearchView searchView;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_search, menu);
@@ -47,29 +44,27 @@ public class SearchList extends AppCompatActivity {
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) searchMenuItem.getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
+        mSearchView = (SearchView) searchMenuItem.getActionView();
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         menu.findItem(R.id.action_search).expandActionView();
-        searchView.setQueryHint(getResources().getString(R.string.searchtarget));
-        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView.setQueryHint(getResources().getString(R.string.searchtarget));
+        mSearchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String arg0) {
-                searchView.clearFocus();
+                mSearchView.clearFocus();
                 return true;
             }
+
             @Override
             public boolean onQueryTextChange(String arg0) {
-
                 return true;
             }
         });
 
 
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
                 onBackPressed();
@@ -79,31 +74,26 @@ public class SearchList extends AppCompatActivity {
         MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                // Write your code here
                 onBackPressed();
                 return false;
             }
         });
 
-
         return super.onCreateOptionsMenu(menu);
-
     }
 
     //Nobody likes powerpoint-like animations
     //todo find some good animations for transition
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(0, 0);
     }
-
 
 
 }

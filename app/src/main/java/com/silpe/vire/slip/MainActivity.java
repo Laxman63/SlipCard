@@ -1,24 +1,20 @@
 package com.silpe.vire.slip;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.dtos.User;
@@ -29,74 +25,42 @@ import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    static final String QR_FRAGMENT = "fragment_qr";
+    private static final String QR_FRAGMENT = "fragment_qr";
     private static final String SEARCH_FRAGMENT = "fragment_search";
     private static final String ACCOUNT_FRAGMENT = "fragment_account";
-
-    Toolbar toolbar;
-    ViewPager viewPager;
-    TabLayout tabLayout;
-    NavigationPagerAdapter navigationPagerAdapter;
-    SearchView  searchView;
-    LinearLayout body, searchlist;
-    Context mContext;
-    User user;
-    FloatingActionButton fab;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = getApplicationContext();
 
-        FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fbUser == null) {
+        // Check whether the user has properly logged in
+        FirebaseUser authUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (authUser == null) {
             SessionModel.get().setUser(null, this);
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
+        } else if (SessionModel.get().getUser(this) == null) {
+            FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child(getString(R.string.database_users))
+                    .child(authUser.getUid())
+                    .addListenerForSingleValueEvent(new UserStateListener());
         } else {
-            // TODO Move this handling into a separate listener class
-            if (SessionModel.get().getUser(this) == null) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                ref = ref.child(getString(R.string.database_users)).child(fbUser.getUid());
-                // TODO Add a timeout feature
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        User user = snapshot.getValue(User.class);
-                        if (user == null) {
-                            FirebaseAuth.getInstance().signOut();
-                            SessionModel.get().setUser(null, MainActivity.this);
-                            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                        } else {
-                            SessionModel.get().setUser(user, MainActivity.this);
-                            construct();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
-                });
-            } else {
-                construct();
-            }
+            construct();
         }
     }
 
+    /**
+     * Separate method called to build the {@code MainActivity} layout.
+     */
     private void construct() {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Set up the QR Code floating action button
-
-        user = SessionModel.get().getUser(this);
-        fab = (FloatingActionButton) findViewById(R.id.scanFab);
+        final User user = SessionModel.get().getUser(this);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.scanFab);
         fab.setOnClickListener(new View.OnClickListener() {
 
 
@@ -116,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationPagerAdapter navigationPagerAdapter = new NavigationPagerAdapter(getSupportFragmentManager(), MainActivity.this);
         ViewPager viewPager = (ViewPager) findViewById(R.id.toplevelPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.toplevelTabs);
-
         viewPager.setAdapter(navigationPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -124,15 +87,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        // Retrieve the SearchView and plug it into SearchManager
         final MenuItem searchItem = menu.findItem(R.id.action_search);
-
         searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(mContext, SearchList.class);
+                Intent intent = new Intent(MainActivity.this, SearchList.class);
                 startActivity(intent);
-                return false;
+                return true;
             }
         });
         return true;
@@ -146,15 +107,16 @@ public class MainActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
-            return true;
         } else if (id == R.id.action_account) {
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.toplevel, new AccountFragment(), ACCOUNT_FRAGMENT)
                     .addToBackStack(ACCOUNT_FRAGMENT)
                     .commit();
+        } else {
+            return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     /**
@@ -166,6 +128,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    private class UserStateListener implements ValueEventListener {
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            User user = snapshot.getValue(User.class);
+            if (user == null) {
+                FirebaseAuth.getInstance().signOut();
+                SessionModel.get().setUser(null, MainActivity.this);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            } else {
+                SessionModel.get().setUser(user, MainActivity.this);
+                construct();
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError error) {
+        }
     }
 
 }
