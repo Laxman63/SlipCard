@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationPagerAdapter navigationPagerAdapter;
     SearchView  searchView;
     LinearLayout body, searchlist;
-    Context contxt;
+    Context mContext;
     User user;
     FloatingActionButton fab;
 
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contxt = getApplicationContext();
+        mContext = getApplicationContext();
 
         FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
         if (fbUser == null) {
@@ -128,13 +127,10 @@ public class MainActivity extends AppCompatActivity {
         // Retrieve the SearchView and plug it into SearchManager
         final MenuItem searchItem = menu.findItem(R.id.action_search);
 
-
-
-
         searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(contxt, SearchList.class);
+                Intent intent = new Intent(mContext, SearchList.class);
                 startActivity(intent);
                 return false;
             }
