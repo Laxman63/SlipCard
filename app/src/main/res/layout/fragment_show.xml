@@ -6,61 +6,63 @@
     android:orientation="vertical"
     tools:context="com.silpe.vire.slip.fragments.MyCardFragment">
 
-    <com.silpe.vire.slip.components.ProfilePictureView
-        android:id="@+id/show_profile_picture"
-        android:layout_width="@dimen/show_profile_picture_size"
-        android:layout_height="@dimen/show_profile_picture_size"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/profile_picture" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/show_firstName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="firstName" />
+        <android.support.v7.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/show_lastName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="lastName" />
+            <com.silpe.vire.slip.components.ProfilePictureView
+                android:id="@+id/show_profile_picture"
+                android:layout_width="@dimen/show_profile_picture_size"
+                android:layout_height="@dimen/show_profile_picture_size"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/profile_picture" />
 
-    <TextView
-        android:id="@+id/show_occupation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="occupation" />
+            <TextView
+                android:id="@+id/show_firstName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/prompt_firstName" />
 
-    <TextView
-        android:id="@+id/show_company"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="company" />
+            <TextView
+                android:id="@+id/show_lastName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/prompt_lastName" />
 
-    <TextView
-        android:id="@+id/show_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="email" />
+            <TextView
+                android:id="@+id/show_occupation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/prompt_occupation" />
 
-    <TextView
-        android:id="@+id/show_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="phone number" />
+            <TextView
+                android:id="@+id/show_company"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/prompt_company" />
 
-    <TextView
-        android:id="@+id/show_uid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="uid" />
-    <!-- TODO <END> remove later-->
+            <TextView
+                android:id="@+id/show_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/prompt_email" />
 
+            <TextView
+                android:id="@+id/show_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/prompt_phoneNumber" />
+        </android.support.v7.widget.LinearLayoutCompat>
+    </ScrollView>
 </android.support.v7.widget.LinearLayoutCompat>

@@ -73,4 +73,5 @@
     <string name="error_add_self">You can\'t add yourself!</string>
     <string name="error_user_added">User already added</string>
     <string name="addUser_success">User added</string>
+    <string name="connection_removeButton_text">Remove</string>
 </resources>

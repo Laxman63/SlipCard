@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.R;
@@ -67,67 +68,53 @@ public class QRFragment extends Fragment {
         final String uid = mUidTextField.getText().toString();
         if (mUid.equals(uid)) {
             mUidTextField.setError(getContext().getString(R.string.error_add_self));
-            mUidTextField.requestFocus();
         } else if (TextUtils.isEmpty(uid)) {
             mUidTextField.setError(getContext().getString(R.string.error_field_required));
-            mUidTextField.requestFocus();
         } else {
             final AtomicInteger counter = new AtomicInteger(2);
-            FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child(getContext().getString(R.string.database_users))
+            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            reference.child(getContext().getString(R.string.database_users))
                     .child(uid)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new UserQueryListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                if (counter.decrementAndGet() == 0) addUid(uid);
+                            if (dataSnapshot.exists() && counter.decrementAndGet() == 0) {
+                                addUid(uid, reference);
                             } else {
                                 mUidTextField.setError(getContext().getString(R.string.error_invalid_uid));
-                                mUidTextField.requestFocus();
                             }
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            mUidTextField.setError(getContext().getString(R.string.error_database));
-                            mUidTextField.requestFocus();
-                        }
                     });
-            FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child(getContext().getString(R.string.database_connections))
+            reference.child(getContext().getString(R.string.database_connections))
                     .child(mUid)
                     .orderByValue()
                     .equalTo(uid)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                    .addListenerForSingleValueEvent(new UserQueryListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getChildrenCount() > 0) {
                                 mUidTextField.setError(getContext().getString(R.string.error_user_added));
-                                mUidTextField.requestFocus();
-                            } else {
-                                if (counter.decrementAndGet() == 0) addUid(uid);
+                            } else if (counter.decrementAndGet() == 0) {
+                                addUid(uid, reference);
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            mUidTextField.setError(getContext().getString(R.string.error_database));
-                            mUidTextField.requestFocus();
                         }
                     });
         }
     }
 
-    private void addUid(String uid) {
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child(getContext().getString(R.string.database_connections))
+    private void addUid(String uid, DatabaseReference reference) {
+        reference.child(getContext().getString(R.string.database_connections))
                 .child(mUid)
                 .push()
                 .setValue(uid);
-        Toast.makeText(getContext(), R.string.addUser_success, Toast.LENGTH_SHORT);
+        Toast.makeText(getContext(), R.string.addUser_success, Toast.LENGTH_SHORT).show();
+    }
+
+    private abstract class UserQueryListener implements ValueEventListener {
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            mUidTextField.setError(getContext().getString(R.string.error_database));
+        }
     }
 
 }

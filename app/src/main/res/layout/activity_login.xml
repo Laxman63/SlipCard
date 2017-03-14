@@ -62,7 +62,6 @@
                     android:maxLines="1" />
             </android.support.design.widget.TextInputLayout>
 
-
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/email_sign_in_button"
                 android:layout_width="fill_parent"
