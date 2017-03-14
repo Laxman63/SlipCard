@@ -33,7 +33,40 @@
             android:id="@+id/camera_uid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/large_text" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/camera_inputField_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/camera_uid"
+            android:layout_marginEnd="@dimen/account_profile_margin"
+            android:layout_marginLeft="@dimen/account_profile_margin"
+            android:layout_marginRight="@dimen/account_profile_margin"
+            android:layout_marginStart="@dimen/account_profile_margin"
+            android:layout_marginTop="@dimen/appbar_padding_top">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/camera_inputField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/camera_uid" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/camera_addUser_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/camera_inputField_container"
+            android:layout_centerHorizontal="true"
+            android:paddingEnd="@dimen/login_padding_horizontal"
+            android:paddingLeft="@dimen/login_padding_horizontal"
+            android:paddingRight="@dimen/login_padding_horizontal"
+            android:paddingStart="@dimen/login_padding_horizontal"
+            android:text="@string/camera_add">
+
+        </Button>
     </RelativeLayout>
 
 </RelativeLayout>

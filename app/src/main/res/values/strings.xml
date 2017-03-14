@@ -66,4 +66,11 @@
     <string name="prompt_fullName">Full name</string>
     <string name="prompt_description">Description</string>
     <string name="prompt_connections">Connections</string>
+    <string name="camera_uid">User ID</string>
+    <string name="camera_add">Add user</string>
+    <string name="error_database">Database error</string>
+    <string name="error_invalid_uid">UID does not exist</string>
+    <string name="error_add_self">You can\'t add yourself!</string>
+    <string name="error_user_added">User already added</string>
+    <string name="addUser_success">User added</string>
 </resources>
