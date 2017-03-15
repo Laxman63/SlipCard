@@ -10,23 +10,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.fragments.AccountFragment;
-import com.silpe.vire.slip.fragments.QRFragment;
 import com.silpe.vire.slip.models.SessionModel;
 import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
+import com.silpe.vire.slip.scanner.BarcodeCaptureActivity;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String QR_FRAGMENT = "fragment_qr";
-    private static final String SEARCH_FRAGMENT = "fragment_search";
+    private static final int QR_FRAGMENT = 5508;
     private static final String ACCOUNT_FRAGMENT = "fragment_account";
 
     @Override
@@ -59,20 +64,24 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Set up the QR Code floating action button
-        final User user = SessionModel.get().getUser(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.scanFab);
         fab.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
             public void onClick(View view) {
-                if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
+                Intent intent = new Intent(MainActivity.this, BarcodeCaptureActivity.class);
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+
+                startActivityForResult(intent, QR_FRAGMENT);
+                /*if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
                     MainActivity.this.getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), SEARCH_FRAGMENT)
                             .addToBackStack(SEARCH_FRAGMENT)
                             .commit();
-                }
+                }*/
             }
         });
 
@@ -82,6 +91,27 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.toplevelTabs);
         viewPager.setAdapter(navigationPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == QR_FRAGMENT) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                    Toast.makeText(this, R.string.barcode_success, Toast.LENGTH_SHORT).show();
+                    String uid = barcode.displayValue;
+                    doAddUser(uid);
+                } else {
+                    Toast.makeText(this, R.string.barcode_failure, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(this, String.format(getString(R.string.barcode_error),
+                        CommonStatusCodes.getStatusCodeString(resultCode)), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -147,6 +177,57 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(DatabaseError error) {
+        }
+    }
+
+    private void doAddUser(final String uid) {
+        final String mUid = SessionModel.get().getUser(this).getUid();
+        if (mUid.equals(uid)) {
+            Toast.makeText(this, R.string.error_add_self, Toast.LENGTH_SHORT).show();
+        } else {
+            final AtomicInteger counter = new AtomicInteger(2);
+            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            reference.child(getString(R.string.database_users))
+                    .child(uid)
+                    .addListenerForSingleValueEvent(new UserQueryListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists() && counter.decrementAndGet() == 0) {
+                                addUid(uid, mUid, reference);
+                            } else {
+                                Toast.makeText(MainActivity.this, R.string.error_invalid_uid, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            reference.child(getString(R.string.database_connections))
+                    .child(mUid)
+                    .orderByValue()
+                    .equalTo(uid)
+                    .addListenerForSingleValueEvent(new UserQueryListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getChildrenCount() > 0) {
+                                Toast.makeText(MainActivity.this, R.string.error_user_added, Toast.LENGTH_SHORT).show();
+                            } else if (counter.decrementAndGet() == 0) {
+                                addUid(uid, mUid, reference);
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void addUid(String uid, String mUid, DatabaseReference reference) {
+        reference.child(getString(R.string.database_connections))
+                .child(mUid)
+                .push()
+                .setValue(uid);
+        Toast.makeText(this, R.string.addUser_success, Toast.LENGTH_SHORT).show();
+    }
+
+    private abstract class UserQueryListener implements ValueEventListener {
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+            Toast.makeText(MainActivity.this, R.string.error_database, Toast.LENGTH_SHORT).show();
         }
     }
 
