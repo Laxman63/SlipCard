@@ -36,6 +36,11 @@ public class User implements Persistent<User> {
         signature = 0;
     }
 
+    public User(String uid) {
+        this();
+        this.uid = uid;
+    }
+
     public User(String uid, String email, String phoneNumber,
                 String firstName, String lastName,
                 String occupation, String company, long signature) {

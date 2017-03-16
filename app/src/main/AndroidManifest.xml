@@ -34,6 +34,10 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
+            android:name=".scanner.BarcodeCaptureActivity"
+            android:screenOrientation="portrait"
+            android:label="Scan QR" />
+        <activity
             android:name=".image.PickerActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
@@ -45,9 +49,8 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search_list"
-            android:theme="@style/noAnimTheme"
             android:parentActivityName=".MainActivity"
-            >
+            android:theme="@style/noAnimTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.silpe.vire.slip.MainActivity" />

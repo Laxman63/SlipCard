@@ -2,6 +2,7 @@ package com.silpe.vire.slip.collection;
 
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -118,6 +119,7 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
                     .using(new FirebaseImageLoader())
                     .load(pRef)
                     .signature(new TimestampSignature(user.getSignature()))
+                    .error(ResourcesCompat.getDrawable(holder.getContext().getResources(), R.drawable.empty_profile, null))
                     .into(holder.getProfilePicture());
         } else {
             holder.getProfilePicture().setImageResource(R.drawable.empty_profile);

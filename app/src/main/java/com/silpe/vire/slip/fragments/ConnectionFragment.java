@@ -2,6 +2,7 @@ package com.silpe.vire.slip.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class ConnectionFragment extends Fragment {
                     .using(new FirebaseImageLoader())
                     .load(reference)
                     .signature(new TimestampSignature(mUser.getSignature()))
+                    .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
                     .into(profilePictureView);
         } else {
             profilePictureView.setImageResource(R.drawable.empty_profile);

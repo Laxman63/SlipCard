@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                    Toast.makeText(this, R.string.barcode_success, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, R.string.barcode_success, Toast.LENGTH_SHORT).show();
                     String uid = barcode.displayValue;
                     doAddUser(uid);
                 } else {
@@ -192,8 +192,8 @@ public class MainActivity extends AppCompatActivity {
                     .addListenerForSingleValueEvent(new UserQueryListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists() && counter.decrementAndGet() == 0) {
-                                addUid(uid, mUid, reference);
+                            if (dataSnapshot.exists()) {
+                                if (counter.decrementAndGet() == 0) addUid(uid, mUid, reference);
                             } else {
                                 Toast.makeText(MainActivity.this, R.string.error_invalid_uid, Toast.LENGTH_SHORT).show();
                             }
