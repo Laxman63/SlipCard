@@ -1,5 +1,11 @@
 package com.silpe.vire.slip.encode;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 public final class Encoder {
 
     // The original table is defined in the table 5 of JISX0510:2004 (p.19).
@@ -570,6 +576,450 @@ public final class Encoder {
         bits.appendBits(Mode.ECI.getBits(), 4);
         // This is correct for values up to 127, which is all we need now.
         bits.appendBits(eci.getValue(), 8);
+    }
+
+}
+
+final class BlockPair {
+
+    private final byte[] dataBytes;
+    private final byte[] errorCorrectionBytes;
+
+    BlockPair(byte[] data, byte[] errorCorrection) {
+        dataBytes = data;
+        errorCorrectionBytes = errorCorrection;
+    }
+
+    public byte[] getDataBytes() {
+        return dataBytes;
+    }
+
+    public byte[] getErrorCorrectionBytes() {
+        return errorCorrectionBytes;
+    }
+
+}
+
+final class GenericGFPoly {
+
+    private final GenericGF field;
+    private final int[] coefficients;
+
+    /**
+     * @param field        the {@link GenericGF} instance representing the field to use
+     *                     to perform computations
+     * @param coefficients coefficients as ints representing elements of GF(size), arranged
+     *                     from most significant (highest-power term) coefficient to least significant
+     * @throws IllegalArgumentException if argument is null or empty,
+     *                                  or if leading coefficient is 0 and this is not a
+     *                                  constant polynomial (that is, it is not the monomial "0")
+     */
+    GenericGFPoly(GenericGF field, int[] coefficients) {
+        if (coefficients.length == 0) {
+            throw new IllegalArgumentException();
+        }
+        this.field = field;
+        int coefficientsLength = coefficients.length;
+        if (coefficientsLength > 1 && coefficients[0] == 0) {
+            // Leading term must be non-zero for anything except the constant polynomial "0"
+            int firstNonZero = 1;
+            while (firstNonZero < coefficientsLength && coefficients[firstNonZero] == 0) {
+                firstNonZero++;
+            }
+            if (firstNonZero == coefficientsLength) {
+                this.coefficients = new int[]{0};
+            } else {
+                this.coefficients = new int[coefficientsLength - firstNonZero];
+                System.arraycopy(coefficients,
+                        firstNonZero,
+                        this.coefficients,
+                        0,
+                        this.coefficients.length);
+            }
+        } else {
+            this.coefficients = coefficients;
+        }
+    }
+
+    int[] getCoefficients() {
+        return coefficients;
+    }
+
+    /**
+     * @return degree of this polynomial
+     */
+    int getDegree() {
+        return coefficients.length - 1;
+    }
+
+    /**
+     * @return true iff this polynomial is the monomial "0"
+     */
+    boolean isZero() {
+        return coefficients[0] == 0;
+    }
+
+    /**
+     * @return coefficient of x^degree term in this polynomial
+     */
+    int getCoefficient(int degree) {
+        return coefficients[coefficients.length - 1 - degree];
+    }
+
+    /**
+     * @return evaluation of this polynomial at a given point
+     */
+    int evaluateAt(int a) {
+        if (a == 0) {
+            // Just return the x^0 coefficient
+            return getCoefficient(0);
+        }
+        if (a == 1) {
+            // Just the sum of the coefficients
+            int result = 0;
+            for (int coefficient : coefficients) {
+                result = GenericGF.addOrSubtract(result, coefficient);
+            }
+            return result;
+        }
+        int result = coefficients[0];
+        int size = coefficients.length;
+        for (int i = 1; i < size; i++) {
+            result = GenericGF.addOrSubtract(field.multiply(a, result), coefficients[i]);
+        }
+        return result;
+    }
+
+    GenericGFPoly addOrSubtract(GenericGFPoly other) {
+        if (!field.equals(other.field)) {
+            throw new IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
+        }
+        if (isZero()) {
+            return other;
+        }
+        if (other.isZero()) {
+            return this;
+        }
+
+        int[] smallerCoefficients = this.coefficients;
+        int[] largerCoefficients = other.coefficients;
+        if (smallerCoefficients.length > largerCoefficients.length) {
+            int[] temp = smallerCoefficients;
+            smallerCoefficients = largerCoefficients;
+            largerCoefficients = temp;
+        }
+        int[] sumDiff = new int[largerCoefficients.length];
+        int lengthDiff = largerCoefficients.length - smallerCoefficients.length;
+        // Copy high-order terms only found in higher-degree polynomial's coefficients
+        System.arraycopy(largerCoefficients, 0, sumDiff, 0, lengthDiff);
+
+        for (int i = lengthDiff; i < largerCoefficients.length; i++) {
+            sumDiff[i] = GenericGF.addOrSubtract(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
+        }
+
+        return new GenericGFPoly(field, sumDiff);
+    }
+
+    GenericGFPoly multiply(GenericGFPoly other) {
+        if (!field.equals(other.field)) {
+            throw new IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
+        }
+        if (isZero() || other.isZero()) {
+            return field.getZero();
+        }
+        int[] aCoefficients = this.coefficients;
+        int aLength = aCoefficients.length;
+        int[] bCoefficients = other.coefficients;
+        int bLength = bCoefficients.length;
+        int[] product = new int[aLength + bLength - 1];
+        for (int i = 0; i < aLength; i++) {
+            int aCoeff = aCoefficients[i];
+            for (int j = 0; j < bLength; j++) {
+                product[i + j] = GenericGF.addOrSubtract(product[i + j],
+                        field.multiply(aCoeff, bCoefficients[j]));
+            }
+        }
+        return new GenericGFPoly(field, product);
+    }
+
+    GenericGFPoly multiply(int scalar) {
+        if (scalar == 0) {
+            return field.getZero();
+        }
+        if (scalar == 1) {
+            return this;
+        }
+        int size = coefficients.length;
+        int[] product = new int[size];
+        for (int i = 0; i < size; i++) {
+            product[i] = field.multiply(coefficients[i], scalar);
+        }
+        return new GenericGFPoly(field, product);
+    }
+
+    GenericGFPoly multiplyByMonomial(int degree, int coefficient) {
+        if (degree < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (coefficient == 0) {
+            return field.getZero();
+        }
+        int size = coefficients.length;
+        int[] product = new int[size + degree];
+        for (int i = 0; i < size; i++) {
+            product[i] = field.multiply(coefficients[i], coefficient);
+        }
+        return new GenericGFPoly(field, product);
+    }
+
+    GenericGFPoly[] divide(GenericGFPoly other) {
+        if (!field.equals(other.field)) {
+            throw new IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
+        }
+        if (other.isZero()) {
+            throw new IllegalArgumentException("Divide by 0");
+        }
+
+        GenericGFPoly quotient = field.getZero();
+        GenericGFPoly remainder = this;
+
+        int denominatorLeadingTerm = other.getCoefficient(other.getDegree());
+        int inverseDenominatorLeadingTerm = field.inverse(denominatorLeadingTerm);
+
+        while (remainder.getDegree() >= other.getDegree() && !remainder.isZero()) {
+            int degreeDifference = remainder.getDegree() - other.getDegree();
+            int scale = field.multiply(remainder.getCoefficient(remainder.getDegree()), inverseDenominatorLeadingTerm);
+            GenericGFPoly term = other.multiplyByMonomial(degreeDifference, scale);
+            GenericGFPoly iterationQuotient = field.buildMonomial(degreeDifference, scale);
+            quotient = quotient.addOrSubtract(iterationQuotient);
+            remainder = remainder.addOrSubtract(term);
+        }
+
+        return new GenericGFPoly[]{quotient, remainder};
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder(8 * getDegree());
+        for (int degree = getDegree(); degree >= 0; degree--) {
+            int coefficient = getCoefficient(degree);
+            if (coefficient != 0) {
+                if (coefficient < 0) {
+                    result.append(" - ");
+                    coefficient = -coefficient;
+                } else {
+                    if (result.length() > 0) {
+                        result.append(" + ");
+                    }
+                }
+                if (degree == 0 || coefficient != 1) {
+                    int alphaPower = field.log(coefficient);
+                    if (alphaPower == 0) {
+                        result.append('1');
+                    } else if (alphaPower == 1) {
+                        result.append('a');
+                    } else {
+                        result.append("a^");
+                        result.append(alphaPower);
+                    }
+                }
+                if (degree != 0) {
+                    if (degree == 1) {
+                        result.append('x');
+                    } else {
+                        result.append("x^");
+                        result.append(degree);
+                    }
+                }
+            }
+        }
+        return result.toString();
+    }
+
+}
+
+final class GenericGF {
+
+    public static final GenericGF AZTEC_DATA_12 = new GenericGF(0x1069, 4096, 1); // x^12 + x^6 + x^5 + x^3 + 1
+    public static final GenericGF AZTEC_DATA_10 = new GenericGF(0x409, 1024, 1); // x^10 + x^3 + 1
+    public static final GenericGF AZTEC_DATA_6 = new GenericGF(0x43, 64, 1); // x^6 + x + 1
+    public static final GenericGF AZTEC_PARAM = new GenericGF(0x13, 16, 1); // x^4 + x + 1
+    public static final GenericGF QR_CODE_FIELD_256 = new GenericGF(0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
+    public static final GenericGF DATA_MATRIX_FIELD_256 = new GenericGF(0x012D, 256, 1); // x^8 + x^5 + x^3 + x^2 + 1
+    public static final GenericGF AZTEC_DATA_8 = DATA_MATRIX_FIELD_256;
+    public static final GenericGF MAXICODE_FIELD_64 = AZTEC_DATA_6;
+
+    private final int[] expTable;
+    private final int[] logTable;
+    private final GenericGFPoly zero;
+    private final GenericGFPoly one;
+    private final int size;
+    private final int primitive;
+    private final int generatorBase;
+
+    /**
+     * Create a representation of GF(size) using the given primitive polynomial.
+     *
+     * @param primitive irreducible polynomial whose coefficients are represented by
+     *                  the bits of an int, where the least-significant bit represents the constant
+     *                  coefficient
+     * @param size      the size of the field
+     * @param b         the factor b in the generator polynomial can be 0- or 1-based
+     *                  (g(x) = (x+a^b)(x+a^(b+1))...(x+a^(b+2t-1))).
+     *                  In most cases it should be 1, but for QR code it is 0.
+     */
+    public GenericGF(int primitive, int size, int b) {
+        this.primitive = primitive;
+        this.size = size;
+        this.generatorBase = b;
+
+        expTable = new int[size];
+        logTable = new int[size];
+        int x = 1;
+        for (int i = 0; i < size; i++) {
+            expTable[i] = x;
+            x *= 2; // we're assuming the generator alpha is 2
+            if (x >= size) {
+                x ^= primitive;
+                x &= size - 1;
+            }
+        }
+        for (int i = 0; i < size - 1; i++) {
+            logTable[expTable[i]] = i;
+        }
+        // logTable[0] == 0 but this should never be used
+        zero = new GenericGFPoly(this, new int[]{0});
+        one = new GenericGFPoly(this, new int[]{1});
+    }
+
+    GenericGFPoly getZero() {
+        return zero;
+    }
+
+    GenericGFPoly getOne() {
+        return one;
+    }
+
+    /**
+     * @return the monomial representing coefficient * x^degree
+     */
+    GenericGFPoly buildMonomial(int degree, int coefficient) {
+        if (degree < 0) {
+            throw new IllegalArgumentException();
+        }
+        if (coefficient == 0) {
+            return zero;
+        }
+        int[] coefficients = new int[degree + 1];
+        coefficients[0] = coefficient;
+        return new GenericGFPoly(this, coefficients);
+    }
+
+    /**
+     * Implements both addition and subtraction -- they are the same in GF(size).
+     *
+     * @return sum/difference of a and b
+     */
+    static int addOrSubtract(int a, int b) {
+        return a ^ b;
+    }
+
+    /**
+     * @return 2 to the power of a in GF(size)
+     */
+    int exp(int a) {
+        return expTable[a];
+    }
+
+    /**
+     * @return base 2 log of a in GF(size)
+     */
+    int log(int a) {
+        if (a == 0) {
+            throw new IllegalArgumentException();
+        }
+        return logTable[a];
+    }
+
+    /**
+     * @return multiplicative inverse of a
+     */
+    int inverse(int a) {
+        if (a == 0) {
+            throw new ArithmeticException();
+        }
+        return expTable[size - logTable[a] - 1];
+    }
+
+    /**
+     * @return product of a and b in GF(size)
+     */
+    int multiply(int a, int b) {
+        if (a == 0 || b == 0) {
+            return 0;
+        }
+        return expTable[(logTable[a] + logTable[b]) % (size - 1)];
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getGeneratorBase() {
+        return generatorBase;
+    }
+
+    @Override
+    public String toString() {
+        return "GF(0x" + Integer.toHexString(primitive) + ',' + size + ')';
+    }
+
+}
+
+final class ReedSolomonEncoder {
+
+    private final GenericGF field;
+    private final List<GenericGFPoly> cachedGenerators;
+
+    public ReedSolomonEncoder(GenericGF field) {
+        this.field = field;
+        this.cachedGenerators = new ArrayList<>();
+        cachedGenerators.add(new GenericGFPoly(field, new int[]{1}));
+    }
+
+    private GenericGFPoly buildGenerator(int degree) {
+        if (degree >= cachedGenerators.size()) {
+            GenericGFPoly lastGenerator = cachedGenerators.get(cachedGenerators.size() - 1);
+            for (int d = cachedGenerators.size(); d <= degree; d++) {
+                GenericGFPoly nextGenerator = lastGenerator.multiply(
+                        new GenericGFPoly(field, new int[]{1, field.exp(d - 1 + field.getGeneratorBase())}));
+                cachedGenerators.add(nextGenerator);
+                lastGenerator = nextGenerator;
+            }
+        }
+        return cachedGenerators.get(degree);
+    }
+
+    public void encode(int[] toEncode, int ecBytes) {
+        if (ecBytes == 0) {
+            throw new IllegalArgumentException("No error correction bytes");
+        }
+        int dataBytes = toEncode.length - ecBytes;
+        if (dataBytes <= 0) {
+            throw new IllegalArgumentException("No data bytes provided");
+        }
+        GenericGFPoly generator = buildGenerator(ecBytes);
+        int[] infoCoefficients = new int[dataBytes];
+        System.arraycopy(toEncode, 0, infoCoefficients, 0, dataBytes);
+        GenericGFPoly info = new GenericGFPoly(field, infoCoefficients);
+        info = info.multiplyByMonomial(ecBytes, 1);
+        GenericGFPoly remainder = info.divide(generator)[1];
+        int[] coefficients = remainder.getCoefficients();
+        int numZeroCoefficients = ecBytes - coefficients.length;
+        for (int i = 0; i < numZeroCoefficients; i++) {
+            toEncode[dataBytes + i] = 0;
+        }
+        System.arraycopy(coefficients, 0, toEncode, dataBytes + numZeroCoefficients, coefficients.length);
     }
 
 }
