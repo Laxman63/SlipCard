@@ -180,20 +180,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void doAddUser(final String uid) {
+    /**
+     * @param tUid the UID of the user to add
+     */
+    private void doAddUser(final String tUid) {
         final String mUid = SessionModel.get().getUser(this).getUid();
-        if (mUid.equals(uid)) {
+        if (mUid.equals(tUid)) {
             Toast.makeText(this, R.string.error_add_self, Toast.LENGTH_SHORT).show();
         } else {
-            final AtomicInteger counter = new AtomicInteger(2);
+            final AtomicInteger mCounter = new AtomicInteger(2);
+            final AtomicInteger tCounter = new AtomicInteger(2);
             final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
             reference.child(getString(R.string.database_users))
-                    .child(uid)
+                    .child(tUid)
                     .addListenerForSingleValueEvent(new UserQueryListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                if (counter.decrementAndGet() == 0) addUid(uid, mUid, reference);
+                                if (mCounter.decrementAndGet() == 0) addUid(tUid, mUid, reference);
+                                if (tCounter.decrementAndGet() == 0) addUid(mUid, tUid, reference);
                             } else {
                                 Toast.makeText(MainActivity.this, R.string.error_invalid_uid, Toast.LENGTH_SHORT).show();
                             }
@@ -202,14 +207,26 @@ public class MainActivity extends AppCompatActivity {
             reference.child(getString(R.string.database_connections))
                     .child(mUid)
                     .orderByValue()
-                    .equalTo(uid)
+                    .equalTo(tUid)
                     .addListenerForSingleValueEvent(new UserQueryListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getChildrenCount() > 0) {
                                 Toast.makeText(MainActivity.this, R.string.error_user_added, Toast.LENGTH_SHORT).show();
-                            } else if (counter.decrementAndGet() == 0) {
-                                addUid(uid, mUid, reference);
+                            } else if (mCounter.decrementAndGet() == 0) {
+                                addUid(tUid, mUid, reference);
+                            }
+                        }
+                    });
+            reference.child(getString(R.string.database_connections))
+                    .child(tUid)
+                    .orderByValue()
+                    .equalTo(mUid)
+                    .addListenerForSingleValueEvent(new UserQueryListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.getChildrenCount() == 0 && tCounter.decrementAndGet() == 0) {
+                                addUid(mUid, tUid, reference);
                             }
                         }
                     });

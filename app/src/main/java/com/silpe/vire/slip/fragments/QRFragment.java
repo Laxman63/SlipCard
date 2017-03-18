@@ -20,6 +20,7 @@ import com.silpe.vire.slip.R;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Deprecated
 public class QRFragment extends Fragment {
     private static final String UID = "mUidView";
 
