@@ -4,34 +4,21 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.encode.BarcodeFormat;
 import com.silpe.vire.slip.encode.BitMatrix;
-import com.silpe.vire.slip.encode.ByteMatrix;
 import com.silpe.vire.slip.encode.EncodeHintType;
 import com.silpe.vire.slip.encode.ErrorCorrectionLevel;
 import com.silpe.vire.slip.encode.QRCodeWriter;
 import com.silpe.vire.slip.encode.WriterException;
 
 import java.util.Hashtable;
-import java.util.concurrent.atomic.AtomicInteger;
 
-@Deprecated
 public class QRFragment extends Fragment {
     private static final String UID = "mUidView";
 
@@ -96,7 +83,7 @@ public class QRFragment extends Fragment {
         Bitmap bmp = Bitmap.createBitmap(width, width, Bitmap.Config.RGB_565);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < width; y++) {
-                bmp.setPixel(y, x, matrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                bmp.setPixel(x, y, matrix.get(x, y) ? Color.BLACK : Color.WHITE);
             }
         }
         return bmp;

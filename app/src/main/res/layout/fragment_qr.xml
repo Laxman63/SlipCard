@@ -75,5 +75,6 @@
         android:layout_width="@dimen/qr_code_size"
         android:layout_height="@dimen/qr_code_size"
         android:layout_centerInParent="true"
-        android:contentDescription="@string/qr_code" />
+        android:contentDescription="@string/qr_code"
+        android:padding="@dimen/qr_code_padding"/>
 </RelativeLayout>

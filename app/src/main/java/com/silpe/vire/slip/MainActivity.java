@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     User user = SessionModel.get().getUser(MainActivity.this);
                     MainActivity.this.getSupportFragmentManager()
                             .beginTransaction()
+                            .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                             .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), QR_FRAGMENT)
                             .addToBackStack(QR_FRAGMENT)
                             .commit();
