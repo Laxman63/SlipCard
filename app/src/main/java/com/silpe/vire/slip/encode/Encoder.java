@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public final class Encoder {
+final class Encoder {
 
     // The original table is defined in the table 5 of JISX0510:2004 (p.19).
     private static final int[] ALPHANUMERIC_TABLE = {
@@ -18,7 +18,7 @@ public final class Encoder {
             25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1,  // 0x50-0x5f
     };
 
-    static final String DEFAULT_BYTE_MODE_ENCODING = "ISO-8859-1";
+    private static final String DEFAULT_BYTE_MODE_ENCODING = "ISO-8859-1";
 
     private Encoder() {
     }
@@ -160,15 +160,11 @@ public final class Encoder {
      * @return the code point of the table used in alphanumeric mode or
      * -1 if there is no corresponding code in the table.
      */
-    static int getAlphanumericCode(int code) {
+    private static int getAlphanumericCode(int code) {
         if (code < ALPHANUMERIC_TABLE.length) {
             return ALPHANUMERIC_TABLE[code];
         }
         return -1;
-    }
-
-    public static Mode chooseMode(String content) {
-        return chooseMode(content, null);
     }
 
     /**
@@ -270,7 +266,7 @@ public final class Encoder {
     /**
      * Terminate bits as described in 8.4.8 and 8.4.9 of JISX0510:2004 (p.24).
      */
-    static void terminateBits(int numDataBytes, BitArray bits) throws WriterException {
+    private static void terminateBits(int numDataBytes, BitArray bits) throws WriterException {
         int capacity = numDataBytes * 8;
         if (bits.getSize() > capacity) {
             throw new WriterException("data bits cannot fit in the QR Code" + bits.getSize() + " > " +
@@ -302,12 +298,12 @@ public final class Encoder {
      * the result in "numDataBytesInBlock", and "numECBytesInBlock". See table 12 in 8.5.1 of
      * JISX0510:2004 (p.30)
      */
-    static void getNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
-                                                       int numDataBytes,
-                                                       int numRSBlocks,
-                                                       int blockID,
-                                                       int[] numDataBytesInBlock,
-                                                       int[] numECBytesInBlock) throws WriterException {
+    private static void getNumDataBytesAndNumECBytesForBlockID(int numTotalBytes,
+                                                               int numDataBytes,
+                                                               int numRSBlocks,
+                                                               int blockID,
+                                                               int[] numDataBytesInBlock,
+                                                               int[] numECBytesInBlock) throws WriterException {
         if (blockID >= numRSBlocks) {
             throw new WriterException("Block ID too large");
         }
@@ -358,10 +354,10 @@ public final class Encoder {
      * Interleave "bits" with corresponding error correction bytes. On success, store the result in
      * "result". The interleave rule is complicated. See 8.6 of JISX0510:2004 (p.37) for details.
      */
-    static BitArray interleaveWithECBytes(BitArray bits,
-                                          int numTotalBytes,
-                                          int numDataBytes,
-                                          int numRSBlocks) throws WriterException {
+    private static BitArray interleaveWithECBytes(BitArray bits,
+                                                  int numTotalBytes,
+                                                  int numDataBytes,
+                                                  int numRSBlocks) throws WriterException {
 
         // "bits" must have "getNumDataBytes" bytes of data.
         if (bits.getSizeInBytes() != numDataBytes) {
@@ -426,7 +422,7 @@ public final class Encoder {
         return result;
     }
 
-    static byte[] generateECBytes(byte[] dataBytes, int numEcBytesInBlock) {
+    private static byte[] generateECBytes(byte[] dataBytes, int numEcBytesInBlock) {
         int numDataBytes = dataBytes.length;
         int[] toEncode = new int[numDataBytes + numEcBytesInBlock];
         for (int i = 0; i < numDataBytes; i++) {
@@ -444,7 +440,7 @@ public final class Encoder {
     /**
      * Append mode info. On success, store the result in "bits".
      */
-    static void appendModeInfo(Mode mode, BitArray bits) {
+    private static void appendModeInfo(Mode mode, BitArray bits) {
         bits.appendBits(mode.getBits(), 4);
     }
 
@@ -452,7 +448,7 @@ public final class Encoder {
     /**
      * Append length info. On success, store the result in "bits".
      */
-    static void appendLengthInfo(int numLetters, Version version, Mode mode, BitArray bits) throws WriterException {
+    private static void appendLengthInfo(int numLetters, Version version, Mode mode, BitArray bits) throws WriterException {
         int numBits = mode.getCharacterCountBits(version);
         if (numLetters >= (1 << numBits)) {
             throw new WriterException(numLetters + " is bigger than " + ((1 << numBits) - 1));
@@ -463,10 +459,10 @@ public final class Encoder {
     /**
      * Append "bytes" in "mode" mode (encoding) into "bits". On success, store the result in "bits".
      */
-    static void appendBytes(String content,
-                            Mode mode,
-                            BitArray bits,
-                            String encoding) throws WriterException {
+    private static void appendBytes(String content,
+                                    Mode mode,
+                                    BitArray bits,
+                                    String encoding) throws WriterException {
         switch (mode) {
             case NUMERIC:
                 appendNumericBytes(content, bits);
@@ -485,7 +481,7 @@ public final class Encoder {
         }
     }
 
-    static void appendNumericBytes(CharSequence content, BitArray bits) {
+    private static void appendNumericBytes(CharSequence content, BitArray bits) {
         int length = content.length();
         int i = 0;
         while (i < length) {
@@ -509,7 +505,7 @@ public final class Encoder {
         }
     }
 
-    static void appendAlphanumericBytes(CharSequence content, BitArray bits) throws WriterException {
+    private static void appendAlphanumericBytes(CharSequence content, BitArray bits) throws WriterException {
         int length = content.length();
         int i = 0;
         while (i < length) {
@@ -533,7 +529,7 @@ public final class Encoder {
         }
     }
 
-    static void append8BitBytes(String content, BitArray bits, String encoding)
+    private static void append8BitBytes(String content, BitArray bits, String encoding)
             throws WriterException {
         byte[] bytes;
         try {
@@ -546,7 +542,7 @@ public final class Encoder {
         }
     }
 
-    static void appendKanjiBytes(String content, BitArray bits) throws WriterException {
+    private static void appendKanjiBytes(String content, BitArray bits) throws WriterException {
         byte[] bytes;
         try {
             bytes = content.getBytes("Shift_JIS");
@@ -590,11 +586,11 @@ final class BlockPair {
         errorCorrectionBytes = errorCorrection;
     }
 
-    public byte[] getDataBytes() {
+    byte[] getDataBytes() {
         return dataBytes;
     }
 
-    public byte[] getErrorCorrectionBytes() {
+    byte[] getErrorCorrectionBytes() {
         return errorCorrectionBytes;
     }
 
@@ -648,49 +644,25 @@ final class GenericGFPoly {
     /**
      * @return degree of this polynomial
      */
-    int getDegree() {
+    private int getDegree() {
         return coefficients.length - 1;
     }
 
     /**
      * @return true iff this polynomial is the monomial "0"
      */
-    boolean isZero() {
+    private boolean isZero() {
         return coefficients[0] == 0;
     }
 
     /**
      * @return coefficient of x^degree term in this polynomial
      */
-    int getCoefficient(int degree) {
+    private int getCoefficient(int degree) {
         return coefficients[coefficients.length - 1 - degree];
     }
 
-    /**
-     * @return evaluation of this polynomial at a given point
-     */
-    int evaluateAt(int a) {
-        if (a == 0) {
-            // Just return the x^0 coefficient
-            return getCoefficient(0);
-        }
-        if (a == 1) {
-            // Just the sum of the coefficients
-            int result = 0;
-            for (int coefficient : coefficients) {
-                result = GenericGF.addOrSubtract(result, coefficient);
-            }
-            return result;
-        }
-        int result = coefficients[0];
-        int size = coefficients.length;
-        for (int i = 1; i < size; i++) {
-            result = GenericGF.addOrSubtract(field.multiply(a, result), coefficients[i]);
-        }
-        return result;
-    }
-
-    GenericGFPoly addOrSubtract(GenericGFPoly other) {
+    private GenericGFPoly addOrSubtract(GenericGFPoly other) {
         if (!field.equals(other.field)) {
             throw new IllegalArgumentException("GenericGFPolys do not have same GenericGF field");
         }
@@ -738,21 +710,6 @@ final class GenericGFPoly {
                 product[i + j] = GenericGF.addOrSubtract(product[i + j],
                         field.multiply(aCoeff, bCoefficients[j]));
             }
-        }
-        return new GenericGFPoly(field, product);
-    }
-
-    GenericGFPoly multiply(int scalar) {
-        if (scalar == 0) {
-            return field.getZero();
-        }
-        if (scalar == 1) {
-            return this;
-        }
-        int size = coefficients.length;
-        int[] product = new int[size];
-        for (int i = 0; i < size; i++) {
-            product[i] = field.multiply(coefficients[i], scalar);
         }
         return new GenericGFPoly(field, product);
     }
@@ -840,19 +797,11 @@ final class GenericGFPoly {
 
 final class GenericGF {
 
-    public static final GenericGF AZTEC_DATA_12 = new GenericGF(0x1069, 4096, 1); // x^12 + x^6 + x^5 + x^3 + 1
-    public static final GenericGF AZTEC_DATA_10 = new GenericGF(0x409, 1024, 1); // x^10 + x^3 + 1
-    public static final GenericGF AZTEC_DATA_6 = new GenericGF(0x43, 64, 1); // x^6 + x + 1
-    public static final GenericGF AZTEC_PARAM = new GenericGF(0x13, 16, 1); // x^4 + x + 1
-    public static final GenericGF QR_CODE_FIELD_256 = new GenericGF(0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
-    public static final GenericGF DATA_MATRIX_FIELD_256 = new GenericGF(0x012D, 256, 1); // x^8 + x^5 + x^3 + x^2 + 1
-    public static final GenericGF AZTEC_DATA_8 = DATA_MATRIX_FIELD_256;
-    public static final GenericGF MAXICODE_FIELD_64 = AZTEC_DATA_6;
+    static final GenericGF QR_CODE_FIELD_256 = new GenericGF(0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
 
     private final int[] expTable;
     private final int[] logTable;
     private final GenericGFPoly zero;
-    private final GenericGFPoly one;
     private final int size;
     private final int primitive;
     private final int generatorBase;
@@ -868,7 +817,7 @@ final class GenericGF {
      *                  (g(x) = (x+a^b)(x+a^(b+1))...(x+a^(b+2t-1))).
      *                  In most cases it should be 1, but for QR code it is 0.
      */
-    public GenericGF(int primitive, int size, int b) {
+    private GenericGF(int primitive, int size, int b) {
         this.primitive = primitive;
         this.size = size;
         this.generatorBase = b;
@@ -889,15 +838,10 @@ final class GenericGF {
         }
         // logTable[0] == 0 but this should never be used
         zero = new GenericGFPoly(this, new int[]{0});
-        one = new GenericGFPoly(this, new int[]{1});
     }
 
     GenericGFPoly getZero() {
         return zero;
-    }
-
-    GenericGFPoly getOne() {
-        return one;
     }
 
     /**
@@ -965,7 +909,7 @@ final class GenericGF {
         return size;
     }
 
-    public int getGeneratorBase() {
+    int getGeneratorBase() {
         return generatorBase;
     }
 
@@ -981,7 +925,7 @@ final class ReedSolomonEncoder {
     private final GenericGF field;
     private final List<GenericGFPoly> cachedGenerators;
 
-    public ReedSolomonEncoder(GenericGF field) {
+    ReedSolomonEncoder(GenericGF field) {
         this.field = field;
         this.cachedGenerators = new ArrayList<>();
         cachedGenerators.add(new GenericGFPoly(field, new int[]{1}));

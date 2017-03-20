@@ -11,7 +11,7 @@ import com.google.android.gms.vision.barcode.Barcode;
  * Graphic instance for rendering barcode position, size, and ID within an associated graphic
  * overlay view.
  */
-public class BarcodeGraphic extends GraphicOverlay.Graphic {
+class BarcodeGraphic extends GraphicOverlay.Graphic {
 
     private int mId;
 
@@ -43,15 +43,15 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
         mTextPaint.setTextSize(36.0f);
     }
 
-    public int getId() {
+    int getId() {
         return mId;
     }
 
-    public void setId(int id) {
+    void setId(int id) {
         this.mId = id;
     }
 
-    public Barcode getBarcode() {
+    Barcode getBarcode() {
         return mBarcode;
     }
 
@@ -85,4 +85,5 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
         // Draws a label at the bottom of the barcode indicate the barcode value that was detected.
         canvas.drawText(barcode.rawValue, rect.left, rect.bottom, mTextPaint);
     }
+
 }

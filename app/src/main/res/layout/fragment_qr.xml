@@ -10,6 +10,8 @@
     tools:targetApi="lollipop">
     <!-- TODO Add elevation support for older versions -->
 
+
+    <!--
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarQR"
         android:layout_width="match_parent"
@@ -68,5 +70,10 @@
 
         </Button>
     </RelativeLayout>
-
+-->
+    <ImageView
+        android:id="@+id/qr_code"
+        android:layout_width="@dimen/qr_code_size"
+        android:layout_height="@dimen/qr_code_size"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

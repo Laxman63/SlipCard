@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.fragments.AccountFragment;
+import com.silpe.vire.slip.fragments.QRFragment;
 import com.silpe.vire.slip.models.SessionModel;
 import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
 import com.silpe.vire.slip.scanner.BarcodeCaptureActivity;
@@ -31,7 +32,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int QR_FRAGMENT = 5508;
+    private static final int SCAN_FRAGMENT = 5508;
+    private static final String QR_FRAGMENT = "fragment_qr";
     private static final String ACCOUNT_FRAGMENT = "fragment_account";
 
     @Override
@@ -64,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Set up the QR Code floating action button
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.scanFab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton scanFab = (FloatingActionButton) findViewById(R.id.scanFab);
+        scanFab.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
 
-                startActivityForResult(intent, QR_FRAGMENT);
+                startActivityForResult(intent, SCAN_FRAGMENT);
                 /*if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
                     MainActivity.this.getSupportFragmentManager()
                             .beginTransaction()
@@ -82,6 +84,20 @@ public class MainActivity extends AppCompatActivity {
                             .addToBackStack(SEARCH_FRAGMENT)
                             .commit();
                 }*/
+            }
+        });
+        FloatingActionButton qrFab = (FloatingActionButton) findViewById(R.id.qrFab);
+        qrFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
+                    User user = SessionModel.get().getUser(MainActivity.this);
+                    MainActivity.this.getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), QR_FRAGMENT)
+                            .addToBackStack(QR_FRAGMENT)
+                            .commit();
+                }
             }
         });
 
@@ -95,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == QR_FRAGMENT) {
+        if (requestCode == SCAN_FRAGMENT) {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);

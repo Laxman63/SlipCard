@@ -30,4 +30,5 @@
     <dimen name="modal_corner_radius">5dip</dimen>
     <dimen name="login_logo_margin">24dp</dimen>
     <dimen name="large_text">18sp</dimen>
+    <dimen name="qr_code_size">320dp</dimen>
 </resources>
