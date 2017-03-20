@@ -32,15 +32,15 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
                 return mMyCardFragment;
             case 1:
                 return mCollectionFragment;
-            case 2:
-                return mNetworkFragment;
+            //case 2:
+                //return mNetworkFragment;
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Override

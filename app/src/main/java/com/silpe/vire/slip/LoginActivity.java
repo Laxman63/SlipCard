@@ -343,6 +343,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 } else {
                     // TODO Error handling
                     LoginActivity.this.showProgress(false);
+                    Toast.makeText(LoginActivity.this, R.string.login_error_databaseFailure, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -360,6 +361,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
                     LoginActivity.this.showProgress(false);
+                    FirebaseAuth.getInstance().signOut();
                     isSuccess = false;
                 }
 
@@ -377,6 +379,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 if (!task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, R.string.auth_failed, Toast.LENGTH_SHORT).show();
                     LoginActivity.this.showProgress(false);
+                    FirebaseAuth.getInstance().signOut();
                 }
             }
         });
@@ -497,6 +500,8 @@ class UserValueListener implements ValueEventListener {
          *    -> Prompt him to log in again
          */
         context.showProgress(false);
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(context, R.string.login_error_retrievalFailure, Toast.LENGTH_SHORT).show();
     }
 
 }

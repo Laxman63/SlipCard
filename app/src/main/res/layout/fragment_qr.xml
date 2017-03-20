@@ -1,12 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteBackground"
+    android:background="@color/black_overlay"
     android:clickable="true"
     android:elevation="6dp"
-    tools:context="com.silpe.vire.slip.fragments.QRFragment"
     tools:targetApi="lollipop">
     <!-- TODO Add elevation support for older versions -->
 
@@ -72,8 +70,10 @@
     </RelativeLayout>
 -->
     <ImageView
+        android:background="@drawable/background_modal"
         android:id="@+id/qr_code"
         android:layout_width="@dimen/qr_code_size"
         android:layout_height="@dimen/qr_code_size"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:contentDescription="@string/qr_code" />
 </RelativeLayout>

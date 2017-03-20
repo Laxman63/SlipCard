@@ -99,7 +99,6 @@ abstract class PickerManager {
     }
 
     public void setUri(Uri uri) {
-
     }
 
     void startCropActivity() {
@@ -115,7 +114,6 @@ abstract class PickerManager {
             options.setActiveWidgetColor(color);
             uCrop = uCrop.withOptions(options);
         }
-
         uCrop.start(activity);
     }
 

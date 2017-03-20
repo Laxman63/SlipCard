@@ -3,6 +3,7 @@ package com.silpe.vire.slip.image;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import static com.yalantis.ucrop.UCrop.REQUEST_CROP;
@@ -51,7 +52,7 @@ public class PickerActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (requestCode == PickerManager.REQUEST_CODE_IMAGE_PERMISSION) {
             pickerManager.handlePermissionResult(grantResults);
         } else {

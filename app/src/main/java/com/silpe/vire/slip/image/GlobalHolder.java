@@ -1,9 +1,6 @@
 package com.silpe.vire.slip.image;
 
-/**
- * Created by Mickael on 18/10/2016.
- */
-public class GlobalHolder {
+class GlobalHolder {
 
     private PickerManager pickerManager;
 
@@ -17,11 +14,11 @@ public class GlobalHolder {
     }
 
 
-    public PickerManager getPickerManager() {
+    PickerManager getPickerManager() {
         return pickerManager;
     }
 
-    public void setPickerManager(PickerManager pickerManager) {
+    void setPickerManager(PickerManager pickerManager) {
         this.pickerManager = pickerManager;
     }
 }

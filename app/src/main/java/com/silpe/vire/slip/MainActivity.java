@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         // Check whether the user has properly logged in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
+            FirebaseAuth.getInstance().signOut();
             SessionModel.get().setUser(null, this);
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -210,6 +211,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onCancelled(DatabaseError error) {
+            FirebaseAuth.getInstance().signOut();
+            SessionModel.get().setUser(null, MainActivity.this);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
         }
     }
 
