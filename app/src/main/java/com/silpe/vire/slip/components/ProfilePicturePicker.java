@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.image.PickerBuilder;
@@ -41,7 +39,6 @@ public class ProfilePicturePicker implements View.OnClickListener {
         @Override
         public void onImageReceived(Uri imageUri) {
             User user = SessionModel.get().getUser(display.getContext());
-            String databaseUsers = display.getString(R.string.database_users);
             // Upload the selected file
             user.getProfilePictureReference(display.getContext()).putFile(imageUri);
             // Update the image signature
