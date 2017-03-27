@@ -161,11 +161,7 @@ class CollectionCardClickListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         fragmentManager.beginTransaction()
-                .setCustomAnimations(
-                        R.anim.card_flip_right_in,
-                        R.anim.card_flip_right_out,
-                        R.anim.card_flip_left_in,
-                        R.anim.card_flip_left_out)
+                .setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_up, R.anim.slide_out_up)
                 .replace(R.id.toplevel, ConnectionFragment.newInstance(user), CONNECTION_FRAGMENt)
                 .addToBackStack(CONNECTION_FRAGMENt)
                 .commit();

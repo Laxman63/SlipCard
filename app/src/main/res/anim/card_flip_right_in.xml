@@ -19,5 +19,5 @@
     <alpha
         android:fromAlpha="0.0"
         android:toAlpha="1.0"
-        android:duration="@integer/card_flip_time_half"/>
+        android:duration="@integer/animation_time_half"/>
 </set>

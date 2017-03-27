@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="card_flip_time_full">500</integer>
-    <integer name="card_flip_time_half">250</integer>
+    <integer name="animation_time_half">250</integer>
     <integer name="shortAnimationTime">200</integer>
     <integer name="double_tap_time">800</integer>
+    <integer name="standard_post_delay">100</integer>
 </resources>

@@ -10,6 +10,6 @@
     <alpha
         android:duration="1"
         android:fromAlpha="1.0"
-        android:startOffset="@integer/card_flip_time_half"
+        android:startOffset="@integer/animation_time_half"
         android:toAlpha="0.0" />
 </set>

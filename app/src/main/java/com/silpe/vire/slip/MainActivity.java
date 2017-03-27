@@ -1,9 +1,12 @@
 package com.silpe.vire.slip;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.os.AsyncTaskCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -67,38 +70,33 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Set up the QR Code floating action button
-        FloatingActionButton scanFab = (FloatingActionButton) findViewById(R.id.scanFab);
+        final FloatingActionButton scanFab = (FloatingActionButton) findViewById(R.id.scanFab);
         scanFab.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, BarcodeCaptureActivity.class);
                 intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
                 intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
-
                 startActivityForResult(intent, SCAN_FRAGMENT);
-                /*if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
-                    MainActivity.this.getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), SEARCH_FRAGMENT)
-                            .addToBackStack(SEARCH_FRAGMENT)
-                            .commit();
-                }*/
             }
         });
-        FloatingActionButton qrFab = (FloatingActionButton) findViewById(R.id.qrFab);
+        final FloatingActionButton qrFab = (FloatingActionButton) findViewById(R.id.qrFab);
         qrFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (getSupportFragmentManager().findFragmentByTag(QR_FRAGMENT) == null) {
                     User user = SessionModel.get().getUser(MainActivity.this);
-                    MainActivity.this.getSupportFragmentManager()
+                    final FragmentTransaction transaction = MainActivity.this.getSupportFragmentManager()
                             .beginTransaction()
                             .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                             .replace(R.id.toplevel, QRFragment.newInstance(user.getUid()), QR_FRAGMENT)
-                            .addToBackStack(QR_FRAGMENT)
-                            .commit();
+                            .addToBackStack(QR_FRAGMENT);
+                    qrFab.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            transaction.commit();
+                        }
+                    }, 100);
                 }
             }
         });
@@ -175,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_account) {
             getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_up, R.anim.slide_out_up)
                     .replace(R.id.toplevel, new AccountFragment(), ACCOUNT_FRAGMENT)
                     .addToBackStack(ACCOUNT_FRAGMENT)
                     .commit();
