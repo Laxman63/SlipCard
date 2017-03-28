@@ -7,22 +7,22 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.collection.CollectionFragment;
+import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.fragments.MyCardFragment;
-import com.silpe.vire.slip.fragments.NetworkFragment;
+import com.silpe.vire.slip.models.SessionModel;
 
 public class NavigationPagerAdapter extends FragmentPagerAdapter {
 
     private Fragment mMyCardFragment;
     private Fragment mCollectionFragment;
-    private Fragment mNetworkFragment;
     private Context mContext;
 
     public NavigationPagerAdapter(FragmentManager fragmentManager, Context context) {
         super(fragmentManager);
+        User user = SessionModel.get().getUser(context);
         mContext = context;
         mMyCardFragment = new MyCardFragment();
-        mCollectionFragment = CollectionFragment.newInstance(fragmentManager);
-        mNetworkFragment = new NetworkFragment();
+        mCollectionFragment = CollectionFragment.newInstance(user, fragmentManager, R.id.toplevel);
     }
 
     @Override
@@ -32,8 +32,6 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
                 return mMyCardFragment;
             case 1:
                 return mCollectionFragment;
-            //case 2:
-                //return mNetworkFragment;
         }
         return null;
     }
@@ -50,8 +48,6 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
                 return mContext.getString(R.string.myCardTitle);
             case 1:
                 return mContext.getString(R.string.collectionTitle);
-            case 2:
-                return mContext.getString(R.string.networkTitle);
         }
         return null;
     }

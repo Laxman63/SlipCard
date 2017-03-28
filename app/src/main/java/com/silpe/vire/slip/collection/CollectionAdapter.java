@@ -88,12 +88,14 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
      * -> Permits easier user updating from UID
      * -> Gracefully passes this update to the adapter
      */
-    private CollectionHashList users;
-    private FragmentManager fragmentManager;
+    private CollectionHashList mUsers;
+    private FragmentManager mFragmentManager;
+    private int mReplaceId;
 
-    CollectionAdapter(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
-        users = new CollectionHashList();
+    CollectionAdapter(FragmentManager fragmentManager, int replaceId) {
+        mFragmentManager = fragmentManager;
+        mReplaceId = replaceId;
+        mUsers = new CollectionHashList();
     }
 
     @Override
@@ -104,7 +106,7 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        final User user = users.get(getItemCount() - position - 1);
+        final User user = mUsers.get(getItemCount() - position - 1);
         final StorageReference pRef;
         pRef = FirebaseStorage
                 .getInstance()
@@ -124,46 +126,46 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
         } else {
             holder.getProfilePicture().setImageResource(R.drawable.empty_profile);
         }
-        holder.getToplevel().setOnClickListener(new CollectionCardClickListener(user, fragmentManager));
+        holder.getToplevel().setOnClickListener(new CollectionCardClickListener(user, mFragmentManager, mReplaceId));
     }
 
     @Override
     public int getItemCount() {
-        return users.size();
+        return mUsers.size();
     }
 
     boolean update(User user) {
-        return users.update(user, this);
+        return mUsers.update(user, this);
     }
 
     void update(List<User> users) {
-        this.users.update(users, this);
+        this.mUsers.update(users, this);
     }
 
     void remove(String uid) {
-        users.remove(uid, this);
+        mUsers.remove(uid, this);
     }
 
 }
 
 class CollectionCardClickListener implements View.OnClickListener {
 
-    private static final String CONNECTION_FRAGMENt = "connection";
+    private final User mUser;
+    private final FragmentManager mFragmentManager;
+    private final int mReplaceId;
 
-    private final User user;
-    private final FragmentManager fragmentManager;
-
-    CollectionCardClickListener(User user, FragmentManager fragmentManager) {
-        this.user = user;
-        this.fragmentManager = fragmentManager;
+    CollectionCardClickListener(User user, FragmentManager fragmentManager, int replaceId) {
+        mUser = user;
+        mFragmentManager = fragmentManager;
+        mReplaceId = replaceId;
     }
 
     @Override
     public void onClick(View v) {
-        fragmentManager.beginTransaction()
+        mFragmentManager.beginTransaction()
                 .setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_up, R.anim.slide_out_up)
-                .replace(R.id.toplevel, ConnectionFragment.newInstance(user), CONNECTION_FRAGMENt)
-                .addToBackStack(CONNECTION_FRAGMENt)
+                .replace(mReplaceId, ConnectionFragment.newInstance(mUser), null)
+                .addToBackStack(null)
                 .commit();
     }
 }

@@ -172,4 +172,9 @@ public class User implements Persistent<User> {
         return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], kv[6], Long.valueOf(kv[7]));
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s - %s, %s", uid, firstName, lastName);
+    }
+
 }

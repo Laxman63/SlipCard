@@ -32,4 +32,5 @@
     <dimen name="large_text">18sp</dimen>
     <dimen name="qr_code_size">320dp</dimen>
     <dimen name="qr_code_padding">5dp</dimen>
+    <dimen name="connection_collectionList_height">200dp</dimen>
 </resources>

@@ -15,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.dtos.User;
-import com.silpe.vire.slip.models.SessionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +22,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CollectionFragment extends Fragment {
 
-
-    public static CollectionFragment newInstance(FragmentManager fragmentManager) {
+    public static CollectionFragment newInstance(User user, FragmentManager fragmentManager, int replaceId) {
         CollectionFragment fragment = new CollectionFragment();
-        fragment.fragmentManager = fragmentManager;
+        fragment.mUser = user;
+        fragment.mFragmentManager = fragmentManager;
+        fragment.mReplaceId = replaceId;
         return fragment;
     }
 
-    private FragmentManager fragmentManager;
+    private User mUser;
+    private FragmentManager mFragmentManager;
+    private int mReplaceId;
 
     public CollectionFragment() {
     }
@@ -38,13 +40,12 @@ public class CollectionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-        final User user = SessionModel.get().getUser(getContext());
-        if (user != null) {
+        if (mUser != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
             CollectionView collectionView = (CollectionView) view.findViewById(R.id.collectionList);
-            collectionView.setAdapter(new CollectionAdapter(fragmentManager));
+            collectionView.setAdapter(new CollectionAdapter(mFragmentManager, mReplaceId));
             collectionView.setLayoutManager(new CollectionLayoutManager(getContext()));
-            ref = ref.child(getString(R.string.database_connections)).child(user.getUid());
+            ref = ref.child(getString(R.string.database_connections)).child(mUser.getUid());
             ref.addChildEventListener(new UserListEventListener(collectionView));
             ref.addListenerForSingleValueEvent(new UserListRetrievalListener(collectionView));
         }
@@ -74,7 +75,6 @@ class UserListRetrievalListener implements ValueEventListener {
     private String getString(int stringId) {
         return collectionView.getContext().getString(stringId);
     }
-
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
