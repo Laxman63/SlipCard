@@ -63,7 +63,7 @@
         <FrameLayout
             android:id="@+id/connection_collectionList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:minHeight="@dimen/connection_collectionList_height" />
 
         <Button

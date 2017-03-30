@@ -23,12 +23,10 @@ public class MyCardFragment extends Fragment
         implements SessionModelListener<User>, ProfileDisplayComponent {
 
     // References to the user information views
-    private TextView mFirstNameView;
-    private TextView mLastNameView;
-    private TextView mOccupationView;
-    private TextView mCompanyView;
+    private TextView mDescription;
     private TextView mEmailView;
     private TextView mPhoneNumberView;
+    private TextView mFullname;
 
     /**
      * Reference to the user profile picture {@code ImageView}.
@@ -65,13 +63,11 @@ public class MyCardFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_show, container, false);
-        mFirstNameView = ((TextView) view.findViewById(R.id.show_firstName));
-        mLastNameView = ((TextView) view.findViewById(R.id.show_lastName));
-        mOccupationView = ((TextView) view.findViewById(R.id.show_occupation));
-        mCompanyView = ((TextView) view.findViewById(R.id.show_company));
-        mEmailView = ((TextView) view.findViewById(R.id.show_email));
-        mPhoneNumberView = ((TextView) view.findViewById(R.id.show_phone));
-        mProfilePictureView = ((ProfilePictureView) view.findViewById(R.id.show_profile_picture));
+        mFullname = ((TextView) view.findViewById(R.id.connection_fullName));
+        mDescription =  ((TextView) view.findViewById(R.id.connection_description));
+        mEmailView = ((TextView) view.findViewById(R.id.connection_email));
+        mPhoneNumberView = ((TextView) view.findViewById(R.id.connection_phoneNumber));
+        mProfilePictureView = ((ProfilePictureView) view.findViewById(R.id.connection_profilePicture));
         updateUser();
 
         mProfilePictureView.setOnClickListener(new ProfilePicturePicker(this));
@@ -99,10 +95,8 @@ public class MyCardFragment extends Fragment
         User user = SessionModel.get().getUser(getContext());
 
         // TODO Improve the display of user information
-        mFirstNameView.setText(user.getFirstName());
-        mLastNameView.setText(user.getLastName());
-        mOccupationView.setText(user.getOccupation());
-        mCompanyView.setText(user.getCompany());
+        mFullname.setText(user.getFirstName() + " " +user.getLastName());
+        mDescription.setText(user.getOccupation() + " at " + user.getCompany());
         mEmailView.setText(user.getEmail());
         // TODO Add clickable prompts to add missing info
         String phoneNumber = user.getPhoneNumber();
