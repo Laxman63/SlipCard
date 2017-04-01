@@ -69,6 +69,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * ID to identify the request made to access contacts.
      * Access to contacts allows the app to prefill the email field.
      */
+    private Intent toRegister;
+    private Intent toMain;
+
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
@@ -84,6 +87,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * the progress indicator.
      */
     private View mProgressView;
+
+    /**
+     *  textview that leads to registration
+     */
+    private TextView mTextView;
 
     /**
      * A flag indicating whether the user is currently
@@ -116,10 +124,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        toRegister = new Intent(this, RegisterActivity.class);
         // Obtain the email input field and attempt autocompletion
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
+        findViewById(R.id.link_signup).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(toRegister);
+            }
+        });
 
         // Obtain the password input field and bind the action listener
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -399,6 +414,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return action;
         }
     }
+
+
 
     /**
      * This listener will attempt to log in the user

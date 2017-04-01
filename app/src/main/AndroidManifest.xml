@@ -64,8 +64,9 @@
                 android:value="com.silpe.vire.slip.MainActivity" />
         </activity>
         <activity
-            android:name="com.silpe.vire.slip.fragments.ConnectionActivity"
+            android:name=".fragments.ConnectionActivity"
             android:label="@string/title_activity_connection" />
+        <activity android:name=".Registration"></activity>
     </application>
 
 </manifest>
