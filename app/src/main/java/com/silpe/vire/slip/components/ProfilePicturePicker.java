@@ -10,6 +10,7 @@ import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.image.PickerBuilder;
 import com.silpe.vire.slip.image.TimestampSignature;
 import com.silpe.vire.slip.models.SessionModel;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 
@@ -32,6 +33,7 @@ public class ProfilePicturePicker implements View.OnClickListener {
                 .setOnImageReceivedListener(new ProfilePictureReceivedListener())
                 .setImageName(display.getString(R.string.profile_picture))
                 .setImageFolderName(display.getString(R.string.picture_folder))
+                .withAspectRatio(1, 1)
                 .start();
     }
 

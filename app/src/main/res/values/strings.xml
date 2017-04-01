@@ -90,4 +90,8 @@
     <string name="login_error_databaseFailure">Failed to query database</string>
     <string name="image_selectImageApp">Select image source</string>
     <string name="qr_code">QR Code</string>
+    <string name="cover_image">Cover image</string>
+    <string name="add_friend">Add friend</string>
+    <string name="show_menu">Show menu</string>
+    <string name="sample_text">Sample Text</string>
 </resources>
