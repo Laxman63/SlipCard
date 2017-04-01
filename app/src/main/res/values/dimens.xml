@@ -10,7 +10,8 @@
     <dimen name="toolbar_height">56dp</dimen>
     <dimen name="login_button_padding">20dp</dimen>
     <dimen name="login_button_width">200dp</dimen>
-    <dimen name="show_profile_picture_size">128dp</dimen>
+    <dimen name="show_profile_picture_size">160dp</dimen>
+    <dimen name="show_profile_picture_size_half">90dp</dimen>
     <dimen name="card_profile_picture">88dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="card_description">26dp</dimen>
@@ -33,4 +34,9 @@
     <dimen name="qr_code_size">320dp</dimen>
     <dimen name="qr_code_padding">5dp</dimen>
     <dimen name="connection_collectionList_height">200dp</dimen>
+    <dimen name="show_menu_margin">16dp</dimen>
+    <dimen name="show_menu_size">30dp</dimen>
+    <dimen name="show_element_elevation">4dp</dimen>
+    <dimen name="show_profile_picture_offset">-80dp</dimen>
+    <dimen name="show_profile_picture_out">180dp</dimen>
 </resources>

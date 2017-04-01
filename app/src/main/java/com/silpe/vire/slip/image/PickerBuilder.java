@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.model.AspectRatio;
 
 public class PickerBuilder {
 
@@ -71,6 +72,11 @@ public class PickerBuilder {
 
     public PickerBuilder setCustomizedUcrop(UCrop ucrop) {
         pickerManager.setCustomizedUcrop(ucrop);
+        return this;
+    }
+
+    public PickerBuilder withAspectRatio(float aspectRatioX, float aspectRatioY){
+        pickerManager.withAspectRatio(new AspectRatio(null, aspectRatioX, aspectRatioY));
         return this;
     }
 

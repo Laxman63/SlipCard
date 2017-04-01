@@ -14,6 +14,7 @@ import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.components.ProfileDisplayComponent;
 import com.silpe.vire.slip.components.ProfilePicturePicker;
 import com.silpe.vire.slip.components.ProfilePictureView;
+import com.silpe.vire.slip.components.RoundedBitmap;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.image.TimestampSignature;
 import com.silpe.vire.slip.models.SessionModel;
@@ -105,11 +106,13 @@ public class MyCardFragment extends Fragment
             Glide.with(this)
                     .using(new FirebaseImageLoader())
                     .load(user.getProfilePictureReference(getContext()))
+                    .asBitmap()
+                    .centerCrop()
                     .signature(new TimestampSignature(user.getSignature()))
                     .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
-                    .into(mProfilePictureView);
+                    .into(new RoundedBitmap(mProfilePictureView, getContext()));
         } else {
-            mProfilePictureView.setImageResource(R.drawable.empty_profile);
+            mProfilePictureView.setImageResource(R.drawable.empty_profile_round);
         }
         // TODO End
     }

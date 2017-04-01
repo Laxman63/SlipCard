@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.silpe.vire.slip.R;
 import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.model.AspectRatio;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -35,12 +36,15 @@ abstract class PickerManager {
     private PickerBuilder.onImageReceivedListener imageReceivedListener;
     private PickerBuilder.onPermissionRefusedListener permissionRefusedListener;
 
+    private UCrop.Options options;
+
     PickerManager(Activity activity) {
         this.activity = activity;
         this.imageName = activity.getString(R.string.app_name);
         cropActivityColor = R.color.colorPrimary;
         withTimeStamp = true;
         folder = null;
+        options = new UCrop.Options();
     }
 
     PickerManager setOnImageReceivedListener(PickerBuilder.onImageReceivedListener listener) {
@@ -105,7 +109,6 @@ abstract class PickerManager {
         if (uCrop == null) {
             uCrop = UCrop.of(mProcessingPhotoUri, getImageFile());
             uCrop = uCrop.useSourceImageAspectRatio();
-            UCrop.Options options = new UCrop.Options();
             options.setFreeStyleCropEnabled(true);
 
             int color = ContextCompat.getColor(activity, cropActivityColor);
@@ -155,4 +158,10 @@ abstract class PickerManager {
         this.uCrop = customizedUcrop;
         return this;
     }
+
+    PickerManager withAspectRatio(AspectRatio aspectRatio) {
+        options.setAspectRatioOptions(0, aspectRatio);
+        return this;
+    }
+
 }

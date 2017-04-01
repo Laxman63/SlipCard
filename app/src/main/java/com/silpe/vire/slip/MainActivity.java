@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             transaction.commit();
                         }
-                    }, 100);
+                    }, 70);
                 }
             }
         });
