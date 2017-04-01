@@ -68,7 +68,7 @@ public class ConnectionFragment extends Fragment {
         if (mUser.getSignature() > 0) {
             Glide.with(getContext())
                     .using(new FirebaseImageLoader())
-                    .load(reference)
+                    .load(reference)c
                     .signature(new TimestampSignature(mUser.getSignature()))
                     .error(ResourcesCompat.getDrawable(getResources(), R.drawable.empty_profile, null))
                     .into(profilePictureView);
