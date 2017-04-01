@@ -96,8 +96,8 @@ public class MyCardFragment extends Fragment
         User user = SessionModel.get().getUser(getContext());
 
         // TODO Improve the display of user information
-        mFullname.setText(user.getFirstName() + " " +user.getLastName());
-        mDescription.setText(user.getOccupation() + " at " + user.getCompany());
+        mFullname.setText(user.getFullName());
+        mDescription.setText(user.getDescription());
         mEmailView.setText(user.getEmail());
         // TODO Add clickable prompts to add missing info
         String phoneNumber = user.getPhoneNumber();

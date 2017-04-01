@@ -35,8 +35,8 @@
             android:label="@string/title_activity_login" />
         <activity
             android:name=".scanner.BarcodeCaptureActivity"
-            android:screenOrientation="portrait"
-            android:label="Scan QR" />
+            android:label="Scan QR"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".image.PickerActivity"
             android:configChanges="orientation|screenSize"
@@ -55,6 +55,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.silpe.vire.slip.MainActivity" />
         </activity>
+        <activity
+            android:name=".fragments.AccountActivity"
+            android:label="@string/title_activity_account"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.silpe.vire.slip.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.silpe.vire.slip.fragments.ConnectionActivity"
+            android:label="@string/title_activity_connection" />
     </application>
 
 </manifest>

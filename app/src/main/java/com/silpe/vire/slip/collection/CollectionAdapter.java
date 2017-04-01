@@ -1,6 +1,7 @@
 package com.silpe.vire.slip.collection;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -17,6 +18,8 @@ import com.google.firebase.storage.StorageReference;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.components.ProfilePictureView;
 import com.silpe.vire.slip.dtos.User;
+import com.silpe.vire.slip.fragments.AccountActivity;
+import com.silpe.vire.slip.fragments.ConnectionActivity;
 import com.silpe.vire.slip.fragments.ConnectionFragment;
 import com.silpe.vire.slip.image.TimestampSignature;
 
@@ -90,10 +93,12 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
      */
     private CollectionHashList mUsers;
     private FragmentManager mFragmentManager;
+    private Context mContext;
     private int mReplaceId;
 
-    CollectionAdapter(FragmentManager fragmentManager, int replaceId) {
+    CollectionAdapter(FragmentManager fragmentManager, int replaceId, Context context) {
         mFragmentManager = fragmentManager;
+        mContext = context;
         mReplaceId = replaceId;
         mUsers = new CollectionHashList();
     }
@@ -126,7 +131,14 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
         } else {
             holder.getProfilePicture().setImageResource(R.drawable.empty_profile);
         }
-        holder.getToplevel().setOnClickListener(new CollectionCardClickListener(user, mFragmentManager, mReplaceId));
+        holder.getToplevel().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ConnectionActivity.class);
+                intent.putExtra(AccountActivity.RESULT_USER, user);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override

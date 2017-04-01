@@ -1,12 +1,10 @@
 package com.silpe.vire.slip;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.dtos.User;
-import com.silpe.vire.slip.fragments.AccountFragment;
+import com.silpe.vire.slip.fragments.AccountActivity;
 import com.silpe.vire.slip.fragments.QRFragment;
 import com.silpe.vire.slip.models.SessionModel;
 import com.silpe.vire.slip.navigation.NavigationPagerAdapter;
@@ -36,8 +34,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MainActivity extends AppCompatActivity {
 
     private static final int SCAN_FRAGMENT = 5508;
+    private static final int ACCOUNT_FRAGMENT = 4705;
     private static final String QR_FRAGMENT = "fragment_qr";
-    private static final String ACCOUNT_FRAGMENT = "fragment_account";
+
+    private NavigationPagerAdapter mNavigationPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,10 +102,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Set up the pagination and tab navigation
-        NavigationPagerAdapter navigationPagerAdapter = new NavigationPagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        mNavigationPager = new NavigationPagerAdapter(getSupportFragmentManager(), MainActivity.this);
         ViewPager viewPager = (ViewPager) findViewById(R.id.toplevelPager);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.toplevelTabs);
-        viewPager.setAdapter(navigationPagerAdapter);
+        viewPager.setAdapter(mNavigationPager);
         tabLayout.setupWithViewPager(viewPager);
 
         // User is logged in, but dispatch an update call anyway
@@ -142,6 +142,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, String.format(getString(R.string.barcode_error),
                         CommonStatusCodes.getStatusCodeString(resultCode)), Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == ACCOUNT_FRAGMENT) {
+            if (resultCode == CommonStatusCodes.SUCCESS && data != null) {
+                User user = data.getParcelableExtra(AccountActivity.RESULT_USER);
+                mNavigationPager.notifyUserUpdated(user);
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -171,12 +176,14 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else if (id == R.id.action_account) {
-            getSupportFragmentManager()
+            /*getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up, R.anim.slide_in_up, R.anim.slide_out_up)
                     .replace(R.id.toplevel, new AccountFragment(), ACCOUNT_FRAGMENT)
                     .addToBackStack(ACCOUNT_FRAGMENT)
-                    .commit();
+                    .commit();*/
+            Intent intent = new Intent(this, AccountActivity.class);
+            startActivityForResult(intent, ACCOUNT_FRAGMENT);
         } else {
             return super.onOptionsItemSelected(item);
         }

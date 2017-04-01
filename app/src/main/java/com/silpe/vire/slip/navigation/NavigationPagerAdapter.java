@@ -13,8 +13,8 @@ import com.silpe.vire.slip.models.SessionModel;
 
 public class NavigationPagerAdapter extends FragmentPagerAdapter {
 
-    private Fragment mMyCardFragment;
-    private Fragment mCollectionFragment;
+    private MyCardFragment mMyCardFragment;
+    private CollectionFragment mCollectionFragment;
     private Context mContext;
 
     public NavigationPagerAdapter(FragmentManager fragmentManager, Context context) {
@@ -50,6 +50,10 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
                 return mContext.getString(R.string.collectionTitle);
         }
         return null;
+    }
+
+    public void notifyUserUpdated(User user) {
+        mMyCardFragment.valueUpdated(user);
     }
 
 }

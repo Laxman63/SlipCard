@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbarAccount"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
             app:popupTheme="@style/AppTheme.PopupOverlay"

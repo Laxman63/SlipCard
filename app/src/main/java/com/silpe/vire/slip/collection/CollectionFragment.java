@@ -43,7 +43,7 @@ public class CollectionFragment extends Fragment {
         if (mUser != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
             CollectionView collectionView = (CollectionView) view.findViewById(R.id.collectionList);
-            collectionView.setAdapter(new CollectionAdapter(mFragmentManager, mReplaceId));
+            collectionView.setAdapter(new CollectionAdapter(mFragmentManager, mReplaceId, getContext()));
             collectionView.setLayoutManager(new CollectionLayoutManager(getContext()));
             ref = ref.child(getString(R.string.database_connections)).child(mUser.getUid());
             ref.addChildEventListener(new UserListEventListener(collectionView));

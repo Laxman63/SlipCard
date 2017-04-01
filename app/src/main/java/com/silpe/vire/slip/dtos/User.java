@@ -1,6 +1,8 @@
 package com.silpe.vire.slip.dtos;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
@@ -12,7 +14,7 @@ import com.silpe.vire.slip.models.Persistent;
 
 import java.util.Locale;
 
-public class User implements Persistent<User> {
+public class User implements Persistent<User>, Parcelable {
 
     private String uid;
 
@@ -54,6 +56,29 @@ public class User implements Persistent<User> {
         setCompany(company);
         setSignature(signature);
     }
+
+    protected User(Parcel in) {
+        uid = in.readString();
+        email = in.readString();
+        phoneNumber = in.readString();
+        firstName = in.readString();
+        lastName = in.readString();
+        occupation = in.readString();
+        company = in.readString();
+        signature = in.readLong();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
 
     @Exclude
     public String getFullName() {
@@ -177,4 +202,20 @@ public class User implements Persistent<User> {
         return String.format("%s - %s, %s", uid, firstName, lastName);
     }
 
+    @Override
+    public int describeContents() {
+        return Parcelable.PARCELABLE_WRITE_RETURN_VALUE;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(uid);
+        dest.writeString(email);
+        dest.writeString(phoneNumber);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(occupation);
+        dest.writeString(company);
+        dest.writeLong(signature);
+    }
 }
