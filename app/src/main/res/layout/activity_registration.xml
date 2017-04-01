@@ -26,13 +26,15 @@
 
                 <com.google.android.gms.common.SignInButton
                     android:id="@+id/google_signin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.4"
+                    android:layout_height="match_parent" />
                 <com.facebook.login.widget.LoginButton
+                    android:text="lol"
                     android:id="@+id/facebook_signin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4" />
 
             </android.support.v7.widget.LinearLayoutCompat>
 
@@ -93,7 +95,7 @@
     </ScrollView>
 
     <RelativeLayout
-        android:id="@+id/login_progress"
+        android:id="@+id/register_progress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0"
