@@ -32,7 +32,6 @@ public class ConnectionFragment extends Fragment {
         fragment.mUser = user;
         return fragment;
     }
-
     private User mUser;
 
     public ConnectionFragment() {
