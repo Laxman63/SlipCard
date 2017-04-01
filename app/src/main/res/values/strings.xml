@@ -88,6 +88,7 @@
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
     <string name="login_error_retrievalFailure">Failed to get user info</string>
     <string name="login_error_databaseFailure">Failed to query database</string>
+    <string name="login_error_nouser">LOL cannot find User, You SUCK!</string>
     <string name="image_selectImageApp">Select image source</string>
     <string name="qr_code">QR Code</string>
     <string name="cover_image">Cover image</string>

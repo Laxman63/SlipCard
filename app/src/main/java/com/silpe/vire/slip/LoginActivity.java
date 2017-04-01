@@ -353,7 +353,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (task.getResult().getProviders().size() > 0) {
                         doLogin(email, password);
                     } else {
-                        doRegister(email, password);
+                        Toast.makeText(LoginActivity.this, R.string.login_error_nouser, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     // TODO Error handling
@@ -363,27 +363,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
     }
-    //lol, debugging purpose:
-    boolean isSuccess;
-    boolean doRegister(final String email, final String password) {
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                LoginActivity.this.mTaskInProgress = false;
-                Log.d(getClass().getCanonicalName(), "createUserWithEmail:onComplete:" + task.isSuccessful());
-                isSuccess = true;
-                if (!task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
-                    LoginActivity.this.showProgress(false);
-                    FirebaseAuth.getInstance().signOut();
-                    isSuccess = false;
-                }
 
-            }
-        });
-        return isSuccess;
-    }
+
 
     private void doLogin(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
