@@ -30,7 +30,7 @@ import com.silpe.vire.slip.models.SessionModel;
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterManually extends AppCompatActivity {
 
     // UI references.
     private EditText mFirstNameView;
@@ -42,8 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,24 +155,6 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    //backRegister
-    boolean isSuccessful = true;
-    boolean doRegistera(final String email, final String password) {
-        isSuccessful = true;
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                Log.d(getClass().getCanonicalName(), "createUserWithEmail:onComplete:" + task.isSuccessful());
-                if (!task.isSuccessful()) {
-                    Toast.makeText(RegisterActivity.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
-                    FirebaseAuth.getInstance().signOut();
-                    isSuccessful = false;
-                }
-
-            }
-        });
-        return isSuccessful;
-    }
 
 
     private void doRegister(String firstName, String lastName, String occupation, String company) {

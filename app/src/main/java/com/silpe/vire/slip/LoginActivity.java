@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        toRegister = new Intent(this, RegisterActivity.class);
+        toRegister = new Intent(this, Registration.class);
         // Obtain the email input field and attempt autocompletion
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -476,7 +476,7 @@ class UserValueListener implements ValueEventListener {
     public void onDataChange(DataSnapshot snapshot) {
         User user = snapshot.getValue(User.class);
         if (user == null) {
-            Intent intent = new Intent(context, RegisterActivity.class);
+            Intent intent = new Intent(context, Registration.class);
             context.showProgress(false);
             context.startActivity(intent);
         } else {
