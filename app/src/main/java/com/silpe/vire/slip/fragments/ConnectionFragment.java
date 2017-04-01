@@ -19,7 +19,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.silpe.vire.slip.R;
-import com.silpe.vire.slip.collection.CollectionFragment;
 import com.silpe.vire.slip.components.ProfilePictureView;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.image.TimestampSignature;
@@ -39,7 +38,7 @@ public class ConnectionFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-        View view = inflater.inflate(R.layout.fragment_connection, container, false);
+        View view = inflater.inflate(R.layout.activity_connection, container, false);
 
         // Bind button listeners
         Button removeButton = (Button) view.findViewById(R.id.connection_removeButton);

@@ -3,7 +3,6 @@ package com.silpe.vire.slip.fragments;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -29,7 +28,7 @@ public class ConnectionActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
-        setContentView(R.layout.fragment_connection);
+        setContentView(R.layout.activity_connection);
         mUser = getIntent().getParcelableExtra(AccountActivity.RESULT_USER);
         Button removeButton = (Button) findViewById(R.id.connection_removeButton);
         removeButton.setOnClickListener(new RemoveUserListener());
@@ -48,7 +47,6 @@ public class ConnectionActivity extends AppCompatActivity {
         ProfilePictureView profilePictureView = (ProfilePictureView) findViewById(R.id.connection_profilePicture);
 
         // Load and set the user's profile picture, if he has one
-        Log.d("XD", mUser.getProfilePictureReference(this).toString());
         if (mUser.getSignature() > 0) {
             Glide.with(this)
                     .using(new FirebaseImageLoader())

@@ -46,7 +46,7 @@ public class AccountFragment extends Fragment implements ProfileDisplayComponent
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_account, container, false);
+        View view = inflater.inflate(R.layout.activity_account, container, false);
         // Obtain references to input fields
         mFirstNameField = (TextInputEditText) view.findViewById(R.id.account_firstNameField);
         mLastNameField = (TextInputEditText) view.findViewById(R.id.account_lastNameField);

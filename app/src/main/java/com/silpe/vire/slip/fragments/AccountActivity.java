@@ -47,7 +47,7 @@ public class AccountActivity extends AppCompatActivity implements ProfileDisplay
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        setContentView(R.layout.fragment_account);
+        setContentView(R.layout.activity_account);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbarAccount));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
