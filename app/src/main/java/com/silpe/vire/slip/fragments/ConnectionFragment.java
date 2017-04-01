@@ -78,15 +78,7 @@ public class ConnectionFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle state) {
-        // Load the collection fragment with the user's connections
-        Fragment collectionFragment = CollectionFragment.newInstance(mUser, getFragmentManager(), R.id.toplevel);
-        getChildFragmentManager()
-                .beginTransaction()
-                .replace(R.id.connection_collectionList, collectionFragment)
-                .commit();
-    }
+
 
     private class RemoveUserListener implements View.OnClickListener {
         @Override
