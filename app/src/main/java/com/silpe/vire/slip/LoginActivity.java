@@ -125,9 +125,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         toRegister = new Intent(this, Registration.class);
-        // Obtain the email input field and attempt autocompletion
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-        populateAutoComplete();
+
 
         findViewById(R.id.link_signup).setOnClickListener(new OnClickListener() {
             @Override
@@ -135,6 +133,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(toRegister);
             }
         });
+
+        // Obtain the email input field and attempt autocompletion
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        populateAutoComplete();
 
         // Obtain the password input field and bind the action listener
         mPasswordView = (EditText) findViewById(R.id.password);
