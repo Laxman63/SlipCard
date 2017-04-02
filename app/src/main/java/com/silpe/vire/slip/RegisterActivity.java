@@ -153,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
             // TODO Handle unexpected user session end OR make errors impossible
         }
-        User slipUser = new User(user.getUid(), user.getEmail(), "", firstName, lastName, occupation, company, 0);
+        User slipUser = new User(user.getUid(), user.getEmail(), "", firstName, lastName, occupation, company);
         SessionModel.get().setUser(slipUser, this);
         ref.child(getString(R.string.database_users)).child(slipUser.getUid()).setValue(slipUser);
         Intent intent = new Intent(this, MainActivity.class);

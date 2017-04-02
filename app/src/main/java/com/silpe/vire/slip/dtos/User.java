@@ -3,6 +3,7 @@ package com.silpe.vire.slip.dtos;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
@@ -25,7 +26,12 @@ public class User implements Persistent<User>, Parcelable {
     private String occupation;
     private String company;
 
-    private long signature;
+    private Integer connections;
+    private Long signature;
+    @Nullable
+    private Double latitude;
+    @Nullable
+    private Double longitude;
 
     public User() {
         uid = "";
@@ -35,7 +41,10 @@ public class User implements Persistent<User>, Parcelable {
         lastName = "";
         occupation = "";
         company = "";
-        signature = 0;
+        connections = 0;
+        signature = 0L;
+        latitude = null;
+        longitude = null;
     }
 
     public User(String uid) {
@@ -45,7 +54,15 @@ public class User implements Persistent<User>, Parcelable {
 
     public User(String uid, String email, String phoneNumber,
                 String firstName, String lastName,
-                String occupation, String company, long signature) {
+                String occupation, String company) {
+        this(uid, email, phoneNumber, firstName, lastName, occupation, company,
+                0, 0, null, null);
+    }
+
+    public User(String uid, String email, String phoneNumber,
+                String firstName, String lastName,
+                String occupation, String company, int connections, long signature,
+                @Nullable Double latitude, @Nullable Double longitude) {
         this();
         setUid(uid);
         setEmail(email);
@@ -54,6 +71,7 @@ public class User implements Persistent<User>, Parcelable {
         setLastName(lastName);
         setOccupation(occupation);
         setCompany(company);
+        setConnections(connections);
         setSignature(signature);
     }
 
@@ -65,6 +83,7 @@ public class User implements Persistent<User>, Parcelable {
         lastName = in.readString();
         occupation = in.readString();
         company = in.readString();
+        connections = in.readInt();
         signature = in.readLong();
     }
 
@@ -104,6 +123,14 @@ public class User implements Persistent<User>, Parcelable {
         return FirebaseDatabase.getInstance()
                 .getReference()
                 .child(context.getString(R.string.database_users))
+                .child(getUid());
+    }
+
+    @Exclude
+    public DatabaseReference getConnectionsReference(Context context) {
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(context.getString(R.string.database_connections))
                 .child(getUid());
     }
 
@@ -163,12 +190,38 @@ public class User implements Persistent<User>, Parcelable {
         this.company = company;
     }
 
-    public long getSignature() {
+    public Integer getConnections() {
+        return connections;
+    }
+
+    public void setConnections(Integer connections) {
+        this.connections = connections;
+    }
+
+    public Long getSignature() {
         return signature;
     }
 
-    public void setSignature(long signature) {
+    public void setSignature(Long signature) {
         this.signature = signature;
+    }
+
+    @Nullable
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(@Nullable Double latitude) {
+        this.latitude = latitude;
+    }
+
+    @Nullable
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(@Nullable Double longitude) {
+        this.longitude = longitude;
     }
 
     @Override
@@ -186,15 +239,30 @@ public class User implements Persistent<User>, Parcelable {
 
     @Override
     public String encode() {
-        return String.format(Locale.US, "%s&%s&%s&%s&%s&%s&%s&%d",
-                uid, email, phoneNumber, firstName, lastName, occupation, company, signature);
+        return String.format(Locale.US, "%s&%s&%s&%s&%s&%s&%s&%d&%d",
+                uid, email, phoneNumber, firstName, lastName, occupation, company,
+                connections, signature) +
+                '&' + (latitude == null ? NULL : latitude) +
+                '&' + (longitude == null ? NULL : longitude);
     }
 
     @Override
     public User decode(String serial) {
         final String[] kv = serial.split("&");
-
-        return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], kv[6], Long.valueOf(kv[7]));
+        if (kv.length == 8) {
+            // uid, email, phoneNumber, firstName, lastName, occupation, company, signature
+            return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], kv[6],
+                    0, Long.parseLong(kv[7]), null, null);
+        } else if (kv.length == 9) {
+            return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], kv[6],
+                    Integer.parseInt(kv[7]), Long.parseLong(kv[8]), null, null);
+        } else {
+            Double latitude = NULL.equals(kv[9]) ? null : Double.parseDouble(kv[9]);
+            Double longitude = NULL.equals(kv[10]) ? null : Double.parseDouble(kv[10]);
+            return new User(kv[0], kv[1], kv[2], kv[3], kv[4], kv[5], kv[6],
+                    Integer.parseInt(kv[7]), Long.parseLong(kv[8]),
+                    latitude, longitude);
+        }
     }
 
     @Override
@@ -216,6 +284,7 @@ public class User implements Persistent<User>, Parcelable {
         dest.writeString(lastName);
         dest.writeString(occupation);
         dest.writeString(company);
+        dest.writeInt(connections);
         dest.writeLong(signature);
     }
 }

@@ -39,4 +39,11 @@
     <dimen name="show_element_elevation">4dp</dimen>
     <dimen name="show_profile_picture_offset">-80dp</dimen>
     <dimen name="show_profile_picture_out">180dp</dimen>
+    <dimen name="show_icon_size">32dp</dimen>
+    <dimen name="show_icon_paddingBottom">30dp</dimen>
+    <dimen name="show_icon_marginHorizontal">14dp</dimen>
+    <dimen name="show_connection_text">16sp</dimen>
+    <dimen name="show_card_text">15sp</dimen>
+    <dimen name="show_padding">20dp</dimen>
+    <dimen name="show_card_margin">7dp</dimen>
 </resources>

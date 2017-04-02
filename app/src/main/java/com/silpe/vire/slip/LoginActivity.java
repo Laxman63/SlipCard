@@ -202,7 +202,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             populateAutoComplete();
         }
-
     }
 
     /**

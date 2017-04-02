@@ -1,9 +1,16 @@
 package com.silpe.vire.slip;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +21,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.silpe.vire.slip.components.IntValueChanger;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.fragments.AccountActivity;
 import com.silpe.vire.slip.fragments.QRFragment;
@@ -31,17 +43,29 @@ import com.silpe.vire.slip.scanner.BarcodeCaptureActivity;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MainActivity extends AppCompatActivity {
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
+public class MainActivity extends AppCompatActivity
+        implements GoogleApiClient.ConnectionCallbacks {
+
+    private static final int REQUEST_ACCESS_COARSE = 3384;
     private static final int SCAN_FRAGMENT = 5508;
     private static final int ACCOUNT_FRAGMENT = 4705;
     private static final String QR_FRAGMENT = "fragment_qr";
 
+    private GoogleApiClient googleApiClient;
     private NavigationPagerAdapter mNavigationPager;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (googleApiClient == null) googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .build();
 
         // Check whether the user has properly logged in
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -66,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void construct() {
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Set up the QR Code floating action button
@@ -201,6 +225,106 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().popBackStackImmediate();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        googleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        googleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        getLastLocation();
+    }
+
+    private boolean hasLocationPermissions() {
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
+            return true;
+        }
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_COARSE_LOCATION)
+                || ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
+            Snackbar.make(toolbar, R.string.permission_location_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION}, REQUEST_ACCESS_COARSE);
+                        }
+                    });
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION}, REQUEST_ACCESS_COARSE);
+        }
+        return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_ACCESS_COARSE
+                && grantResults.length == 2
+                && grantResults[0] == PERMISSION_GRANTED
+                && grantResults[1] == PERMISSION_GRANTED) {
+            getLastLocation();
+        }
+    }
+
+    private void getLastLocation() {
+        if (!hasLocationPermissions())
+            return;
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PERMISSION_GRANTED)
+            return;
+        Location lastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (lastKnownLocation != null) {
+            User user = SessionModel.get().getUser(this);
+            user.setLatitude(lastKnownLocation.getLatitude());
+            user.setLongitude(lastKnownLocation.getLongitude());
+            SessionModel.get().setUser(user, this);
+        }
+        LocationRequest locationRequest = new LocationRequest()
+                .setInterval(3_000L)
+                .setFastestInterval(1_000L)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Activity $this = MainActivity.this;
+                User user = SessionModel.get().getUser($this);
+                user.setLatitude(location.getLatitude());
+                user.setLongitude(location.getLongitude());
+                SessionModel.get().setUser(user, $this);
+            }
+        });
+        LocationRequest longLocationRequest = new LocationRequest()
+                .setInterval(10_000L)
+                .setFastestInterval(1_000L)
+                //.setSmallestDisplacement(15_000f)
+                .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, longLocationRequest, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Activity $this = MainActivity.this;
+                DatabaseReference ref = SessionModel.get()
+                        .getUser($this)
+                        .getDatabaseReference($this);
+                ref.child($this.getString(R.string.database_user_latitude))
+                        .setValue(location.getLatitude());
+                ref.child($this.getString(R.string.database_user_longitude))
+                        .setValue(location.getLongitude());
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
     private class UserStateListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
@@ -283,7 +407,10 @@ public class MainActivity extends AppCompatActivity {
                 .child(mUid)
                 .push()
                 .setValue(uid);
-        Toast.makeText(this, R.string.addUser_success, Toast.LENGTH_SHORT).show();
+        reference.child(getString(R.string.database_users))
+                .child(mUid)
+                .child(getString(R.string.database_connections))
+                .runTransaction(new IntValueChanger(true));
     }
 
     private abstract class UserQueryListener implements ValueEventListener {

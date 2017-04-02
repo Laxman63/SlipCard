@@ -27,6 +27,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/defaultback" />
 
+
                 <RelativeLayout
                     android:id="@+id/profile_layout"
                     android:layout_width="match_parent"
@@ -79,6 +80,85 @@
                         android:text="@string/sample_text"
                         android:textColor="@color/white"
                         android:textSize="14sp" />
+
+                    <android.support.v7.widget.LinearLayoutCompat
+                        android:id="@+id/show_middle"
+                        android:layout_width="@dimen/show_profile_picture_size"
+                        android:layout_height="@dimen/show_profile_picture_size"
+                        android:layout_centerHorizontal="true" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/show_middle"
+                        android:layout_toStartOf="@id/show_middle"
+                        android:paddingBottom="@dimen/show_icon_paddingBottom">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/show_group_icon"
+                            android:layout_width="@dimen/show_icon_size"
+                            android:layout_height="@dimen/show_icon_size"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/ic_group_white_24dp" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/show_number_connections"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/show_group_icon"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/sample_text"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/show_connection_text" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/show_number_connections"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/show_connections"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/show_middle"
+                        android:layout_toRightOf="@id/show_middle"
+                        android:paddingBottom="@dimen/show_icon_paddingBottom">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:id="@+id/show_location_icon"
+                            android:layout_width="@dimen/show_icon_size"
+                            android:layout_height="@dimen/show_icon_size"
+                            android:layout_centerHorizontal="true"
+                            android:background="@drawable/ic_location_on_white_24dp" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/show_location_city"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/show_location_icon"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/sample_text"
+                            android:textColor="@color/white" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/show_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/show_location_city"
+                            android:layout_centerHorizontal="true"
+                            android:text="@string/sample_text"
+                            android:textColor="@color/white" />
+                    </RelativeLayout>
                 </RelativeLayout>
 
                 <com.silpe.vire.slip.components.ProfilePictureView
@@ -96,63 +176,109 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/profile_layout"
-                android:layout_marginTop="5dp"
+                android:layout_marginEnd="@dimen/show_card_margin"
+                android:layout_marginLeft="@dimen/show_card_margin"
+                android:layout_marginRight="@dimen/show_card_margin"
+                android:layout_marginStart="@dimen/show_card_margin"
+                android:layout_marginTop="@dimen/show_card_margin"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/connection_phoneNumber"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
                     android:background="@color/white"
                     android:clickable="true"
-                    android:elevation="@dimen/show_element_elevation"
-                    android:padding="20dp"
-                    android:text="@string/sample_text" />
+                    android:elevation="@dimen/show_element_elevation">
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/connection_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@color/white"
-                    android:clickable="true"
-                    android:elevation="@dimen/show_element_elevation"
-                    android:padding="20dp"
-                    android:text="@string/sample_text" />
+                    <ImageView
+                        android:id="@+id/show_email_icon"
+                        android:layout_width="@dimen/show_icon_size"
+                        android:layout_height="@dimen/show_icon_size"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/show_padding"
+                        android:background="@drawable/ic_email_black_24dp" />
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@color/white"
-                    android:clickable="true"
-                    android:elevation="@dimen/show_element_elevation"
-                    android:padding="20dp"
-                    android:text="@string/sample_text" />
+                    <android.support.v7.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/show_email_icon"
+                        android:layout_toRightOf="@id/show_email_icon"
+                        android:background="@drawable/show_border"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/show_padding"
+                        android:paddingTop="@dimen/show_padding">
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@color/white"
-                    android:clickable="true"
-                    android:elevation="@dimen/show_element_elevation"
-                    android:padding="20dp"
-                    android:text="@string/sample_text" />
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/connection_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/sample_text"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/show_card_text" />
 
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="match_parent"
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/show_email"
+                            android:textColor="@android:color/darker_gray" />
+                    </android.support.v7.widget.LinearLayoutCompat>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
                     android:background="@color/white"
                     android:clickable="true"
                     android:elevation="@dimen/show_element_elevation"
-                    android:padding="20dp"
-                    android:text="@string/sample_text" />
+                    android:padding="@dimen/show_padding">
+
+                    <ImageView
+                        android:id="@+id/show_phoneNumber_icon"
+                        android:layout_width="@dimen/show_icon_size"
+                        android:layout_height="@dimen/show_icon_size"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/show_padding"
+                        android:layout_marginRight="@dimen/show_padding"
+                        android:background="@drawable/ic_local_phone_black_24dp" />
+
+                    <android.support.v7.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/show_phoneNumber_icon"
+                        android:layout_toRightOf="@id/show_phoneNumber_icon"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/connection_phoneNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/sample_text"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/show_card_text" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/show_mobilePhone"
+                            android:textColor="@android:color/darker_gray" />
+                    </android.support.v7.widget.LinearLayoutCompat>
+
+                    <ImageView
+                        android:id="@+id/show_phoneNumberMessage_icon"
+                        android:layout_width="@dimen/show_icon_size"
+                        android:layout_height="@dimen/show_icon_size"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_message_black_24dp" />
+                </RelativeLayout>
             </android.support.v7.widget.LinearLayoutCompat>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
         </android.support.v7.widget.LinearLayoutCompat>
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

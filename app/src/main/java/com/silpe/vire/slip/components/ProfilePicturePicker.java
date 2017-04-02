@@ -1,6 +1,5 @@
 package com.silpe.vire.slip.components;
 
-
 import android.net.Uri;
 import android.view.View;
 
@@ -10,7 +9,6 @@ import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.image.PickerBuilder;
 import com.silpe.vire.slip.image.TimestampSignature;
 import com.silpe.vire.slip.models.SessionModel;
-import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 
@@ -51,8 +49,10 @@ public class ProfilePicturePicker implements View.OnClickListener {
             // Update the user profile picture
             Glide.with(display.getActivity())
                     .load(new File(imageUri.getPath()))
+                    .asBitmap()
+                    .centerCrop()
                     .signature(signature)
-                    .into(display.getProfilePicture());
+                    .into(new RoundedBitmap(display.getProfilePicture(), display.getContext()));
         }
     }
 

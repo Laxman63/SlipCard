@@ -96,4 +96,13 @@
     <string name="sample_text">Sample Text</string>
     <string name="title_activity_account">AccountActivity</string>
     <string name="title_activity_connection">ConnectionActivity</string>
+    <string name="show_connections">Connections</string>
+    <string name="permission_location_rationale">Location services can help you connect with others.</string>
+    <string name="location_earth">Earth</string>
+    <string name="empty" />
+    <string name="show_email">Email</string>
+    <string name="show_mobilePhone">Mobile</string>
+    <string name="earth">Earth</string>
+    <string name="database_user_latitude">latitude</string>
+    <string name="database_user_longitude">longitude</string>
 </resources>
