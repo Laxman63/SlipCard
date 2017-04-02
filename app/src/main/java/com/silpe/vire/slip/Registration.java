@@ -2,7 +2,9 @@ package com.silpe.vire.slip;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,19 +22,28 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.components.DoubleBackHandler;
+import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.dtos.Validator;
+import com.silpe.vire.slip.models.SessionModel;
 
 public class Registration extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private AutoCompleteTextView mEmailView;
-    private EditText mPasswordView;
-    private EditText mRePassView;
+    private TextInputEditText mPasswordView;
+    private TextInputEditText mRePassView;
     private View mProgressView;
     private TextView mTextView;
     private boolean mTaskInProgress = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,28 +54,54 @@ public class Registration extends AppCompatActivity {
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
         // Obtain the password input field and bind the action listener
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView = (TextInputEditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new Registration.PasswordSubmitListener());
 
-        mRePassView = (EditText) findViewById(R.id.password);
+        mRePassView = (TextInputEditText) findViewById(R.id.repass);
         mRePassView.setOnEditorActionListener(new Registration.PasswordSubmitListener());
 
         // Bind the attempt login listener to the login button
-        Button signInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button signInButton = (Button) findViewById(R.id.login_button);
         signInButton.setOnClickListener(new Registration.LoginButtonListener());
 
         // Obtain a reference to the loading indicator
-        mProgressView = findViewById(R.id.login_progress);
+        mProgressView = findViewById(R.id.register_progress);
 
         // Obtain the Firebase Authentication listeners and create the listener
         mAuth = FirebaseAuth.getInstance();
-
-
-
-
-
+        mAuthListener = new UserStateListener();
 
     }
+    private class UserStateListener implements FirebaseAuth.AuthStateListener {
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                ref = ref.child(getString(R.string.database_users)).child(user.getUid());
+                ref.addListenerForSingleValueEvent(new com.silpe.vire.slip.Registration.UserValueListener(Registration.this));
+            }
+            /*
+             * TODO
+             * -- Handle edge cases where
+             *    -> The user may be logged in while in this screen
+             *    -> The user may become logged out in this screen
+             */
+        }
+    }
+
+    //This can be modularized
+    private class PasswordSubmitListener implements TextView.OnEditorActionListener {
+        @Override
+        public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+            final boolean action =
+                    (id == R.id.login || id == EditorInfo.IME_NULL);
+            if (action)
+                attemptLogin();
+            return action;
+        }
+    }
+
 
     private class LoginButtonListener implements View.OnClickListener {
         @Override
@@ -78,6 +115,7 @@ public class Registration extends AppCompatActivity {
         if (show) {
             mProgressView.setVisibility(View.VISIBLE);
         }
+
         mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
@@ -87,6 +125,20 @@ public class Registration extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    /**
+     * When this activity has stopped, remove the user state listener.
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 
     // TODO CLEAN UP CODE
@@ -102,7 +154,8 @@ public class Registration extends AppCompatActivity {
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-        String repass =  mPasswordView.getText().toString();
+        String repass =  mRePassView.getText().toString();
+        Log.d ("YOLO", password + ":" +repass);
 
         boolean cancel = false;
         View focusView = null;
@@ -123,10 +176,12 @@ public class Registration extends AppCompatActivity {
             mPasswordView.setError(getString(R.string.error_field_required));
             focusView = mPasswordView;
             cancel = true;
+            Log.d ("YOLO", "pasEmpt");
         } else if (!Validator.isValidPassword(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
+            Log.d ("YOLO", "NotValid");
         }
 
         // Check for a valid password, if the user entered one.
@@ -134,13 +189,13 @@ public class Registration extends AppCompatActivity {
             mRePassView.setError(getString(R.string.error_field_required));
             focusView = mRePassView;
             cancel = true;
-        } else if (password != repass) {
+            Log.d ("YOLO", "NoRepas");
+        } else if (!password.equals(repass)) {
             mRePassView.setError(getString(R.string.error_notsame_password));
             focusView = mRePassView;
             cancel = true;
+            Log.d ("YOLO", "NotMatch");
         }
-
-
 
         if (cancel) {
             focusView.requestFocus();
@@ -151,32 +206,63 @@ public class Registration extends AppCompatActivity {
         }
     }
 
-
-    //This can be modularized
-    private class PasswordSubmitListener implements TextView.OnEditorActionListener {
-        @Override
-        public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-            final boolean action = id == R.id.login || id == EditorInfo.IME_NULL;
-            if (action) attemptLogin();
-            return action;
-        }
-    }
-
     boolean isSuccessful = true;
     boolean doRegister(final String email, final String password) {
         isSuccessful = true;
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+
                 Log.d(getClass().getCanonicalName(), "createUserWithEmail:onComplete:" + task.isSuccessful());
                 if (!task.isSuccessful()) {
                     Toast.makeText(Registration.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
                     FirebaseAuth.getInstance().signOut();
                     isSuccessful = false;
                 }
+
             }
         });
-        mTaskInProgress = false;
         return isSuccessful;
+    }
+    class UserValueListener implements ValueEventListener {
+
+        private final Registration context;
+
+        UserValueListener(Registration context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onDataChange(DataSnapshot snapshot) {
+            User user = snapshot.getValue(User.class);
+            if (user == null) {
+                Intent intent = new Intent(context, RegisterManually.class);
+                context.showProgress(false);
+                context.startActivity(intent);
+            } else {
+                //doesnt exist?
+                SessionModel.get().setUser(user, context);
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.showProgress(false);
+                context.startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError error) {
+            Log.d(getClass().getCanonicalName(), error.toString());
+
+            /*
+            *   TODO
+            *   -- Handle an error in which the database request
+            *   for user information is disconnected
+            *   -> Indicate the user a connection issue
+            *   -> Prompt him to log in again
+            */
+            context.showProgress(false);
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(context, R.string.login_error_retrievalFailure, Toast.LENGTH_SHORT).show();
+        }
     }
 }

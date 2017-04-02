@@ -162,8 +162,14 @@ public class RegisterManually extends AppCompatActivity {
         DatabaseReference ref = database.getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
+            Toast.makeText(this,
+                    "Fuck you, fucking retard for crashing the app. " +
+                    "Now you are happy eh? How sad your little pathetic life got " +
+                    "nothing better to do than crasahing ppl's code. " +
+                    "Go home and get a life, sucker",Toast.LENGTH_SHORT).show();
+            System.out.println ();
             return;
-            // TODO Handle unexpected user session end OR make errors impossible
+
         }
         User slipUser = new User(user.getUid(), user.getEmail(), "", firstName, lastName, occupation, company, 0);
         SessionModel.get().setUser(slipUser, this);
@@ -172,6 +178,5 @@ public class RegisterManually extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
-
 }
 
