@@ -28,9 +28,10 @@ The user may easily maintain the platform by choosing which connections to add o
 When we started building this project, we thought about building a fast, beautiful and maintainable app. That's why we choose to develop natively for Android, an ecosystem for approximately 70% of the singer
 
 ## Challenges I ran into
-
-## Accomplishments that I'm proud of
+Integrating the app with firebase was the most challenging issue I've run into during the course of the project. In the past, I used to set up a mySQL server on local host. And then handle the request by having java jdec communicate in SQL directly with the database, or do it through PHP. however, since we are under a more strict time limit here at HackPrinceton (given 36 hours), I have no choice but to use a more established database connection service that is Firebase, provided by google, for Android. This database allowed authorization, google sign-in, cloud-messaging, and a Relational database all at once. However, since it is pretty high level, I do not have write the code for lower level functions, and so I was not quite sure how this structure works. In fact, different than previous dbs, at Google Firebase, you do not handle your own user session transition. The firebase handles it for you. So you make your changes to user log in state, and then through a listener called mAuthListener, the Firebase SDK decides whether your user data has changed and then make decisions for you, if user == null, then signs you up, if not != null then signs you in. Because I do not handle the user state transition myself. it was not that intuitive for me to catch that the firebase detects the user itself in a listener. This took me the entire Saturday afternoon to figure out. Enventually, by consulting my partner who is an expert in working with databases, I learned that the listeners are implemmented in each classes, so that when something goes out of hand, the listener would always catch that and take action against the response. 
 
 ## What I learned
+I learnd that
 
 ## What's next for Slip
+Next, we will continue use a (machine learning) 
