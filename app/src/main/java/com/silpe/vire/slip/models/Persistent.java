@@ -9,6 +9,8 @@ package com.silpe.vire.slip.models;
  */
 public interface Persistent<T> {
 
+    String NULL = "null";
+
     boolean equals(Object o);
 
     int hashCode();

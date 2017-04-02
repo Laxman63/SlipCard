@@ -2,7 +2,6 @@ package com.silpe.vire.slip.collection;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,17 +21,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CollectionFragment extends Fragment {
 
-    public static CollectionFragment newInstance(User user, FragmentManager fragmentManager, int replaceId) {
+    public static CollectionFragment newInstance(User user) {
         CollectionFragment fragment = new CollectionFragment();
         fragment.mUser = user;
-        fragment.mFragmentManager = fragmentManager;
-        fragment.mReplaceId = replaceId;
         return fragment;
     }
 
     private User mUser;
-    private FragmentManager mFragmentManager;
-    private int mReplaceId;
 
     public CollectionFragment() {
     }
@@ -43,7 +38,7 @@ public class CollectionFragment extends Fragment {
         if (mUser != null) {
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
             CollectionView collectionView = (CollectionView) view.findViewById(R.id.collectionList);
-            collectionView.setAdapter(new CollectionAdapter(mFragmentManager, mReplaceId, getContext()));
+            collectionView.setAdapter(new CollectionAdapter(getContext()));
             collectionView.setLayoutManager(new CollectionLayoutManager(getContext()));
             ref = ref.child(getString(R.string.database_connections)).child(mUser.getUid());
             ref.addChildEventListener(new UserListEventListener(collectionView));

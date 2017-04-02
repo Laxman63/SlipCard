@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,12 +39,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.silpe.vire.slip.components.DoubleBackHandler;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.dtos.Validator;
 import com.silpe.vire.slip.models.SessionModel;
 
-public class Registration extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity {
     private boolean isGoogle = false;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -74,14 +72,14 @@ public class Registration extends AppCompatActivity {
 
         // Obtain the password input field and bind the action listener
         mPasswordView = (TextInputEditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new Registration.PasswordSubmitListener());
+        mPasswordView.setOnEditorActionListener(new RegistrationActivity.PasswordSubmitListener());
 
         mRePassView = (TextInputEditText) findViewById(R.id.repass);
-        mRePassView.setOnEditorActionListener(new Registration.PasswordSubmitListener());
+        mRePassView.setOnEditorActionListener(new RegistrationActivity.PasswordSubmitListener());
 
         // Bind the attempt login listener to the login button
         Button signInButton = (Button) findViewById(R.id.login_button);
-        signInButton.setOnClickListener(new Registration.LoginButtonListener());
+        signInButton.setOnClickListener(new RegistrationActivity.LoginButtonListener());
 
         // Obtain a reference to the loading indicator
         mProgressView = findViewById(R.id.register_progress);
@@ -132,7 +130,7 @@ public class Registration extends AppCompatActivity {
             if (user != null) {
                 DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                 ref = ref.child(getString(R.string.database_users)).child(user.getUid());
-                ref.addListenerForSingleValueEvent(new com.silpe.vire.slip.Registration.UserValueListener(Registration.this));
+                ref.addListenerForSingleValueEvent(new RegistrationActivity.UserValueListener(RegistrationActivity.this));
             }
             /*
              * TODO
@@ -251,7 +249,7 @@ public class Registration extends AppCompatActivity {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(Registration.this, "Authentication failed.",
+                            Toast.makeText(RegistrationActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                         isGoogle = true;
@@ -360,7 +358,7 @@ public class Registration extends AppCompatActivity {
 
                 Log.d(getClass().getCanonicalName(), "createUserWithEmail:onComplete:" + task.isSuccessful());
                 if (!task.isSuccessful()) {
-                    Toast.makeText(Registration.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegistrationActivity.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
                     FirebaseAuth.getInstance().signOut();
                     isSuccessful = false;
                 }
@@ -371,9 +369,9 @@ public class Registration extends AppCompatActivity {
     }
     class UserValueListener implements ValueEventListener {
 
-        private final Registration context;
+        private final RegistrationActivity context;
 
-        UserValueListener(Registration context) {
+        UserValueListener(RegistrationActivity context) {
             this.context = context;
         }
 

@@ -124,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        toRegister = new Intent(this, Registration.class);
+        toRegister = new Intent(this, RegistrationActivity.class);
 
         findViewById(R.id.link_signup).setOnClickListener(new OnClickListener() {
             @Override
@@ -219,7 +219,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             populateAutoComplete();
         }
-
     }
 
     /**
@@ -480,7 +479,7 @@ class UserValueListener implements ValueEventListener {
     public void onDataChange(DataSnapshot snapshot) {
         User user = snapshot.getValue(User.class);
         if (user == null) {
-            Intent intent = new Intent(context, Registration.class);
+            Intent intent = new Intent(context, RegistrationActivity.class);
             context.showProgress(false);
             context.startActivity(intent);
         } else {

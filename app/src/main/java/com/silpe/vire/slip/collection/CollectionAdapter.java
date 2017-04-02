@@ -19,7 +19,7 @@ import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.components.ProfilePictureView;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.fragments.AccountActivity;
-import com.silpe.vire.slip.fragments.ConnectionActivity;
+import com.silpe.vire.slip.fragments.ActivityConnection;
 import com.silpe.vire.slip.fragments.ConnectionFragment;
 import com.silpe.vire.slip.image.TimestampSignature;
 
@@ -92,14 +92,10 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
      * -> Gracefully passes this update to the adapter
      */
     private CollectionHashList mUsers;
-    private FragmentManager mFragmentManager;
     private Context mContext;
-    private int mReplaceId;
 
-    CollectionAdapter(FragmentManager fragmentManager, int replaceId, Context context) {
-        mFragmentManager = fragmentManager;
+    CollectionAdapter(Context context) {
         mContext = context;
-        mReplaceId = replaceId;
         mUsers = new CollectionHashList();
     }
 
@@ -134,7 +130,7 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
         holder.getToplevel().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ConnectionActivity.class);
+                Intent intent = new Intent(mContext, ActivityConnection.class);
                 intent.putExtra(AccountActivity.RESULT_USER, user);
                 mContext.startActivity(intent);
             }
