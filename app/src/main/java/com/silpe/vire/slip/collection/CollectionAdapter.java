@@ -92,14 +92,10 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
      * -> Gracefully passes this update to the adapter
      */
     private CollectionHashList mUsers;
-    private FragmentManager mFragmentManager;
     private Context mContext;
-    private int mReplaceId;
 
-    CollectionAdapter(FragmentManager fragmentManager, int replaceId, Context context) {
-        mFragmentManager = fragmentManager;
+    CollectionAdapter(Context context) {
         mContext = context;
-        mReplaceId = replaceId;
         mUsers = new CollectionHashList();
     }
 

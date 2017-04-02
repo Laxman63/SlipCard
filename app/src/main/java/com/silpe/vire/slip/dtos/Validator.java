@@ -15,6 +15,7 @@ public class Validator {
     public static boolean isValidPhoneNumber(String phoneNumber) {
         // TODO Provide proper phone number validation
         return !phoneNumber.matches(".*[a-zA-Z].*");
+
     }
 
     public static boolean isValidPassword(String password) {

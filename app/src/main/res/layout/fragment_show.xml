@@ -172,109 +172,109 @@
                     android:elevation="@dimen/show_element_elevation" />
             </RelativeLayout>
 
-            <android.support.v7.widget.LinearLayoutCompat
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/profile_layout"
-                android:layout_marginEnd="@dimen/show_card_margin"
-                android:layout_marginLeft="@dimen/show_card_margin"
-                android:layout_marginRight="@dimen/show_card_margin"
-                android:layout_marginStart="@dimen/show_card_margin"
-                android:layout_marginTop="@dimen/show_card_margin"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/profile_layout"
+                    android:layout_margin="@dimen/show_card_margin"
                     android:background="@color/white"
-                    android:clickable="true"
-                    android:elevation="@dimen/show_element_elevation">
-
-                    <ImageView
-                        android:id="@+id/show_email_icon"
-                        android:layout_width="@dimen/show_icon_size"
-                        android:layout_height="@dimen/show_icon_size"
-                        android:layout_centerVertical="true"
-                        android:layout_margin="@dimen/show_padding"
-                        android:background="@drawable/ic_email_black_24dp" />
-
-                    <android.support.v7.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/show_email_icon"
-                        android:layout_toRightOf="@id/show_email_icon"
-                        android:background="@drawable/show_border"
-                        android:orientation="vertical"
-                        android:paddingBottom="@dimen/show_padding"
-                        android:paddingTop="@dimen/show_padding">
-
-                        <android.support.v7.widget.AppCompatTextView
-                            android:id="@+id/connection_email"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="@string/sample_text"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/show_card_text" />
-
-                        <android.support.v7.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/show_email"
-                            android:textColor="@android:color/darker_gray" />
-                    </android.support.v7.widget.LinearLayoutCompat>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:clickable="true"
+                    android:clipToPadding="false"
                     android:elevation="@dimen/show_element_elevation"
-                    android:padding="@dimen/show_padding">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/show_phoneNumber_icon"
-                        android:layout_width="@dimen/show_icon_size"
-                        android:layout_height="@dimen/show_icon_size"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/show_padding"
-                        android:layout_marginRight="@dimen/show_padding"
-                        android:background="@drawable/ic_local_phone_black_24dp" />
-
-                    <android.support.v7.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/show_phoneNumber_icon"
-                        android:layout_toRightOf="@id/show_phoneNumber_icon"
-                        android:orientation="vertical">
+                        android:clickable="true">
 
-                        <android.support.v7.widget.AppCompatTextView
-                            android:id="@+id/connection_phoneNumber"
-                            android:layout_width="wrap_content"
+                        <ImageView
+                            android:id="@+id/show_email_icon"
+                            android:layout_width="@dimen/show_icon_size"
+                            android:layout_height="@dimen/show_icon_size"
+                            android:layout_centerVertical="true"
+                            android:layout_margin="@dimen/show_padding"
+                            android:background="@drawable/ic_email_black_24dp" />
+
+                        <android.support.v7.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:text="@string/sample_text"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/show_card_text" />
+                            android:layout_toEndOf="@id/show_email_icon"
+                            android:layout_toRightOf="@id/show_email_icon"
+                            android:background="@drawable/show_border"
+                            android:orientation="vertical"
+                            android:paddingBottom="@dimen/show_padding"
+                            android:paddingTop="@dimen/show_padding">
 
-                        <android.support.v7.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/connection_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:text="@string/sample_text"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/show_card_text" />
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/show_email"
+                                android:textColor="@android:color/darker_gray" />
+                        </android.support.v7.widget.LinearLayoutCompat>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:padding="@dimen/show_padding">
+
+                        <ImageView
+                            android:id="@+id/show_phoneNumber_icon"
+                            android:layout_width="@dimen/show_icon_size"
+                            android:layout_height="@dimen/show_icon_size"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/show_padding"
+                            android:layout_marginRight="@dimen/show_padding"
+                            android:background="@drawable/ic_local_phone_black_24dp" />
+
+                        <android.support.v7.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/show_mobilePhone"
-                            android:textColor="@android:color/darker_gray" />
-                    </android.support.v7.widget.LinearLayoutCompat>
+                            android:layout_toEndOf="@id/show_phoneNumber_icon"
+                            android:layout_toRightOf="@id/show_phoneNumber_icon"
+                            android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/show_phoneNumberMessage_icon"
-                        android:layout_width="@dimen/show_icon_size"
-                        android:layout_height="@dimen/show_icon_size"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/ic_message_black_24dp" />
-                </RelativeLayout>
-            </android.support.v7.widget.LinearLayoutCompat>
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/connection_phoneNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:text="@string/sample_text"
+                                android:textColor="@android:color/black"
+                                android:textSize="@dimen/show_card_text" />
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/show_mobilePhone"
+                                android:textColor="@android:color/darker_gray" />
+                        </android.support.v7.widget.LinearLayoutCompat>
+
+                        <ImageView
+                            android:id="@+id/show_phoneNumberMessage_icon"
+                            android:layout_width="@dimen/show_icon_size"
+                            android:layout_height="@dimen/show_icon_size"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/ic_message_black_24dp" />
+                    </RelativeLayout>
+                </android.support.v7.widget.LinearLayoutCompat>
+            </FrameLayout>
 
             <TextView
                 android:layout_width="match_parent"

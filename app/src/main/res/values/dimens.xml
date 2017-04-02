@@ -45,5 +45,5 @@
     <dimen name="show_connection_text">16sp</dimen>
     <dimen name="show_card_text">15sp</dimen>
     <dimen name="show_padding">20dp</dimen>
-    <dimen name="show_card_margin">7dp</dimen>
+    <dimen name="show_card_margin">17dp</dimen>
 </resources>

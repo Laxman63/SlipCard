@@ -48,7 +48,7 @@ public class AccountActivity extends AppCompatActivity implements ProfileDisplay
     protected void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_account);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbarAccount));
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);

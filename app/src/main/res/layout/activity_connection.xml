@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF">
-
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/whiteBackground"
+        android:clipToPadding="false"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
+            android:background="@color/whiteBackground"
+            android:clipToPadding="false"
             android:orientation="vertical"
             android:scrollbars="vertical">
 
@@ -21,9 +25,28 @@
                 android:id="@+id/header_cover_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:clipToPadding="false"
                 android:contentDescription="@string/cover_image"
                 android:scaleType="centerCrop"
                 android:src="@drawable/defaultback" />
+
+
+            <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBarAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:theme="@style/AppTheme.AppBarOverlay">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toolbar_height"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    android:background="@drawable/background_toolbar_translucent"
+                    app:title="@string/empty" />
+
+            </android.support.design.widget.AppBarLayout>
 
             <RelativeLayout
                 android:id="@+id/profile_layout"
@@ -31,30 +54,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/header_cover_image"
                 android:background="@color/colorSecondary"
+                android:clipToPadding="false"
                 android:elevation="@dimen/show_element_elevation"
-                android:paddingBottom="24dp">
-
-                <!--<ImageView
-                    android:id="@+id/add_friend"
-                    android:layout_width="@dimen/show_menu_size"
-                    android:layout_height="@dimen/show_menu_size"
-                    android:layout_marginLeft="@dimen/show_menu_margin"
-                    android:layout_marginStart="@dimen/show_menu_margin"
-                    android:layout_marginTop="@dimen/show_menu_margin"
-                    android:layout_toLeftOf="@id/drop_down_option_menu"
-                    android:layout_toStartOf="@id/drop_down_option_menu"
-                    android:contentDescription="@string/add_friend" />
-
-                <ImageView
-                    android:id="@+id/drop_down_option_menu"
-                    android:layout_width="@dimen/show_menu_size"
-                    android:layout_height="@dimen/show_menu_size"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginLeft="@dimen/show_menu_margin"
-                    android:layout_marginStart="@dimen/show_menu_margin"
-                    android:layout_marginTop="@dimen/show_menu_margin"
-                    android:contentDescription="@string/show_menu" />-->
+                android:paddingBottom="24dp"
+                tools:targetApi="lollipop">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/connection_fullName"
@@ -166,127 +169,135 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/show_profile_picture_offset"
                 android:background="@drawable/background_profile_large"
-                android:elevation="@dimen/show_element_elevation" />
+                android:elevation="@dimen/show_element_elevation"
+                tools:targetApi="lollipop" />
         </RelativeLayout>
 
-        <android.support.v7.widget.LinearLayoutCompat
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/profile_layout"
-            android:layout_marginEnd="@dimen/show_card_margin"
-            android:layout_marginLeft="@dimen/show_card_margin"
-            android:layout_marginRight="@dimen/show_card_margin"
-            android:layout_marginStart="@dimen/show_card_margin"
-            android:layout_marginTop="@dimen/show_card_margin"
-            android:elevation="@dimen/show_element_elevation"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/show_card_margin"
                 android:background="@color/white"
-                android:clickable="true">
+                android:clipToPadding="false"
+                android:elevation="@dimen/show_element_elevation"
+                android:orientation="vertical"
+                tools:targetApi="lollipop">
 
-                <ImageView
-                    android:id="@+id/show_email_icon"
-                    android:layout_width="@dimen/show_icon_size"
-                    android:layout_height="@dimen/show_icon_size"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="@dimen/show_padding"
-                    android:background="@drawable/ic_email_black_24dp" />
-
-                <android.support.v7.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/show_email_icon"
-                    android:layout_toRightOf="@id/show_email_icon"
-                    android:background="@drawable/show_border"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/show_padding"
-                    android:paddingTop="@dimen/show_padding">
+                    android:clickable="true">
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/connection_email"
+                    <ImageView
+                        android:id="@+id/show_email_icon"
+                        android:layout_width="@dimen/show_icon_size"
+                        android:layout_height="@dimen/show_icon_size"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/show_padding"
+                        android:background="@drawable/ic_email_black_24dp" />
+
+                    <android.support.v7.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/sample_text"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/show_card_text" />
+                        android:layout_toEndOf="@id/show_email_icon"
+                        android:layout_toRightOf="@id/show_email_icon"
+                        android:background="@drawable/show_border"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/show_padding"
+                        android:paddingTop="@dimen/show_padding">
 
-                    <android.support.v7.widget.AppCompatTextView
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/connection_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/sample_text"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/show_card_text" />
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/show_email"
+                            android:textColor="@android:color/darker_gray" />
+                    </android.support.v7.widget.LinearLayoutCompat>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:padding="@dimen/show_padding">
+
+                    <ImageView
+                        android:id="@+id/show_phoneNumber_icon"
+                        android:layout_width="@dimen/show_icon_size"
+                        android:layout_height="@dimen/show_icon_size"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/show_padding"
+                        android:layout_marginRight="@dimen/show_padding"
+                        android:background="@drawable/ic_local_phone_black_24dp" />
+
+                    <android.support.v7.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/show_email"
-                        android:textColor="@android:color/darker_gray" />
-                </android.support.v7.widget.LinearLayoutCompat>
-            </RelativeLayout>
+                        android:layout_toEndOf="@id/show_phoneNumber_icon"
+                        android:layout_toRightOf="@id/show_phoneNumber_icon"
+                        android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:clickable="true"
-                android:padding="@dimen/show_padding">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:id="@+id/connection_phoneNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/sample_text"
+                            android:textColor="@android:color/black"
+                            android:textSize="@dimen/show_card_text" />
 
-                <ImageView
-                    android:id="@+id/show_phoneNumber_icon"
-                    android:layout_width="@dimen/show_icon_size"
-                    android:layout_height="@dimen/show_icon_size"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/show_padding"
-                    android:layout_marginRight="@dimen/show_padding"
-                    android:background="@drawable/ic_local_phone_black_24dp" />
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/show_mobilePhone"
+                            android:textColor="@android:color/darker_gray" />
+                    </android.support.v7.widget.LinearLayoutCompat>
 
-                <android.support.v7.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/show_phoneNumber_icon"
-                    android:layout_toRightOf="@id/show_phoneNumber_icon"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/connection_phoneNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/sample_text"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/show_card_text" />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/show_mobilePhone"
-                        android:textColor="@android:color/darker_gray" />
-                </android.support.v7.widget.LinearLayoutCompat>
-
-                <ImageView
-                    android:id="@+id/show_phoneNumberMessage_icon"
-                    android:layout_width="@dimen/show_icon_size"
-                    android:layout_height="@dimen/show_icon_size"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/ic_message_black_24dp" />
-            </RelativeLayout>
-        </android.support.v7.widget.LinearLayoutCompat>
+                    <ImageView
+                        android:id="@+id/show_phoneNumberMessage_icon"
+                        android:layout_width="@dimen/show_icon_size"
+                        android:layout_height="@dimen/show_icon_size"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/ic_message_black_24dp" />
+                </RelativeLayout>
+            </android.support.v7.widget.LinearLayoutCompat>
+        </FrameLayout>
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            android:background="@android:color/transparent" />
+
+        <Button
+            android:id="@+id/connection_collectionButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/account_profile_margin"
+            android:text="@string/connection_collectionButton_text" />
 
         <Button
             android:id="@+id/connection_removeButton"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/account_profile_margin"
             android:layout_marginTop="@dimen/account_profile_margin"
-            android:paddingEnd="@dimen/login_padding_horizontal"
-            android:paddingLeft="@dimen/login_padding_horizontal"
-            android:paddingRight="@dimen/login_padding_horizontal"
-            android:paddingStart="@dimen/login_padding_horizontal"
             android:text="@string/connection_removeButton_text" />
     </android.support.v7.widget.LinearLayoutCompat>
 </ScrollView>

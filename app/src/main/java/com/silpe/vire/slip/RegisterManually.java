@@ -4,8 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,7 +15,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +30,7 @@ import com.silpe.vire.slip.models.SessionModel;
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterManually extends AppCompatActivity {
 
     // UI references.
     private EditText mFirstNameView;
@@ -33,6 +39,10 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mCompanyView;
     private View mProgressView;
     private View mLoginFormView;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,13 +155,21 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void doRegister(String firstName, String lastName, String occupation, String company) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
+            Toast.makeText(this,
+                    "Fuck you, fucking retard for crashing the app. " +
+                    "Now you are happy eh? How sad your little pathetic life got " +
+                    "nothing better to do than crasahing ppl's code. " +
+                    "Go home and get a life, sucker",Toast.LENGTH_SHORT).show();
+            System.out.println ();
             return;
-            // TODO Handle unexpected user session end OR make errors impossible
+
         }
         User slipUser = new User(user.getUid(), user.getEmail(), "", firstName, lastName, occupation, company);
         SessionModel.get().setUser(slipUser, this);
@@ -160,6 +178,5 @@ public class RegisterActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
-
 }
 

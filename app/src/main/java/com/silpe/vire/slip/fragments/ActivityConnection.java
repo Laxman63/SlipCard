@@ -1,9 +1,12 @@
 package com.silpe.vire.slip.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.silpe.vire.slip.R;
+import com.silpe.vire.slip.collection.CollectionActivity;
 import com.silpe.vire.slip.components.BasicValueEventListener;
 import com.silpe.vire.slip.components.IntValueChanger;
 import com.silpe.vire.slip.components.LocationDisplayComponent;
@@ -27,7 +31,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ActivityConnection extends AppCompatActivity implements LocationDisplayComponent {
 
-
     private TextView mCityView;
     private TextView mLocationView;
     private User mUser;
@@ -36,9 +39,27 @@ public class ActivityConnection extends AppCompatActivity implements LocationDis
     public void onCreate(Bundle state) {
         super.onCreate(state);
         setContentView(R.layout.activity_connection);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle("");
+            actionBar.setSubtitle("");
+        }
         mUser = getIntent().getParcelableExtra(AccountActivity.RESULT_USER);
         Button removeButton = (Button) findViewById(R.id.connection_removeButton);
         removeButton.setOnClickListener(new RemoveUserListener());
+        Button collectionButton = (Button) findViewById(R.id.connection_collectionButton);
+        collectionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityConnection.this, CollectionActivity.class);
+                intent.putExtra(AccountActivity.RESULT_USER, mUser);
+                ActivityConnection.this.startActivity(intent);
+            }
+        });
 
         // Populate the text views with the user's information
         TextView fullNameView = (TextView) findViewById(R.id.connection_fullName);
@@ -149,6 +170,11 @@ public class ActivityConnection extends AppCompatActivity implements LocationDis
         }
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
     private class RemovalListener extends BasicValueEventListener {
 

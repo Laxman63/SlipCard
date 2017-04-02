@@ -69,6 +69,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * ID to identify the request made to access contacts.
      * Access to contacts allows the app to prefill the email field.
      */
+    private Intent toRegister;
+    private Intent toMain;
+
     private static final int REQUEST_READ_CONTACTS = 0;
 
     /**
@@ -84,6 +87,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * the progress indicator.
      */
     private View mProgressView;
+
+    /**
+     *  textview that leads to registration
+     */
+    private TextView mTextView;
 
     /**
      * A flag indicating whether the user is currently
@@ -116,10 +124,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        toRegister = new Intent(this, RegistrationActivity.class);
+
+        findViewById(R.id.link_signup).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(toRegister);
+            }
+        });
 
         // Obtain the email input field and attempt autocompletion
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
 
         // Obtain the password input field and bind the action listener
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -337,7 +354,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (task.getResult().getProviders().size() > 0) {
                         doLogin(email, password);
                     } else {
-                        doRegister(email, password);
+                        Toast.makeText(LoginActivity.this, R.string.login_error_nouser, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     // TODO Error handling
@@ -347,27 +364,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
     }
-    //lol, debugging purpose:
-    boolean isSuccess;
-    boolean doRegister(final String email, final String password) {
 
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                LoginActivity.this.mTaskInProgress = false;
-                Log.d(getClass().getCanonicalName(), "createUserWithEmail:onComplete:" + task.isSuccessful());
-                isSuccess = true;
-                if (!task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, R.string.register_failed, Toast.LENGTH_SHORT).show();
-                    LoginActivity.this.showProgress(false);
-                    FirebaseAuth.getInstance().signOut();
-                    isSuccess = false;
-                }
 
-            }
-        });
-        return isSuccess;
-    }
+
 
     private void doLogin(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -398,6 +397,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return action;
         }
     }
+
+
 
     /**
      * This listener will attempt to log in the user
@@ -472,11 +473,13 @@ class UserValueListener implements ValueEventListener {
         this.context = context;
     }
 
+
+
     @Override
     public void onDataChange(DataSnapshot snapshot) {
         User user = snapshot.getValue(User.class);
         if (user == null) {
-            Intent intent = new Intent(context, RegisterActivity.class);
+            Intent intent = new Intent(context, RegistrationActivity.class);
             context.showProgress(false);
             context.startActivity(intent);
         } else {
