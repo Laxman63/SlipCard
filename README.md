@@ -25,13 +25,20 @@ If you have mutual connections in the first degree, and or second degree, you ca
 The user may easily maintain the platform by choosing which connections to add or remove by simply clicking add or the other remove button. When you remove some one, he/she doesn't get noticed, so it is not awkward at all. 
 
 ## How I built it
-When we started building this project, we thought about building a fast, beautiful and maintainable app. That's why we choose to develop natively for Android, an ecosystem for approximately 70% of the singer
+When we started building this project, we thought about building a fast, beautiful and maintainable app. That's why we choose to develop natively for Android, an ecosystem for approximately 70% of the users. So we started off by planning out the chuncks in our program: the mainActivity flow, the login/regisration, the add/remove friend. The QRcode generator/receptor, and location filter/displayer, Firebase integration, and google playService integration. We had a conversation about how this project should turn out in the end, then we divide the task into our own capacity, and worked on each. I worked on setting a login.regisration screen, a simple UI for show and display section, and setting up the integration with google. Jeff was writing the algorithm that powers the operation of the app, the network system, built upon firebase that facilitates informaton exchange within the service, as well as the mechanism for generating the Hash, and scanning the code for extracting the hash. 
 
 ## Challenges I ran into
 Integrating the app with firebase was the most challenging issue I've run into during the course of the project. In the past, I used to set up a mySQL server on local host. And then handle the request by having java jdec communicate in SQL directly with the database, or do it through PHP. however, since we are under a more strict time limit here at HackPrinceton (given 36 hours), I have no choice but to use a more established database connection service that is Firebase, provided by google, for Android. This database allowed authorization, google sign-in, cloud-messaging, and a Relational database all at once. However, since it is pretty high level, I do not have write the code for lower level functions, and so I was not quite sure how this structure works. In fact, different than previous dbs, at Google Firebase, you do not handle your own user session transition. The firebase handles it for you. So you make your changes to user log in state, and then through a listener called mAuthListener, the Firebase SDK decides whether your user data has changed and then make decisions for you, if user == null, then signs you up, if not != null then signs you in. Because I do not handle the user state transition myself. it was not that intuitive for me to catch that the firebase detects the user itself in a listener. This took me the entire Saturday afternoon to figure out. Enventually, by consulting my partner who is an expert in working with databases, I learned that the listeners are implemmented in each classes, so that when something goes out of hand, the listener would always catch that and take action against the response. 
 
 ## What I learned
-I learnd that
+I learnd how to manipulate AysncTask in Java
+I learned to work with Google's Play service API
+I learned how to incorporate Facebook SDK into the app
+I learned to not overestimate what you can do within 36 hrs
+I also learned to not leave documentation / this hackathon description to 4 am to start writing.
+
 
 ## What's next for Slip
-Next, we will continue use a (machine learning) 
+Next, I will continue use a more advance data processing engine integrated with machine learning to filter and process data given by the centralized account, so that we may provide a more in depth look for every one's card
+Also, we will need to implement full geomessaging
+Lastly, we will get more people to try this app out. We've got 40 signed up accounts so far. We will get 1at least 100 people participating in the app's alpha testing to see how people want it and if there is a market for the app to take over. Then we will gradually transfer this prototype into a legitimate project. 
