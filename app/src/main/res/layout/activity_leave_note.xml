@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.silpe.vire.slip.fragments.LeaveNoteActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/message_writePrompt" />
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/message_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/show_location_icon"
+                android:layout_width="@dimen/show_icon_size_large"
+                android:layout_height="@dimen/show_icon_size_large"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ic_location_on_pink_24dp" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/show_location_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/show_location_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/sample_text"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/show_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/show_location_city"
+                android:layout_centerHorizontal="true"
+                android:text="@string/sample_text"
+                android:textSize="16sp" />
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/show_location">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/messenger_latitude_longitude"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/sample_text" />
+            </android.support.v7.widget.LinearLayoutCompat>
+        </RelativeLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/message_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginStart="30dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/message_message"
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
+
+            <Button
+                android:id="@+id/message_writeButton"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/account_profile_margin"
+                android:layout_marginTop="10dp"
+                android:text="@string/message_writeButton_text" />
+        </android.support.design.widget.TextInputLayout>
+    </RelativeLayout>
+</android.support.v7.widget.LinearLayoutCompat>

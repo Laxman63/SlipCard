@@ -17,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.components.ProfilePictureView;
+import com.silpe.vire.slip.components.RoundedBitmap;
 import com.silpe.vire.slip.dtos.User;
 import com.silpe.vire.slip.fragments.AccountActivity;
 import com.silpe.vire.slip.fragments.ActivityConnection;
@@ -121,11 +122,13 @@ class CollectionAdapter extends RecyclerView.Adapter<CollectionAdapter.ViewHolde
             Glide.with(holder.getContext())
                     .using(new FirebaseImageLoader())
                     .load(pRef)
+                    .asBitmap()
+                    .centerCrop()
                     .signature(new TimestampSignature(user.getSignature()))
-                    .error(ResourcesCompat.getDrawable(holder.getContext().getResources(), R.drawable.empty_profile, null))
-                    .into(holder.getProfilePicture());
+                    .error(ResourcesCompat.getDrawable(holder.getContext().getResources(), R.drawable.empty_profile_round, null))
+                    .into(new RoundedBitmap(holder.getProfilePicture(), mContext));
         } else {
-            holder.getProfilePicture().setImageResource(R.drawable.empty_profile);
+            holder.getProfilePicture().setImageResource(R.drawable.empty_profile_round);
         }
         holder.getToplevel().setOnClickListener(new View.OnClickListener() {
             @Override

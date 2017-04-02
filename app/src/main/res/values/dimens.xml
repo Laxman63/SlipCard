@@ -4,7 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
-    <dimen name="card_preview_height">100dp</dimen>
+    <dimen name="card_preview_height">130dp</dimen>
     <dimen name="card_preview_horizontal_padding">9dp</dimen>
     <dimen name="card_preview_vertical_padding">9dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
@@ -12,9 +12,9 @@
     <dimen name="login_button_width">200dp</dimen>
     <dimen name="show_profile_picture_size">160dp</dimen>
     <dimen name="show_profile_picture_size_half">90dp</dimen>
-    <dimen name="card_profile_picture">88dp</dimen>
+    <dimen name="card_profile_picture">96dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
-    <dimen name="card_description">26dp</dimen>
+    <dimen name="card_description">40dp</dimen>
     <dimen name="login_padding_horizontal">64dp</dimen>
     <dimen name="login_logo_height">72dp</dimen>
     <dimen name="account_profile_margin">10dp</dimen>
@@ -46,4 +46,5 @@
     <dimen name="show_card_text">15sp</dimen>
     <dimen name="show_padding">20dp</dimen>
     <dimen name="show_card_margin">17dp</dimen>
+    <dimen name="show_icon_size_large">50dp</dimen>
 </resources>

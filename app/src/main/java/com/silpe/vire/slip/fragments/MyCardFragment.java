@@ -147,10 +147,7 @@ public class MyCardFragment extends Fragment
         } else {
             mProfilePictureView.setImageResource(R.drawable.empty_profile_round);
         }
-        if (user.getLatitude() == null || user.getLongitude() == null) {
-            mCityView.setText(getString(R.string.location_earth));
-            mLocationView.setText(getString(R.string.empty));
-        } else {
+        if (user.getLatitude() != null && user.getLongitude() != null) {
             populateLocation(user, this);
         }
         // TODO End

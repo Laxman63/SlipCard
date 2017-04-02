@@ -8,9 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
-class CollectionLayoutManager extends LinearLayoutManager {
+public class CollectionLayoutManager extends LinearLayoutManager {
 
-    CollectionLayoutManager(Context context) {
+    public CollectionLayoutManager(Context context) {
         super(context, VERTICAL, false);
     }
 

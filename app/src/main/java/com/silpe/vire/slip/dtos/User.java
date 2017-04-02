@@ -73,6 +73,8 @@ public class User implements Persistent<User>, Parcelable {
         setCompany(company);
         setConnections(connections);
         setSignature(signature);
+        setLatitude(latitude);
+        setLongitude(longitude);
     }
 
     protected User(Parcel in) {
@@ -85,6 +87,8 @@ public class User implements Persistent<User>, Parcelable {
         company = in.readString();
         connections = in.readInt();
         signature = in.readLong();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -286,5 +290,7 @@ public class User implements Persistent<User>, Parcelable {
         dest.writeString(company);
         dest.writeInt(connections);
         dest.writeLong(signature);
+        if (latitude != null) dest.writeDouble(latitude);
+        if (longitude != null) dest.writeDouble(longitude);
     }
 }

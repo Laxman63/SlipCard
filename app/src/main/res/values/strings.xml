@@ -108,7 +108,10 @@
     <string name="earth">Earth</string>
     <string name="database_user_latitude">latitude</string>
     <string name="database_user_longitude">longitude</string>
-    <string name="messageTitle">Note</string>
+    <string name="messageTitle">Notes</string>
     <string name="connection_collectionButton_text">See connections</string>
     <string name="space"> </string>
+    <string name="message_writeButton_text">Leave note</string>
+    <string name="message_writePrompt">Write a note</string>
+    <string name="database_messages">messages</string>
 </resources>

@@ -21,7 +21,6 @@
     <uses-feature android:name="android.hardware.location.network" />
     <uses-feature android:name="android.hardware.location.gps" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -74,10 +73,11 @@
                 android:value="com.silpe.vire.slip.MainActivity" />
         </activity>
         <activity
-            android:name="com.silpe.vire.slip.fragments.ActivityConnection"
+            android:name=".fragments.ActivityConnection"
             android:label="@string/title_activity_connection" />
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".collection.CollectionActivity" />
+        <activity android:name=".fragments.LeaveNoteActivity"></activity>
     </application>
 
 </manifest>

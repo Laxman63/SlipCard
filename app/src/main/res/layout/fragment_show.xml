@@ -197,7 +197,7 @@
                             android:layout_height="@dimen/show_icon_size"
                             android:layout_centerVertical="true"
                             android:layout_margin="@dimen/show_padding"
-                            android:background="@drawable/ic_email_black_24dp" />
+                            android:background="@drawable/ic_email_pink_24dp" />
 
                         <android.support.v7.widget.LinearLayoutCompat
                             android:layout_width="match_parent"

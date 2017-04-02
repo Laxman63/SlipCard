@@ -17,17 +17,15 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:elevation="@dimen/card_elevation"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp"
         tools:targetApi="lollipop">
 
         <com.silpe.vire.slip.components.ProfilePictureView
             android:id="@+id/card_picture"
             android:layout_width="@dimen/card_profile_picture"
             android:layout_height="@dimen/card_profile_picture"
-            android:layout_gravity="center"
-            android:layout_marginEnd="9dp"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="9dp"
-            android:layout_marginStart="9dp" />
+            android:layout_gravity="center" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,7 +33,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/card_description"
+                android:id="@+id/card_username"
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/card_description"
                 android:layout_alignParentBottom="true"
@@ -49,10 +47,10 @@
                 android:paddingRight="10dp"
                 android:paddingStart="10dp"
                 android:text="@string/sample_text"
-                android:textSize="16sp" />
+                android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/card_name"
+                android:id="@+id/card_message"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/card_description"
@@ -60,14 +58,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignWithParentIfMissing="true"
-                android:gravity="center_vertical"
-                android:paddingEnd="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingStart="10dp"
+                android:padding="4dp"
                 android:text="@string/sample_text"
                 android:textColor="@android:color/black"
-                android:textSize="25sp" />
+                android:textSize="15sp" />
         </RelativeLayout>
     </android.support.v7.widget.LinearLayoutCompat>
 </RelativeLayout>

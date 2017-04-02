@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.silpe.vire.slip.R;
 import com.silpe.vire.slip.collection.CollectionFragment;
 import com.silpe.vire.slip.dtos.User;
-import com.silpe.vire.slip.fragments.MemeFragment;
+import com.silpe.vire.slip.fragments.MessageFragment;
 import com.silpe.vire.slip.fragments.MyCardFragment;
 import com.silpe.vire.slip.models.SessionModel;
 
@@ -16,7 +16,7 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
 
     private MyCardFragment mMyCardFragment;
     private CollectionFragment mCollectionFragment;
-    private MemeFragment memeFragment;
+    private MessageFragment memeFragment;
     private Context mContext;
 
     public NavigationPagerAdapter(FragmentManager fragmentManager, Context context) {
@@ -25,7 +25,7 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
         mContext = context;
         mMyCardFragment = new MyCardFragment();
         mCollectionFragment = CollectionFragment.newInstance(user);
-        memeFragment = MemeFragment.newInstance(user);
+        memeFragment = MessageFragment.newInstance(user);
     }
 
     @Override
