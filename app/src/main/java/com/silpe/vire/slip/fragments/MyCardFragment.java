@@ -79,7 +79,7 @@ public class MyCardFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_show, container, false);
+        View view = inflater.inflate(R.layout.fragment_mycard, container, false);
         mFullNameView = ((TextView) view.findViewById(R.id.connection_fullName));
         mDescriptionView = ((TextView) view.findViewById(R.id.connection_description));
         mEmailView = ((TextView) view.findViewById(R.id.connection_email));
@@ -167,8 +167,6 @@ public class MyCardFragment extends Fragment
 
     protected static void populateLocation(final @NonNull User user,
                                            final @NonNull LocationDisplayComponent locationComponent) {
-        locationComponent.getCityView().setText(R.string.earth);
-        locationComponent.getLocationView().setText(R.string.empty);
         getAddresses(locationComponent.getContext(), user, new GeoDecodeListener() {
             @Override
             protected void onFinished(List<Address> results) {

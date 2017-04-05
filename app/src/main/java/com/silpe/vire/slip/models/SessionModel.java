@@ -3,13 +3,15 @@ package com.silpe.vire.slip.models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.silpe.vire.slip.dtos.User;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//TODO Link this class with SharedPreferences to gracefully handle and cache information
 
 /**
  * Singleton class that contains the current session models.
@@ -38,19 +40,22 @@ public class SessionModel {
         userListeners = new ArrayList<>();
     }
 
-
     private User user;
+    private ValueEventListener userEventListener;
     private List<SessionModelListener<User>> userListeners;
 
-    public User getUser(Context context) {
+    @Nullable
+    public User getUser(@NonNull Context context) {
+        checkEventListener(context);
         if (user == null) {
             readUser(context);
         }
         return user;
     }
 
-    public void setUser(User user, Context context) {
+    public void setUser(@Nullable User user, @NonNull Context context) {
         this.user = user;
+        checkEventListener(context);
         notifyListeners(userListeners, user);
         cacheUser(context);
     }
@@ -74,6 +79,35 @@ public class SessionModel {
         SharedPreferences userSessionCache = context.getSharedPreferences(USER_SESSION_CACHE, Context.MODE_PRIVATE);
         String serial = userSessionCache.getString(USER_SESSION_KEY, null);
         user = serial == null ? null : new User().decode(serial);
+    }
+
+    private void checkEventListener(@NonNull Context context) {
+        if (user == null) {
+            userEventListener = null;
+        } else if (userEventListener == null) {
+            userEventListener = new UserEventListener(context);
+            user.getDatabaseReference(context).addValueEventListener(userEventListener);
+        }
+    }
+
+    private class UserEventListener implements ValueEventListener {
+
+        private final Context context;
+
+        private UserEventListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            User user = dataSnapshot.getValue(User.class);
+            setUser(user, context);
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+        }
+
     }
 
 }

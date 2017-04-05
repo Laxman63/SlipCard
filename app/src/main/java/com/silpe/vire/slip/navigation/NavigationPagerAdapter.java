@@ -16,7 +16,7 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
 
     private MyCardFragment mMyCardFragment;
     private CollectionFragment mCollectionFragment;
-    private MessageFragment memeFragment;
+    private MessageFragment messageFragment;
     private Context mContext;
 
     public NavigationPagerAdapter(FragmentManager fragmentManager, Context context) {
@@ -25,7 +25,7 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
         mContext = context;
         mMyCardFragment = new MyCardFragment();
         mCollectionFragment = CollectionFragment.newInstance(user);
-        memeFragment = MessageFragment.newInstance(user);
+        messageFragment = MessageFragment.newInstance(user);
     }
 
     @Override
@@ -35,15 +35,15 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
                 return mMyCardFragment;
             case 1:
                 return mCollectionFragment;
-            case 2:
-                return memeFragment;
+            //case 2:
+            //    return messageFragment;
         }
         return null;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -53,8 +53,8 @@ public class NavigationPagerAdapter extends FragmentPagerAdapter {
                 return mContext.getString(R.string.myCardTitle);
             case 1:
                 return mContext.getString(R.string.collectionTitle);
-            case 2:
-                return mContext.getString(R.string.messageTitle);
+            //case 2:
+            //    return mContext.getString(R.string.messageTitle);
         }
         return null;
     }
